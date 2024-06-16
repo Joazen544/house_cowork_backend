@@ -1,5 +1,7 @@
+import { MinLength } from 'class-validator';
+
 export class CreateUserDto {
-  id!: number;
+  @MinLength(3)
   name!: string;
   age!: number;
 }
