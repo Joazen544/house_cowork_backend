@@ -6,10 +6,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Put,
+  Patch,
   Query,
   UseGuards,
   ValidationPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,36 +19,37 @@ import { AdminGuard } from 'src/admin/admin.guard';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
-  getUsers(@Query('age') age?: string) {
-    const ageNumber = typeof age == 'string' ? parseInt(age) : undefined;
-
-    return this.usersService.getUsers(ageNumber);
+  findAllUsers(@Query('email') email: string) {
+    return this.usersService.find(email);
   }
 
   @Get(':id')
-  getUser(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.getUser(id);
+  async findUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.findOne(id);
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+    return user;
   }
 
-  @Post()
-  @UseGuards(AdminGuard)
-  createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+  @Post('signup')
+  createUser(@Body(new ValidationPipe()) body: CreateUserDto) {
+    this.usersService.create(body.email, body.password, body.name);
   }
 
-  @Put(':id')
+  @Patch(':id')
   updateUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() body: UpdateUserDto,
   ) {
-    return this.usersService.updateUser(id, updateUserDto);
+    return this.usersService.update(id, body);
   }
 
   @Delete(':id')
   removeUser(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.removeUser(id);
+    return this.usersService.remove(id);
   }
 }
