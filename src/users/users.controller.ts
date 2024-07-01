@@ -4,37 +4,43 @@ import {
   Delete,
   Get,
   Param,
+  Session,
   ParseIntPipe,
   Post,
   Patch,
   Query,
-  UseGuards,
   ValidationPipe,
   NotFoundException,
-  UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AdminGuard } from 'src/admin/admin.guard';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
+import { SigninUserDto } from './dto/signin-user.dto';
 
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Get()
   findAllUsers(@Query('email') email: string) {
     return this.usersService.find(email);
   }
 
+  @Get('who')
+  whoAmI(@Session() session: any) {
+    return this.usersService.findOne({ id: session.userId });
+  }
+
   @Get(':id')
   async findUser(@Param('id', ParseIntPipe) id: number) {
-    console.log('running in controller');
-    const user = await this.usersService.findOne(id);
+    const user = await this.usersService.findOne({ id });
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -42,8 +48,32 @@ export class UsersController {
   }
 
   @Post('signup')
-  createUser(@Body(new ValidationPipe()) body: CreateUserDto) {
-    this.usersService.create(body.email, body.password, body.name);
+  async createUser(
+    @Body(new ValidationPipe()) body: CreateUserDto,
+    @Session() session: any,
+  ) {
+    const user = await this.authService.signUp(
+      body.email,
+      body.password,
+      body.name,
+    );
+
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('signin')
+  async signin(@Body() body: SigninUserDto, @Session() session: any) {
+    console.log('weee');
+
+    const user = await this.authService.signIn(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
   }
 
   @Patch(':id')
