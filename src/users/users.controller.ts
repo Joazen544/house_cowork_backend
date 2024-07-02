@@ -11,6 +11,7 @@ import {
   Query,
   ValidationPipe,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
@@ -18,7 +19,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
+import { User } from './user.entity';
 import { SigninUserDto } from './dto/signin-user.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 @Serialize(UserDto)
@@ -33,9 +37,15 @@ export class UsersController {
     return this.usersService.find(email);
   }
 
+  // @Get('who')
+  // whoAmI(@Session() session: any) {
+  //   return this.usersService.findOne({ id: session.userId });
+  // }
+
   @Get('who')
-  whoAmI(@Session() session: any) {
-    return this.usersService.findOne({ id: session.userId });
+  @UseGuards(AuthGuard)
+  whoAmI(@CurrentUser() user: User) {
+    return user;
   }
 
   @Get(':id')
