@@ -13,14 +13,14 @@ export class Task {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, (user) => user)
+  @ManyToOne(() => User, (user) => user.ownedTasks)
   owner!: User;
 
   @Column()
-  title!: number;
+  title!: string;
 
   @Column()
-  description!: number;
+  description!: string;
 
   @ManyToMany(() => User, (user) => user.assignedTasks)
   @JoinTable()

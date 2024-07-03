@@ -15,12 +15,12 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
-import { UserDto } from './dto/user.dto';
+import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
-import { SigninUserDto } from './dto/signin-user.dto';
+import { SigninUserDto } from './dtos/signin-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
 
