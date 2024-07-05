@@ -74,8 +74,6 @@ export class UsersController {
 
   @Post('signin')
   async signin(@Body() body: SigninUserDto, @Session() session: any) {
-    console.log('weee');
-
     const user = await this.authService.signIn(body.email, body.password);
     session.userId = user.id;
     return user;
@@ -83,6 +81,7 @@ export class UsersController {
 
   @Post('signout')
   signOut(@Session() session: any) {
+    console.log(session.userId);
     session.userId = null;
   }
 
