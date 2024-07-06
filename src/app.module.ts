@@ -8,6 +8,7 @@ import { User } from './users/user.entity';
 import { TasksModule } from './tasks/tasks.module';
 import { Task } from './tasks/task.entity';
 import { APP_PIPE } from '@nestjs/core';
+import dataSource, { dataSourceOptions } from 'db/data-source';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -18,13 +19,16 @@ const cookieSession = require('cookie-session');
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          synchronize: true,
-          entities: [User, Task],
-        };
+      // useFactory: (config: ConfigService) => {
+      //   return {
+      //     type: 'sqlite',
+      //     database: config.get<string>('DB_NAME'),
+      //     synchronize: true,
+      //     entities: [User, Task],
+      //   };
+      // },
+      useFactory: () => {
+        return dataSourceOptions;
       },
     }),
 
