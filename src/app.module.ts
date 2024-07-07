@@ -4,11 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/user.entity';
 import { TasksModule } from './tasks/tasks.module';
-import { Task } from './tasks/task.entity';
 import { APP_PIPE } from '@nestjs/core';
-import dataSource, { dataSourceOptions } from 'db/data-source';
+import { dataSourceOptions } from './db/data-source';
+import { DataSource } from 'typeorm';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -18,17 +17,18 @@ const cookieSession = require('cookie-session');
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
-      // useFactory: (config: ConfigService) => {
-      //   return {
-      //     type: 'sqlite',
-      //     database: config.get<string>('DB_NAME'),
-      //     synchronize: true,
-      //     entities: [User, Task],
-      //   };
-      // },
       useFactory: () => {
         return dataSourceOptions;
+      },
+
+      dataSourceFactory: async (options) => {
+        if (!options) {
+          throw new Error('Data source does not exist');
+        }
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
       },
     }),
 
