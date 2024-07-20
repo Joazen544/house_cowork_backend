@@ -7,7 +7,7 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateUserDto } from './dtos/request/create-user.dto';
 
 @Injectable()
 export class UsersService {

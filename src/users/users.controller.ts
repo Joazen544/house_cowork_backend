@@ -15,16 +15,24 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { CreateUserDto } from './dtos/request/create-user.dto';
+import { UpdateUserDto } from './dtos/request/update-user.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
-import { SigninUserDto } from './dtos/signin-user.dto';
+import { SigninUserDto } from './dtos/request/signin-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 @Serialize(UserDto)
 export class UsersController {
   constructor(
@@ -32,32 +40,14 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
-  @Get()
-  findAllUsers(@Query('email') email: string) {
-    return this.usersService.find(email);
-  }
-
-  // @Get('who')
-  // whoAmI(@Session() session: any) {
-  //   return this.usersService.findOne({ id: session.userId });
-  // }
-
-  @Get('who')
-  @UseGuards(AuthGuard)
-  whoAmI(@CurrentUser() user: User) {
-    return user;
-  }
-
-  @Get(':id')
-  async findUser(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOne({ id });
-    if (!user) {
-      throw new NotFoundException('user not found');
-    }
-    return user;
-  }
-
   @Post('signup')
+  @ApiOperation({ summary: 'Create a user' })
+  @ApiResponse({ status: 201, description: 'User created!', type: User })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request, some property is missed.',
+  })
+  @ApiBody({ type: CreateUserDto })
   async createUser(
     @Body(new ValidationPipe()) body: CreateUserDto,
     @Session() session: any,
@@ -69,6 +59,20 @@ export class UsersController {
     );
 
     session.userId = user.id;
+    return user;
+  }
+
+  @Get()
+  findAllUsers(@Query('email') email: string) {
+    return this.usersService.find(email);
+  }
+
+  @Get(':id')
+  async findUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.findOne({ id });
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
     return user;
   }
 
