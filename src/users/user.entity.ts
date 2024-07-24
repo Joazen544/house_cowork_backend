@@ -7,10 +7,12 @@ import {
   OneToMany,
   ManyToMany,
   AfterRemove,
+  Unique,
 } from 'typeorm';
 import { Task } from '../tasks/task.entity';
 
 @Entity()
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;

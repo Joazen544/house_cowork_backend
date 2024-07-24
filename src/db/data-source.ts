@@ -10,23 +10,13 @@ if (!process.env.NODE_ENV) {
 }
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-console.log(
-  'Loading environment variables from:',
-  `.env.${process.env.NODE_ENV}`,
-);
-// console.log('DATABASE_TYPE:', process.env.DATABASE_TYPE);
-// console.log('DATABASE_NAME:', process.env.DATABASE_NAME);
-// console.log('DATABASE_USERNAME:', process.env.DATABASE_USERNAME);
-// console.log('DATABASE_PASSWORD:', process.env.DATABASE_PASSWORD);
 
 const isValidDatabaseType = (type: any): type is 'postgres' | 'sqlite' => {
   const validDatabaseTypes: ('postgres' | 'sqlite')[] = ['postgres', 'sqlite'];
   return validDatabaseTypes.includes(type);
 };
 
-export const createDataSourceOptions = ():
-  | PostgresConnectionOptions
-  | SqliteConnectionOptions => {
+export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnectionOptions => {
   const type = process.env.DATABASE_TYPE;
   if (!isValidDatabaseType(type)) {
     throw new Error(`Invalid DATABASE_TYPE: ${type}`);
@@ -35,7 +25,7 @@ export const createDataSourceOptions = ():
   const normarlDatabaseProperties = {
     entities: [User, Task],
     migrations: ['dist/db/migrations/*js'],
-    synchronize: false,
+    synchronize: true,
     migration: true,
   };
 
@@ -58,9 +48,7 @@ export const createDataSourceOptions = ():
   }
 };
 
-export const dataSourceOptions:
-  | PostgresConnectionOptions
-  | SqliteConnectionOptions = createDataSourceOptions();
+export const dataSourceOptions: PostgresConnectionOptions | SqliteConnectionOptions = createDataSourceOptions();
 
 const AppDataSource = new DataSource(dataSourceOptions);
 
