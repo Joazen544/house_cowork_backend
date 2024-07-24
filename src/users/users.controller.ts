@@ -26,9 +26,13 @@ import { User } from './user.entity';
 import { SigninUserDto } from './dtos/request/signin-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dtos/response/create-user-response.dto';
-import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from 'src/dto/errors/errors.dto';
+import {
+  BadRequestErrorResponseDto,
+  NotFoundErrorResponseDto,
+  UnauthorizedErrorResponseDto,
+} from 'src/dto/errors/errors.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -71,28 +75,20 @@ export class UsersController {
   }
 
   @Post('signout')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Sign out' })
+  @ApiResponse({ status: 200, description: 'User signout!' })
   signOut(@Session() session: any) {
-    console.log(session.userId);
     session.userId = null;
   }
 
-  @Get('who')
-  @Serialize(CreateUserResponseDto)
-  whoAmI(@CurrentUser() user: User) {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    const accessToken = 'asdf';
-    return { user: user, accessToken: accessToken };
-  }
-
-  @Get()
-  findAllUsers(@Query('email') email: string) {
-    return this.usersService.find(email);
-  }
-
   @Get(':id')
+  @ApiOperation({ summary: 'Find a user info' })
+  @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Can only find user info in family', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
+  @Serialize(UserDto)
   async findUser(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne({
       id,
@@ -108,8 +104,24 @@ export class UsersController {
     return this.usersService.update(id, body);
   }
 
+  @Get()
+  findAllUsers(@Query('email') email: string) {
+    return this.usersService.find(email);
+  }
+
   @Delete(':id')
   removeUser(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Get('who')
+  @Serialize(CreateUserResponseDto)
+  whoAmI(@CurrentUser() user: User) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const accessToken = 'asdf';
+    return { user: user, accessToken: accessToken };
   }
 }
