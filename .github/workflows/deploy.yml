@@ -1,0 +1,43 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # 當 main 分支有更新時觸發
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'  # 根據你的 Node.js 版本設置
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        SERVER_IP: ${{ secrets.EC2_SERVER_IP }}
+        USERNAME: ${{ secrets.EC2_USERNAME }}
+      run: |
+        # 安裝 sshpass 如果需要
+        sudo apt-get install -y sshpass
+
+        # 使用 SSH 部署到 EC2
+        ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $USERNAME@$SERVER_IP << 'EOF'
+          cd /house_cowork
+          git pull origin main
+          npm install
+          npm run build
+          pm2 restart all
+        EOF
