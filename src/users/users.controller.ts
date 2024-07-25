@@ -82,7 +82,7 @@ export class UsersController {
     session.userId = null;
   }
 
-  @Get(':id')
+  @Get(':id/profile')
   @ApiOperation({ summary: 'Find a user info' })
   @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
@@ -108,10 +108,10 @@ export class UsersController {
     return this.usersService.update(user.id, body);
   }
 
-  @Get()
-  findAllUsers(@Query('email') email: string) {
-    return this.usersService.find(email);
-  }
+  // @Get()
+  // findAllUsers(@Query('email') email: string) {
+  //   return this.usersService.find(email);
+  // }
 
   // @Delete(':id')
   // removeUser(@Param('id', ParseIntPipe) id: number) {
