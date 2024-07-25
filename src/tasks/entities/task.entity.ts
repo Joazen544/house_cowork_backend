@@ -31,6 +31,9 @@ export class Task {
   })
   status!: TaskStatus;
 
+  @Column({ type: 'timestamp' })
+  time!: string;
+
   @ManyToMany(() => User, (user) => user.assignedTasks)
   @JoinTable()
   assignedToUsers!: User[];
