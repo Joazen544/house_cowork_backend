@@ -1,25 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateHouseResponseDto } from './dto/response/create-house-response.dto';
-import {
-  BadRequestErrorResponseDto,
-  ForbiddenErrorResponseDto,
-  UnauthorizedErrorResponseDto,
-} from 'src/dto/errors/errors.dto';
+import { BadRequestErrorResponseDto, UnauthorizedErrorResponseDto } from 'src/dto/errors/errors.dto';
 
 @Controller('houses')
 export class HousesController {
@@ -31,6 +16,7 @@ export class HousesController {
   @ApiResponse({ status: 201, description: 'House created.', type: CreateHouseResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
+  @ApiBody({ type: CreateHouseDto })
   create(@Body() createHouseDto: CreateHouseDto) {
     return this.housesService.create(createHouseDto);
   }

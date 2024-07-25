@@ -9,7 +9,7 @@ import {
   AfterRemove,
   Unique,
 } from 'typeorm';
-import { Task } from '../tasks/task.entity';
+import { Task } from '../../tasks/task.entity';
 
 @Entity()
 @Unique(['email'])

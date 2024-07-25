@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dtos/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { TaskDto } from '../tasks/dtos/task.dto';
 

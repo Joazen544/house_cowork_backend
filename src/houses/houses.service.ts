@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
-import { UpdateHouseDto } from './dto/update-house.dto';
+import { UpdateHouseDto } from './dto/request/update-house.dto';
 
 @Injectable()
 export class HousesService {
