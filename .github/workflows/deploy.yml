@@ -38,7 +38,7 @@ jobs:
 
         # 使用 SSH 部署到 EC2
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USERNAME@$SERVER_IP << 'EOF'
-          cd /house_cowork
+          cd house_cowork
           git pull origin main
           npm install
           npm run build
