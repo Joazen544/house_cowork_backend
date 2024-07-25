@@ -33,8 +33,11 @@ jobs:
         # 安裝 sshpass 如果需要
         sudo apt-get install -y sshpass
 
+        echo "${SSH_PRIVATE_KEY}" > private_key.pem
+        chmod 600 private_key.pem
+
         # 使用 SSH 部署到 EC2
-        ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $USERNAME@$SERVER_IP << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USERNAME@$SERVER_IP << 'EOF'
           cd /house_cowork
           git pull origin main
           npm install
