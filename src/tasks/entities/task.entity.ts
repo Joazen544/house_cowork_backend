@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from 'src/houses/entities/house.entity';
+import { TaskStatus } from './task-status.enum';
+import { TaskPublicStatus } from './task-public-status.enum';
 
 @Entity()
 export class Task {
@@ -15,6 +17,19 @@ export class Task {
 
   @Column()
   description!: string;
+
+  @Column({
+    type: 'enum',
+    enum: TaskPublicStatus,
+    default: TaskPublicStatus.ALL,
+  })
+  open!: TaskPublicStatus;
+
+  @Column({
+    type: 'enum',
+    enum: TaskStatus,
+  })
+  status!: TaskStatus;
 
   @ManyToMany(() => User, (user) => user.assignedTasks)
   @JoinTable()
