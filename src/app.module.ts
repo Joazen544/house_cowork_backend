@@ -8,6 +8,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { APP_PIPE } from '@nestjs/core';
 import { dataSourceOptions } from './db/data-source';
 import { DataSource } from 'typeorm';
+import { HousesModule } from './houses/houses.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -34,6 +35,7 @@ const cookieSession = require('cookie-session');
 
     UsersModule,
     TasksModule,
+    HousesModule,
   ],
   controllers: [AppController],
   providers: [
