@@ -99,9 +99,13 @@ export class UsersController {
     return user;
   }
 
-  @Patch(':id')
-  updateUser(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
-    return this.usersService.update(id, body);
+  @Patch('/profile')
+  @ApiOperation({ summary: 'Update profile' })
+  @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
+  @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
+  updateUser(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
+    return this.usersService.update(user.id, body);
   }
 
   @Get()
@@ -109,10 +113,10 @@ export class UsersController {
     return this.usersService.find(email);
   }
 
-  @Delete(':id')
-  removeUser(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
-  }
+  // @Delete(':id')
+  // removeUser(@Param('id', ParseIntPipe) id: number) {
+  //   return this.usersService.remove(id);
+  // }
 
   @Get('who')
   @Serialize(CreateUserResponseDto)
