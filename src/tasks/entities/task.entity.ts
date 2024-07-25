@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+import { House } from 'src/houses/entities/house.entity';
 
 @Entity()
 export class Task {
@@ -18,4 +19,7 @@ export class Task {
   @ManyToMany(() => User, (user) => user.assignedTasks)
   @JoinTable()
   assignedToUsers!: User[];
+
+  @ManyToOne(() => House, (house) => house.tasks)
+  house!: House;
 }

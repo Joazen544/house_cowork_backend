@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, Unique } from 'typeorm';
-import { Task } from '../../tasks/task.entity';
+import { Task } from '../../tasks/entities/task.entity';
+import { House } from 'src/houses/entities/house.entity';
 
 @Entity()
 @Unique(['email'])
@@ -21,4 +22,7 @@ export class User {
 
   @ManyToMany(() => Task, (task) => task.assignedToUsers)
   assignedTasks!: Task[];
+
+  @ManyToMany(() => House, (house) => house.users)
+  houses!: House[];
 }
