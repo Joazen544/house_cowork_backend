@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateHouseResponseDto } from './dto/response/create-house-response.dto';
 import { BadRequestErrorResponseDto, UnauthorizedErrorResponseDto } from 'src/dto/errors/errors.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { House } from './entities/house.entity';
 
 @Controller('houses')
+@ApiTags('Houses')
 export class HousesController {
   constructor(private readonly housesService: HousesService) {}
 
@@ -17,6 +20,7 @@ export class HousesController {
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
   @ApiBody({ type: CreateHouseDto })
+  @Serialize(House)
   create(@Body() createHouseDto: CreateHouseDto) {
     return this.housesService.create(createHouseDto);
   }

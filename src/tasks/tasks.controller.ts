@@ -6,8 +6,10 @@ import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { TaskDto } from '../tasks/dtos/task.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('tasks')
+@ApiTags('Tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
