@@ -22,6 +22,17 @@ export class UnauthorizedErrorResponseDto {
   message!: string;
 }
 
+export class ForbiddenErrorResponseDto {
+  @ApiProperty({ example: 404 })
+  statusCode!: number;
+
+  @ApiProperty({ example: 'Not Found' })
+  error!: string;
+
+  @ApiProperty({ example: 'Something not found' })
+  message!: string;
+}
+
 export class NotFoundErrorResponseDto {
   @ApiProperty({ example: 404 })
   statusCode!: number;

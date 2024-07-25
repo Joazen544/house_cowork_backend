@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateHouseDto } from './dto/create-house.dto';
+import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/update-house.dto';
 
 @Injectable()

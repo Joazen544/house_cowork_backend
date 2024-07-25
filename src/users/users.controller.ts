@@ -30,6 +30,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } 
 import { CreateUserResponseDto } from './dtos/response/create-user-response.dto';
 import {
   BadRequestErrorResponseDto,
+  ForbiddenErrorResponseDto,
   NotFoundErrorResponseDto,
   UnauthorizedErrorResponseDto,
 } from 'src/dto/errors/errors.dto';
@@ -49,7 +50,7 @@ export class UsersController {
   @ApiResponse({ status: 201, description: 'User created!', type: CreateUserResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiBody({ type: CreateUserDto })
-  async createUser(@Body(new ValidationPipe()) body: CreateUserDto, @Session() session: any) {
+  async create(@Body(new ValidationPipe()) body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signUp(body.email, body.password, body.name);
 
     session.userId = user.id;
@@ -87,10 +88,10 @@ export class UsersController {
   @ApiOperation({ summary: 'Find a user info' })
   @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
-  @ApiResponse({ status: 403, description: 'Can only find user info in family', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Can only find user info in family', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @Serialize(UserDto)
-  async findUser(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne({
       id,
     });
@@ -106,7 +107,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
-  updateUser(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
+  update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
     return this.usersService.update(user.id, body);
   }
 
