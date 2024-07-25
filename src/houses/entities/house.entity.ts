@@ -1,6 +1,7 @@
 import { Task } from 'src/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Rule } from './rule.entity';
 
 @Entity()
 export class House {
@@ -13,8 +14,8 @@ export class House {
   @Column()
   description!: string;
 
-  @Column()
-  rules!: string[];
+  @OneToMany(() => Rule, (rule) => rule.house)
+  rules!: Rule[];
 
   @ManyToMany(() => User, (user) => user.houses)
   users!: User[];

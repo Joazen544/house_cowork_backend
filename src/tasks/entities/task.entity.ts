@@ -19,19 +19,19 @@ export class Task {
   description!: string;
 
   @Column({
-    type: 'enum',
+    type: 'integer',
     enum: TaskPublicStatus,
     default: TaskPublicStatus.ALL,
   })
   publicStatus!: TaskPublicStatus;
 
   @Column({
-    type: 'enum',
+    type: 'integer',
     enum: TaskStatus,
   })
   status!: TaskStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   time!: string;
 
   @ManyToMany(() => User, (user) => user.assignedTasks)

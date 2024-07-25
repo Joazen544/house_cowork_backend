@@ -4,6 +4,8 @@ import { User } from '../users/entities/user.entity';
 import { Task } from '../tasks/entities/task.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { House } from 'src/houses/entities/house.entity';
+import { Rule } from 'src/houses/entities/rule.entity';
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
@@ -23,7 +25,7 @@ export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteCon
   }
 
   const normarlDatabaseProperties = {
-    entities: [User, Task],
+    entities: [User, Task, House, Rule],
     migrations: ['dist/db/migrations/*js'],
     synchronize: true,
     migration: true,
