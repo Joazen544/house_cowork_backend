@@ -83,6 +83,7 @@ export class UsersController {
   }
 
   @Get(':id/profile')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Find a user info' })
   @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
@@ -100,6 +101,7 @@ export class UsersController {
   }
 
   @Patch('/profile')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update profile' })
   @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
