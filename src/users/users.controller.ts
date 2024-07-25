@@ -121,14 +121,14 @@ export class UsersController {
   //   return this.usersService.remove(id);
   // }
 
-  @Get('who')
-  @Serialize(CreateUserResponseDto)
-  whoAmI(@CurrentUser() user: User) {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
+  // @Get('who')
+  // @Serialize(CreateUserResponseDto)
+  // whoAmI(@CurrentUser() user: User) {
+  //   if (!user) {
+  //     throw new UnauthorizedException();
+  //   }
 
-    const accessToken = 'asdf';
-    return { user: user, accessToken: accessToken };
-  }
+  //   const accessToken = 'asdf';
+  //   return { user: user, accessToken: accessToken };
+  // }
 }
