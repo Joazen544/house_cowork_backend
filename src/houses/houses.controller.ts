@@ -12,10 +12,10 @@ export class HousesController {
     return this.housesService.create(createHouseDto);
   }
 
-  @Get()
-  findAll() {
-    return this.housesService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.housesService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
