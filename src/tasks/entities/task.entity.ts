@@ -23,7 +23,7 @@ export class Task {
     enum: TaskPublicStatus,
     default: TaskPublicStatus.ALL,
   })
-  open!: TaskPublicStatus;
+  publicStatus!: TaskPublicStatus;
 
   @Column({
     type: 'enum',
