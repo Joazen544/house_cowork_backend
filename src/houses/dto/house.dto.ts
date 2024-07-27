@@ -1,8 +1,12 @@
-import { IsArray, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+import { ApiProperty, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserDto } from 'src/users/dtos/user.dto';
 
 export class HouseDto {
+  @ApiProperty({ example: 1 })
+  @IsNumber()
+  id!: number;
+
   @ApiProperty({ example: 'No 10 Floor 5' })
   @IsString()
   name!: string;

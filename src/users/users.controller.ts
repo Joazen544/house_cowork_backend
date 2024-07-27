@@ -34,6 +34,7 @@ import {
   NotFoundErrorResponseDto,
   UnauthorizedErrorResponseDto,
 } from 'src/dto/errors/errors.dto';
+import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -86,11 +87,11 @@ export class UsersController {
   @Get(':id/profile')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Find a user info' })
-  @ApiResponse({ status: 200, description: 'User info found!', type: UserDto })
+  @ApiResponse({ status: 200, description: 'User info found!', type: UserInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Can only find user info in family', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
-  @Serialize(UserDto)
+  @Serialize(UserInfoResponseDto)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne({
       id,
@@ -104,9 +105,10 @@ export class UsersController {
   @Patch('/profile')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update profile' })
-  @ApiResponse({ status: 200, description: 'User info updated!', type: UserDto })
+  @ApiResponse({ status: 200, description: 'User info updated!', type: UserInfoResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
-  @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to update user info.', type: UnauthorizedErrorResponseDto })
+  @Serialize(UserInfoResponseDto)
   update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
     return this.usersService.update(user.id, body);
   }

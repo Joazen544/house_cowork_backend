@@ -23,4 +23,12 @@ export class HousesService {
   remove(id: number) {
     return `This action removes a #${id} house`;
   }
+
+  findOneWithInvitation(invitationCode: string) {
+    return `This action looks for invitation first and if invitation not expired, will return house info`;
+  }
+
+  createJoinRequest(invitationCode: string) {
+    return 'This action create a join request.';
+  }
 }

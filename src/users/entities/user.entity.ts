@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, Unique } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 import { House } from 'src/houses/entities/house.entity';
+import { JoinRequest } from 'src/houses/entities/join-request.entity';
 
 @Entity()
 @Unique(['email'])
@@ -25,4 +26,7 @@ export class User {
 
   @ManyToMany(() => House, (house) => house.users)
   houses!: House[];
+
+  @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.user)
+  houseJoinRequests!: JoinRequest[];
 }

@@ -6,6 +6,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { House } from 'src/houses/entities/house.entity';
 import { Rule } from 'src/houses/entities/rule.entity';
+import { JoinRequest } from 'src/houses/entities/join-request.entity';
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
@@ -25,7 +26,7 @@ export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteCon
   }
 
   const normarlDatabaseProperties = {
-    entities: [User, Task, House, Rule],
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     migrations: ['dist/db/migrations/*js'],
     synchronize: true,
     migration: true,
