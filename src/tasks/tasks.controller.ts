@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../guards/auth.guard';
@@ -12,13 +12,14 @@ import {
   UnauthorizedErrorResponseDto,
 } from 'src/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
+import { Express } from 'express';
 
 @Controller('tasks')
 @ApiTags('Tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  @Post()
+  @Post('house/:houseId')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a task' })
@@ -31,4 +32,8 @@ export class TasksController {
   createTask(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User) {
     return this.tasksService.create(createTaskDto, user);
   }
+
+  // @Get()
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: 'Get all tasks of a house.' })
 }

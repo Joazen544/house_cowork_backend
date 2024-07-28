@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
@@ -19,6 +31,10 @@ import { SimpleResponseDto } from './dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { HouseMemberGuard } from 'src/guards/house-member.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { CurrentHouse } from './decorators/current-house.decorator';
+import { House } from './entities/house.entity';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -40,14 +56,15 @@ export class HousesController {
 
   @Get(':houseId')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard, HouseMemberGuard)
   @ApiOperation({ summary: 'Get a house info.' })
   @ApiResponse({ status: 200, description: 'House info got.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get house info.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get house info.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseInfoResponseDto)
-  findOne(@Param('houseId') houseId: string) {
-    return this.housesService.findOne(+houseId);
+  findOne(@CurrentHouse() house: House) {
+    return { house };
   }
 
   @Patch(':houseId')

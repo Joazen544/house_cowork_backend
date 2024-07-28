@@ -2,9 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from 'src/users/entities/user.entity';
+import { House } from './entities/house.entity';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class HousesService {
+  constructor(@InjectRepository(House) private repo: Repository<House>) {}
+
   create(createHouseDto: CreateHouseDto) {
     return 'This action adds a new house';
   }
@@ -13,8 +18,11 @@ export class HousesService {
     return `This action returns all houses`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} house`;
+  findOne(attrs: FindOptionsWhere<User>) {
+    if (Object.values(attrs).length === 0) {
+      return null;
+    }
+    return this.repo.findOneBy(attrs);
   }
 
   update(id: number, updateHouseDto: UpdateHouseDto) {
@@ -35,5 +43,9 @@ export class HousesService {
 
   leave(user: User) {
     return 'This action will make user leave a house.';
+  }
+
+  isUserMemberOfHouse(user: User, house: House) {
+    return 'This action return if user member of a house.';
   }
 }
