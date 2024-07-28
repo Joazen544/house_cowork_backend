@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class HousesService {
@@ -30,5 +31,9 @@ export class HousesService {
 
   createJoinRequest(invitationCode: string) {
     return 'This action create a join request.';
+  }
+
+  leave(user: User) {
+    return 'This action will make user leave a house.';
   }
 }

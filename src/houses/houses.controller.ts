@@ -15,8 +15,10 @@ import { HouseInfoResponseDto } from './dto/response/house-info-response.dto';
 import { CreateHouseInvitationResponseDto } from './dto/response/create-house-invitation-response.dto';
 import { CreateHouseJoinRequestResponseDto } from './dto/response/create-house-join-request-response.dto';
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
-import { AnswerJoinRequestResponseDto } from './dto/response/answer-join-request-response.dto';
+import { SimpleResponseDto } from './dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
+import { CurrentUser } from 'src/users/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -116,18 +118,24 @@ export class HousesController {
   @Patch('joinRequests/:joinRequestId')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Accept or reject a request.' })
-  @ApiResponse({ status: 200, description: 'Request accepted or rejected.', type: AnswerJoinRequestResponseDto })
+  @ApiResponse({ status: 200, description: 'Request accepted or rejected.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to answer join request.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can answer.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: AnswerJoinRequestDto })
-  @Serialize(AnswerJoinRequestResponseDto)
+  @Serialize(SimpleResponseDto)
   answerJoinRequest(@Query('invitationCode') invitationCode: string) {
     return this.housesService.createJoinRequest(invitationCode);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.housesService.remove(+id);
+  @Delete(':houseId/leave')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Leave a house.' })
+  @ApiResponse({ status: 200, description: 'Left a house.', type: SimpleResponseDto })
+  @ApiResponse({ status: 401, description: 'Need signin to leave house.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only house member can leave.', type: ForbiddenErrorResponseDto })
+  @Serialize(SimpleResponseDto)
+  leaveHouse(@CurrentUser() user: User) {
+    return this.housesService.leave(user);
   }
 }
