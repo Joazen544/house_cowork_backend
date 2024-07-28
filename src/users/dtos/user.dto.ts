@@ -1,20 +1,25 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString } from 'class-validator';
 
 export class UserDto {
-  @Expose()
   @ApiProperty({ example: 1 })
+  @IsNumber()
+  @Expose()
   id!: number;
 
-  @Expose()
   @ApiProperty({ example: 'Kevin' })
+  @IsString()
+  @Expose()
   name!: string;
 
-  @Expose()
   @ApiProperty({ example: 'Handsome boy' })
+  @IsString()
+  @Expose()
   nickName!: string;
 
-  @Expose()
   @ApiProperty({ example: 'https://image/url' })
+  @IsString()
+  @Expose()
   avatar!: string;
 }

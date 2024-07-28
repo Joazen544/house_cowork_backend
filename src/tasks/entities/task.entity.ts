@@ -32,11 +32,11 @@ export class Task {
   status!: TaskStatus;
 
   @Column({ type: 'datetime' })
-  time!: string;
+  dueTime!: Date;
 
   @ManyToMany(() => User, (user) => user.assignedTasks)
   @JoinTable()
-  assignedToUsers!: User[];
+  assignees!: User[];
 
   @ManyToOne(() => House, (house) => house.tasks)
   house!: House;

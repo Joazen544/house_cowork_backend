@@ -21,7 +21,7 @@ export class User {
   @OneToMany(() => Task, (task) => task.owner)
   ownedTasks!: Task[];
 
-  @ManyToMany(() => Task, (task) => task.assignedToUsers)
+  @ManyToMany(() => Task, (task) => task.assignees)
   assignedTasks!: Task[];
 
   @ManyToMany(() => House, (house) => house.users)
