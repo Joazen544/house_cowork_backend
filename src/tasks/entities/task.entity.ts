@@ -1,8 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from 'src/houses/entities/house.entity';
-import { TaskStatus } from './task-status.enum';
-import { TaskPublicStatus } from './task-public-status.enum';
+
+export enum TaskPublicStatus {
+  ALL = 0,
+  ASSIGNEE = 1,
+}
+
+export enum TaskStatus {
+  OPEN = 0,
+  IN_PROGRESS = 1,
+  DONE = 2,
+  CANCELED = 3,
+}
 
 @Entity()
 export class Task {
@@ -28,6 +38,7 @@ export class Task {
   @Column({
     type: 'integer',
     enum: TaskStatus,
+    default: TaskStatus.OPEN,
   })
   status!: TaskStatus;
 

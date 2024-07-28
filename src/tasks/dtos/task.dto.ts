@@ -3,9 +3,8 @@ import { User } from '../../users/entities/user.entity';
 import { UserDto } from 'src/users/dtos/user.dto';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TaskPublicStatus } from '../entities/task-public-status.enum';
-import { TaskStatus } from '../entities/task-status.enum';
 import { HouseDto } from 'src/houses/dto/house.dto';
+import { TaskPublicStatus, TaskStatus } from '../entities/task.entity';
 
 export class TaskDto {
   @Expose()
