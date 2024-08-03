@@ -15,6 +15,8 @@ import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto'
 import { Express } from 'express';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
 import { TasksResponseDto } from './dtos/response/tasks-response.dto';
+import { CurrentHouse } from '../houses/decorators/current-house.decorator';
+import { House } from '../houses/entities/house.entity';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -45,7 +47,7 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
-  getTasks(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string) {
+  getTasks(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
     let startDate: Date;
 
     if (timeStart) {
@@ -56,6 +58,6 @@ export class TasksController {
     }
     const endDate = timeEnd ? new Date(timeEnd) : null;
 
-    return this.tasksService.findByDatePeriod(startDate, endDate);
+    return this.tasksService.findByDatePeriod(startDate, endDate, house.id);
   }
 }

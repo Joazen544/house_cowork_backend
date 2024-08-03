@@ -26,13 +26,14 @@ export class TasksService {
     return this.repo.find({ where: attrs });
   }
 
-  findByDatePeriod(startDate: Date, endDate: Date | null) {
+  findByDatePeriod(startDate: Date, endDate: Date | null, houseId: number) {
     const queryBuilder = this.repo.createQueryBuilder('task');
 
+    queryBuilder.where('task.houseId = :houseId', { houseId });
     if (endDate) {
-      queryBuilder.where('task.dueTime BETWEEN :startDate AND :endDate', { startDate, endDate });
+      queryBuilder.andWhere('task.dueTime BETWEEN :startDate AND :endDate', { startDate, endDate });
     } else {
-      queryBuilder.where('task.dueTime >= :startDate', { startDate });
+      queryBuilder.andWhere('task.dueTime >= :startDate', { startDate });
     }
 
     return queryBuilder.getMany();
