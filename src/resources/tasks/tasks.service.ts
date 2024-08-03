@@ -4,6 +4,7 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
 import { User } from 'src/resources/users/entities/user.entity';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
+import { House } from '../houses/entities/house.entity';
 
 @Injectable()
 export class TasksService {
@@ -26,10 +27,10 @@ export class TasksService {
     return this.repo.find({ where: attrs });
   }
 
-  findByDatePeriod(startDate: Date, endDate: Date | null, houseId: number) {
+  findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
     const queryBuilder = this.repo.createQueryBuilder('task');
 
-    queryBuilder.where('task.houseId = :houseId', { houseId });
+    queryBuilder.where('task.houseId = :houseId', { houseId: house.id });
     if (endDate) {
       queryBuilder.andWhere('task.dueTime BETWEEN :startDate AND :endDate', { startDate, endDate });
     } else {

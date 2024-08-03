@@ -58,6 +58,6 @@ export class TasksController {
     }
     const endDate = timeEnd ? new Date(timeEnd) : null;
 
-    return this.tasksService.findByDatePeriod(startDate, endDate, house.id);
+    return this.tasksService.findByDatePeriod(startDate, endDate, house);
   }
 }
