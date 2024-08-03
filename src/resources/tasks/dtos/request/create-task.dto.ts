@@ -15,15 +15,17 @@ export class CreateTaskDto {
 
   @IsEnum(TaskPublicStatus)
   @IsNotEmpty()
-  @ApiProperty({ example: 0, enum: TaskPublicStatus })
+  @ApiProperty({ description: '0 is for open to all.\n 1 is only for assignees.', example: 0, enum: TaskPublicStatus })
   publicStatus!: TaskPublicStatus;
 
   @IsDate()
   @IsNotEmpty()
+  @ApiProperty({ example: '2024-07-22' })
   @Type(() => Date)
   dueTime!: Date;
 
   @IsArray()
+  @ApiProperty({ example: [7, 10] })
   @IsNumber({}, { each: true })
   assigneesId!: number[];
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { TaskPublicStatus } from 'src/resources/tasks/entities/task.entity';
+import { TaskPublicStatus, TaskStatus } from 'src/resources/tasks/entities/task.entity';
 
 export class UpdateTaskDto {
   @IsString()
