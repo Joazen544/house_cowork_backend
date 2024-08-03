@@ -49,4 +49,9 @@ export class TasksService {
     Object.assign(task, updateTaskDto);
     return this.repo.save(task);
   }
+
+  async delete(task: Task) {
+    await this.repo.remove(task);
+    return true;
+  }
 }

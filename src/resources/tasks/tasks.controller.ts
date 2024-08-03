@@ -1,4 +1,16 @@
-import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req, Query, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Req,
+  Query,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -21,6 +33,7 @@ import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
 import { CurrentTask } from './decorators/current-task.decorator';
 import { Task } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
+import { SimpleResponseDto } from '../houses/dto/response/simple-response.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -74,5 +87,16 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only task owner can update the task.', type: ForbiddenErrorResponseDto })
   update(@Body() updateTaskDto: UpdateTaskDto, @CurrentTask() task: Task) {
     return this.tasksService.update(task, updateTaskDto);
+  }
+
+  @Delete(':taskId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, TaskOwnerGuard)
+  @ApiOperation({ summary: 'Delete a task.' })
+  @ApiResponse({ status: 200, description: 'Task deleted.', type: SimpleResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to delete task.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only task owner can delete the task.', type: ForbiddenErrorResponseDto })
+  delete(@CurrentTask() task: Task) {
+    return this.tasksService.delete(task);
   }
 }
