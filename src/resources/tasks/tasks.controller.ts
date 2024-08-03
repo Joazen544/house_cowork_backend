@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req, Query, Patch } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -17,6 +17,10 @@ import { HouseMemberGuard } from 'src/guards/house-member.guard';
 import { TasksResponseDto } from './dtos/response/tasks-response.dto';
 import { CurrentHouse } from '../houses/decorators/current-house.decorator';
 import { House } from '../houses/entities/house.entity';
+import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
+import { CurrentTask } from './decorators/current-task.decorator';
+import { Task } from './entities/task.entity';
+import { UpdateTaskDto } from './dtos/request/update-task.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -47,7 +51,7 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
-  getTasks(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
+  find(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
     let startDate: Date;
 
     if (timeStart) {
@@ -59,5 +63,16 @@ export class TasksController {
     const endDate = timeEnd ? new Date(timeEnd) : null;
 
     return this.tasksService.findByDatePeriod(startDate, endDate, house);
+  }
+
+  @Patch(':taskId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, TaskOwnerGuard)
+  @ApiOperation({ summary: 'Update a task.' })
+  @ApiResponse({ status: 200, description: 'Task updated.', type: CreateTaskResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to update task.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only task owner can update the task.', type: ForbiddenErrorResponseDto })
+  update(@Body() updateTaskDto: UpdateTaskDto, @CurrentTask() task: Task) {
+    return this.tasksService.update(task, updateTaskDto);
   }
 }

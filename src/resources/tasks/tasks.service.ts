@@ -5,6 +5,7 @@ import { Task } from './entities/task.entity';
 import { User } from 'src/resources/users/entities/user.entity';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { House } from '../houses/entities/house.entity';
+import { UpdateTaskDto } from './dtos/request/update-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -38,5 +39,14 @@ export class TasksService {
     }
 
     return queryBuilder.getMany();
+  }
+
+  isUserOwnerOfTask(user: User, task: Task) {
+    return task.owner === user;
+  }
+
+  update(task: Task, updateTaskDto: UpdateTaskDto) {
+    Object.assign(task, updateTaskDto);
+    return this.repo.save(task);
   }
 }
