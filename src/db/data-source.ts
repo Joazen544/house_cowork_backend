@@ -4,9 +4,9 @@ import { User } from '../resources/users/entities/user.entity';
 import { Task } from '../resources/tasks/entities/task.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { House } from 'src/houses/entities/house.entity';
-import { Rule } from 'src/houses/entities/rule.entity';
-import { JoinRequest } from 'src/houses/entities/join-request.entity';
+import { House } from 'src/resources/houses/entities/house.entity';
+import { Rule } from 'src/resources/houses/entities/rule.entity';
+import { JoinRequest } from 'src/resources/houses/entities/join-request.entity';
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';

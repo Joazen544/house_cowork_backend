@@ -8,7 +8,7 @@ import { TasksModule } from './resources/tasks/tasks.module';
 import { APP_PIPE } from '@nestjs/core';
 import { dataSourceOptions } from './db/data-source';
 import { DataSource } from 'typeorm';
-import { HousesModule } from './houses/houses.module';
+import { HousesModule } from './resources/houses/houses.module';
 const cookieSession = require('cookie-session');
 
 @Module({

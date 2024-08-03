@@ -3,7 +3,7 @@ import { User } from '../../users/entities/user.entity';
 import { UserDto } from 'src/resources/users/dtos/user.dto';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { HouseDto } from 'src/houses/dto/house.dto';
+import { HouseDto } from 'src/resources/houses/dto/house.dto';
 import { TaskPublicStatus, TaskStatus } from '../entities/task.entity';
 
 export class TaskDto {

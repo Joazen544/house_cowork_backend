@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, Unique } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
-import { House } from 'src/houses/entities/house.entity';
-import { JoinRequest } from 'src/houses/entities/join-request.entity';
+import { House } from 'src/resources/houses/entities/house.entity';
+import { JoinRequest } from 'src/resources/houses/entities/join-request.entity';
 
 @Entity()
 @Unique(['email'])
