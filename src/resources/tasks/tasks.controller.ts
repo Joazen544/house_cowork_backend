@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req, Query } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -14,6 +14,7 @@ import {
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
 import { Express } from 'express';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
+import { TasksResponseDto } from './dtos/response/tasks-response.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -35,7 +36,18 @@ export class TasksController {
     return this.tasksService.create(createTaskDto, user);
   }
 
-  // @Get()
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Get all tasks of a house.' })
+  @Get('house/:houseId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, HouseMemberGuard)
+  @ApiOperation({ summary: 'Get tasks from a house.' })
+  @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
+  @ApiOperation({ summary: 'Get all tasks of a house.' })
+  getTasks(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string) {
+    const startDate = new Date(timeStart);
+    const endDate = new Date(timeEnd);
+
+    return this.tasksService.findByDatePeriod(startDate, endDate);
+  }
 }
