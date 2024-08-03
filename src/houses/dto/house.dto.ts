@@ -1,6 +1,6 @@
 import { IsArray, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/users/dtos/user.dto';
+import { UserDto } from 'src/resources/users/dtos/user.dto';
 import { Expose } from 'class-transformer';
 
 export class HouseDto {

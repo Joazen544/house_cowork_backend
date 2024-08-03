@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './resources/users/users.module';
 import { TasksModule } from './resources/tasks/tasks.module';
 import { APP_PIPE } from '@nestjs/core';
 import { dataSourceOptions } from './db/data-source';

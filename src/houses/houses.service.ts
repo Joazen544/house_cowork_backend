@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './entities/house.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';

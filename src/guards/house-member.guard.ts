@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../resources/users/users.service';
 import { HousesService } from '../houses/houses.service';
 
 @Injectable()

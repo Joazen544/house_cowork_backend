@@ -1,4 +1,4 @@
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/resources/users/entities/user.entity';
 import { House } from 'src/houses/entities/house.entity';
 
 declare global {

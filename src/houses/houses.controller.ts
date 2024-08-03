@@ -29,8 +29,8 @@ import { CreateHouseJoinRequestResponseDto } from './dto/response/create-house-j
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 import { SimpleResponseDto } from './dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { CurrentUser } from 'src/resources/users/decorators/current-user.decorator';
+import { User } from 'src/resources/users/entities/user.entity';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';

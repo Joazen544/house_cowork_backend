@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, Unique } from 'typeorm';
-import { Task } from '../../resources/tasks/entities/task.entity';
+import { Task } from '../../tasks/entities/task.entity';
 import { House } from 'src/houses/entities/house.entity';
 import { JoinRequest } from 'src/houses/entities/join-request.entity';
 

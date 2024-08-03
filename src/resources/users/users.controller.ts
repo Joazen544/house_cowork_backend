@@ -19,11 +19,11 @@ import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/request/create-user.dto';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
-import { Serialize } from '../interceptors/serialize.interceptor';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 import { User } from './entities/user.entity';
 import { SigninUserDto } from './dtos/request/signin-user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard } from '../guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dtos/response/create-user-response.dto';
 import {
