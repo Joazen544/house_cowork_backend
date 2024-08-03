@@ -26,10 +26,15 @@ export class TasksService {
     return this.repo.find({ where: attrs });
   }
 
-  findByDatePeriod(startTime: Date, endTime: Date) {
-    return this.repo
-      .createQueryBuilder('task')
-      .where('task.dueTime BETWEEN :startDate AND :endDate', { startTime, endTime }) // 构建查询条件
-      .getMany();
+  findByDatePeriod(startDate: Date, endDate: Date | null) {
+    const queryBuilder = this.repo.createQueryBuilder('task');
+
+    if (endDate) {
+      queryBuilder.where('task.dueTime BETWEEN :startDate AND :endDate', { startDate, endDate });
+    } else {
+      queryBuilder.where('task.dueTime >= :startDate', { startDate });
+    }
+
+    return queryBuilder.getMany();
   }
 }

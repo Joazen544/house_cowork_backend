@@ -5,7 +5,7 @@ import { AuthGuard } from '../../guards/auth.guard';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from 'src/resources/users/entities/user.entity';
 import { Serialize } from '../../interceptors/serialize.interceptor';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   BadRequestErrorResponseDto,
   ForbiddenErrorResponseDto,
@@ -40,13 +40,21 @@ export class TasksController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard, HouseMemberGuard)
   @ApiOperation({ summary: 'Get tasks from a house.' })
+  @ApiQuery({ name: 'timeStart', required: false, type: String, example: '2024-07-11' })
+  @ApiQuery({ name: 'timeEnd', required: false, type: String, example: '2024-07-15' })
   @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
-  @ApiOperation({ summary: 'Get all tasks of a house.' })
   getTasks(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string) {
-    const startDate = new Date(timeStart);
-    const endDate = new Date(timeEnd);
+    let startDate: Date;
+
+    if (timeStart) {
+      startDate = new Date(timeStart);
+    } else {
+      startDate = new Date();
+      startDate.setDate(startDate.getDate() - 40);
+    }
+    const endDate = timeEnd ? new Date(timeEnd) : null;
 
     return this.tasksService.findByDatePeriod(startDate, endDate);
   }
