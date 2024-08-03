@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    request.user = user; // 将用户信息附加到 request 对象上
+    request.user = user;
     return true;
   }
 }

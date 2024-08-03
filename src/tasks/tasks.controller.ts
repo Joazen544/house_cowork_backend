@@ -13,6 +13,7 @@ import {
 } from 'src/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
 import { Express } from 'express';
+import { HouseMemberGuard } from 'src/guards/house-member.guard';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -22,6 +23,7 @@ export class TasksController {
   @Post('house/:houseId')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
+  @UseGuards(AuthGuard, HouseMemberGuard)
   @ApiOperation({ summary: 'Create a task' })
   @ApiResponse({ status: 201, description: 'Task created.', type: CreateTaskResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })

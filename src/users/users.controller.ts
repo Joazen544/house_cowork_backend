@@ -76,6 +76,7 @@ export class UsersController {
 
   @Post('signout')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Sign out' })
   @ApiResponse({ status: 200, description: 'User signout!' })
   signOut(@Session() session: any) {
@@ -84,6 +85,7 @@ export class UsersController {
 
   @Get(':id/profile')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Find a user info' })
   @ApiResponse({ status: 200, description: 'User info found!', type: UserInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get user info.', type: UnauthorizedErrorResponseDto })
@@ -102,6 +104,7 @@ export class UsersController {
 
   @Patch('/profile')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update profile' })
   @ApiResponse({ status: 200, description: 'User info updated!', type: UserInfoResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
