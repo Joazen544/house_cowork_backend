@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User } from '../users/entities/user.entity';
-import { Task } from '../tasks/entities/task.entity';
+import { Task } from '../resources/tasks/entities/task.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { House } from 'src/houses/entities/house.entity';

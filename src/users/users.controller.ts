@@ -79,6 +79,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Sign out' })
   @ApiResponse({ status: 200, description: 'User signout!' })
+  @ApiResponse({ status: 401, description: 'Needs sign in to sign out.', type: UnauthorizedErrorResponseDto })
   signOut(@Session() session: any) {
     session.userId = null;
   }

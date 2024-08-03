@@ -1,10 +1,10 @@
 import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Req } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
-import { AuthGuard } from '../guards/auth.guard';
-import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
+import { CurrentUser } from '../../users/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
-import { Serialize } from '../interceptors/serialize.interceptor';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   BadRequestErrorResponseDto,

@@ -1,5 +1,5 @@
 import { Expose, Transform, plainToClass } from 'class-transformer';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../../users/entities/user.entity';
 import { UserDto } from 'src/users/dtos/user.dto';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';

@@ -1,4 +1,4 @@
-import { Task } from 'src/tasks/entities/task.entity';
+import { Task } from 'src/resources/tasks/entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Rule } from './rule.entity';
