@@ -1,6 +1,6 @@
 import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './house.entity';
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class JoinRequest {

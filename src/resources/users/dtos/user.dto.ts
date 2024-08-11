@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsEmail } from 'class-validator';
 
 export class UserDto {
   @ApiProperty({ example: 1 })
@@ -12,6 +12,11 @@ export class UserDto {
   @IsString()
   @Expose()
   name!: string;
+
+  @ApiProperty({ example: 'kevin@gmail.com' })
+  @IsEmail()
+  @Expose()
+  email!: string;
 
   @ApiProperty({ example: 'Handsome boy' })
   @IsString()

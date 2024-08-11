@@ -1,8 +1,7 @@
 import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Query, Patch, Delete } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
-import { AuthGuard } from '../../guards/auth.guard';
-import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from 'src/resources/users/entities/user.entity';
 import { Serialize } from '../../interceptors/serialize.interceptor';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -30,7 +29,7 @@ export class TasksController {
   @Post('house/:houseId')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Create a task' })
   @ApiResponse({ status: 201, description: 'Task created.', type: CreateTaskResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
@@ -44,7 +43,7 @@ export class TasksController {
 
   @Get('house/:houseId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Get tasks from a house.' })
   @ApiQuery({ name: 'timeStart', required: false, type: String, example: '2024-07-11' })
   @ApiQuery({ name: 'timeEnd', required: false, type: String, example: '2024-07-15' })
@@ -67,7 +66,7 @@ export class TasksController {
 
   @Patch(':taskId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, TaskOwnerGuard)
+  @UseGuards(TaskOwnerGuard)
   @ApiOperation({ summary: 'Update a task.' })
   @ApiResponse({ status: 200, description: 'Task updated.', type: CreateTaskResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to update task.', type: UnauthorizedErrorResponseDto })
@@ -78,7 +77,7 @@ export class TasksController {
 
   @Delete(':taskId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, TaskOwnerGuard)
+  @UseGuards(TaskOwnerGuard)
   @ApiOperation({ summary: 'Delete a task.' })
   @ApiResponse({ status: 200, description: 'Task deleted.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to delete task.', type: UnauthorizedErrorResponseDto })

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../user.dto';
+import { UserDto } from '../../../users/dtos/user.dto';
 import { Expose } from 'class-transformer';
 
 export class CreateUserResponseDto {

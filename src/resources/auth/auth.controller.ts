@@ -1,0 +1,58 @@
+import { Body, Controller, Session, Post, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { CreateUserDto } from './dto/request/create-user.dto';
+import {
+  BadRequestErrorResponseDto,
+  NotFoundErrorResponseDto,
+  UnauthorizedErrorResponseDto,
+} from 'src/dto/errors/errors.dto';
+import { SigninUserDto } from './dto/request/signin-user.dto';
+import { Public } from './decorators/public.decorator';
+
+@Controller('auth')
+@ApiTags('Auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('signup')
+  @Public()
+  @HttpCode(HttpStatus.CREATED)
+  @Serialize(CreateUserResponseDto)
+  @ApiOperation({ summary: 'Create a user' })
+  @ApiResponse({ status: 201, description: 'User created!', type: CreateUserResponseDto })
+  @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
+  @ApiBody({ type: CreateUserDto })
+  async create(@Body(new ValidationPipe()) body: CreateUserDto, @Session() session: any) {
+    const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name);
+
+    session.userId = user.id;
+
+    return { user, accessToken };
+  }
+
+  @Post('signin')
+  @Public()
+  @Serialize(CreateUserResponseDto)
+  @ApiOperation({ summary: 'Sign in' })
+  @ApiResponse({ status: 200, description: 'User signin!', type: CreateUserResponseDto })
+  @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
+  @ApiBody({ type: SigninUserDto })
+  async signin(@Body() body: SigninUserDto, @Session() session: any) {
+    const { user, accessToken } = await this.authService.signIn(body.email, body.password);
+    session.userId = user.id;
+
+    return { user: user, accessToken: accessToken };
+  }
+
+  @Post('signout')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Sign out' })
+  @ApiResponse({ status: 200, description: 'User signout!' })
+  @ApiResponse({ status: 401, description: 'Needs sign in to sign out.', type: UnauthorizedErrorResponseDto })
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
+}

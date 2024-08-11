@@ -29,10 +29,9 @@ import { CreateHouseJoinRequestResponseDto } from './dto/response/create-house-j
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 import { SimpleResponseDto } from './dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
-import { CurrentUser } from 'src/resources/users/decorators/current-user.decorator';
+import { CurrentUser } from 'src/resources/auth/decorators/current-user.decorator';
 import { User } from 'src/resources/users/entities/user.entity';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
 
@@ -44,7 +43,6 @@ export class HousesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create a house' })
   @ApiResponse({ status: 201, description: 'House created.', type: CreateHouseResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
@@ -57,7 +55,7 @@ export class HousesController {
 
   @Get(':houseId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Get a house info.' })
   @ApiResponse({ status: 200, description: 'House info got.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get house info.', type: UnauthorizedErrorResponseDto })
@@ -70,7 +68,7 @@ export class HousesController {
 
   @Patch(':houseId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Update house info.' })
   @ApiResponse({ status: 200, description: 'House info updated.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to update house info.', type: UnauthorizedErrorResponseDto })
@@ -85,7 +83,7 @@ export class HousesController {
   @Post(':houseId/invitations')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Create a house invitation' })
   @ApiResponse({ status: 201, description: 'House invitation created.', type: CreateHouseInvitationResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to create invitation.', type: UnauthorizedErrorResponseDto })
@@ -98,7 +96,7 @@ export class HousesController {
 
   @Get('introduction')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Get house info from invitation.' })
   @ApiResponse({ status: 200, description: 'House info got.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get introduction.', type: UnauthorizedErrorResponseDto })
@@ -113,7 +111,7 @@ export class HousesController {
   @Post('joinRequests')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Create a house join request.' })
   @ApiResponse({ status: 201, description: 'House join request created.', type: CreateHouseJoinRequestResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
@@ -127,7 +125,7 @@ export class HousesController {
 
   @Get(':houseId/joinRequests')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Get all house join requests.' })
   @ApiResponse({ status: 200, description: 'House join requests got.', type: HouseJoinRequestsResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
@@ -140,7 +138,7 @@ export class HousesController {
 
   @Patch('joinRequests/:joinRequestId')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Accept or reject a request.' })
   @ApiResponse({ status: 200, description: 'Request accepted or rejected.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to answer join request.', type: UnauthorizedErrorResponseDto })
@@ -154,7 +152,7 @@ export class HousesController {
 
   @Delete(':houseId/leave')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, HouseMemberGuard)
+  @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Leave a house.' })
   @ApiResponse({ status: 200, description: 'Left a house.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to leave house.', type: UnauthorizedErrorResponseDto })

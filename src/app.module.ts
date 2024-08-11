@@ -5,10 +5,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './resources/users/users.module';
 import { TasksModule } from './resources/tasks/tasks.module';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { dataSourceOptions } from './db/data-source';
 import { DataSource } from 'typeorm';
 import { HousesModule } from './resources/houses/houses.module';
+import { AuthModule } from './resources/auth/auth.module';
+import { AuthGuard } from './guards/auth.guard';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -32,7 +34,7 @@ const cookieSession = require('cookie-session');
         return dataSource;
       },
     }),
-
+    AuthModule,
     UsersModule,
     TasksModule,
     HousesModule,
@@ -43,6 +45,10 @@ const cookieSession = require('cookie-session');
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({ whitelist: true }),
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
