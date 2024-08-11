@@ -1,16 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  HttpCode,
-  HttpStatus,
-  Get,
-  Req,
-  Query,
-  Patch,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Query, Patch, Delete } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -24,7 +12,6 @@ import {
   UnauthorizedErrorResponseDto,
 } from 'src/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
-import { Express } from 'express';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
 import { TasksResponseDto } from './dtos/response/tasks-response.dto';
 import { CurrentHouse } from '../houses/decorators/current-house.decorator';
