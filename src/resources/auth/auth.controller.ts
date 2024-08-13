@@ -1,14 +1,10 @@
-import { Body, Controller, Session, Post, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto } from './dto/request/create-user.dto';
-import {
-  BadRequestErrorResponseDto,
-  NotFoundErrorResponseDto,
-  UnauthorizedErrorResponseDto,
-} from 'src/dto/errors/errors.dto';
+import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from 'src/dto/errors/errors.dto';
 import { SigninUserDto } from './dto/request/signin-user.dto';
 import { Public } from './decorators/public.decorator';
 
