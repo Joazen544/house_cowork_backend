@@ -38,9 +38,8 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'User signin!', type: CreateUserResponseDto })
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: SigninUserDto })
-  async signin(@Body() body: SigninUserDto, @Session() session: any) {
+  async signin(@Body() body: SigninUserDto) {
     const { user, accessToken } = await this.authService.signIn(body.email, body.password);
-    session.userId = user.id;
 
     return { user: user, accessToken: accessToken };
   }
