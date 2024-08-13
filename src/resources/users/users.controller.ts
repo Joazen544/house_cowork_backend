@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, NotFoundException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
 import { Serialize } from '../../interceptors/serialize.interceptor';
@@ -26,12 +35,15 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Can only find user info in family', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @Serialize(UserInfoResponseDto)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOne({
-      id,
-    });
-    if (!user) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+    const targetUser = await this.usersService.findOne({ id });
+    if (!targetUser) {
       throw new NotFoundException('user not found');
+    }
+
+    const isInSameHouse = this.usersService.areUsersInSameHouse(user, targetUser);
+    if (!isInSameHouse) {
+      throw new ForbiddenException('Can only find user info in family');
     }
     return user;
   }

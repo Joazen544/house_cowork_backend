@@ -40,4 +40,8 @@ export class UsersService {
     }
     return this.repo.remove(user);
   }
+
+  areUsersInSameHouse(user1: User, user2: User) {
+    return user1.houses.some((house) => user2.houses.includes(house));
+  }
 }
