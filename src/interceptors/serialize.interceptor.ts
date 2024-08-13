@@ -1,9 +1,9 @@
 import { UseInterceptors, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { map } from 'rxjs/operators';
-import { plainToClass } from 'class-transformer';
+import { ClassTransformOptions, plainToClass } from 'class-transformer';
 
 interface ClassConstructor {
-  new (...args: any[]): {};
+  new (...args: any[]): object;
 }
 
 export function Serialize(dto: ClassConstructor) {
@@ -15,9 +15,12 @@ export class SerializeInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
       map((data: any) => {
-        return plainToClass(this.dto, data, {
+        const options: ClassTransformOptions = {
           excludeExtraneousValues: true,
-        });
+          enableImplicitConversion: true,
+          exposeDefaultValues: true,
+        };
+        return plainToClass(this.dto, data, options);
       }),
     );
   }
