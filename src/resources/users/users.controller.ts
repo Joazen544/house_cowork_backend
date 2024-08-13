@@ -36,6 +36,10 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @Serialize(UserInfoResponseDto)
   async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
+    if (id === user.id) {
+      return user;
+    }
+
     const targetUser = await this.usersService.findOne({ id });
     if (!targetUser) {
       throw new NotFoundException('user not found');
