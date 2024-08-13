@@ -25,10 +25,8 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User created!', type: CreateUserResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiBody({ type: CreateUserDto })
-  async create(@Body(new ValidationPipe()) body: CreateUserDto, @Session() session: any) {
+  async create(@Body(new ValidationPipe()) body: CreateUserDto) {
     const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name);
-
-    session.userId = user.id;
 
     return { user, accessToken };
   }
