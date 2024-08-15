@@ -11,6 +11,7 @@ import { DataSource } from 'typeorm';
 import { HousesModule } from './resources/houses/houses.module';
 import { AuthModule } from './resources/auth/auth.module';
 import { AuthGuard } from './guards/auth.guard';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
 @Module({
