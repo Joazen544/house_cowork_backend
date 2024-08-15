@@ -77,7 +77,7 @@ export class HousesController {
   @ApiBody({ type: UpdateHouseDto })
   @Serialize(HouseInfoResponseDto)
   update(@CurrentHouse() house: House, @Body() updateHouseDto: UpdateHouseDto) {
-    return this.housesService.update(house, updateHouseDto);
+    return { house: this.housesService.update(house, updateHouseDto) };
   }
 
   @Post(':houseId/invitations')
