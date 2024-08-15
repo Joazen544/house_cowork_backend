@@ -3,6 +3,7 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Rule } from './rule.entity';
 import { JoinRequest } from './join-request.entity';
+import { Invitation } from './invitation.entity';
 
 @Entity()
 export class House {
@@ -26,4 +27,7 @@ export class House {
 
   @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.house)
   joinRequests!: JoinRequest[];
+
+  @OneToMany(() => Invitation, (invitation) => invitation.house)
+  invitations!: Invitation[];
 }
