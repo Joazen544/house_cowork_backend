@@ -26,7 +26,7 @@ export class UsersService {
 
   async update(user: User, attrs: Partial<User>) {
     Object.assign(user, attrs);
-    return this.repo.save(user);
+    return await this.repo.save(user);
   }
 
   async remove(id: number) {
