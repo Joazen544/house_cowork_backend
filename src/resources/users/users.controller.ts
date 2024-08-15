@@ -60,7 +60,7 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Needs sign in to update user info.', type: UnauthorizedErrorResponseDto })
   @Serialize(UserInfoResponseDto)
   update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
-    return this.usersService.update(user.id, body);
+    return this.usersService.update(user, body);
   }
 
   // @Get()

@@ -24,11 +24,7 @@ export class UsersService {
     return this.repo.find({ where: { email } });
   }
 
-  async update(id: number, attrs: Partial<User>) {
-    const user = await this.findOne({ id });
-    if (!user) {
-      throw new NotFoundException('user not found');
-    }
+  async update(user: User, attrs: Partial<User>) {
     Object.assign(user, attrs);
     return this.repo.save(user);
   }
