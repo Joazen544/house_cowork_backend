@@ -49,8 +49,8 @@ export class HousesController {
   @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
   @ApiBody({ type: CreateHouseDto })
   @Serialize(CreateHouseResponseDto)
-  create(@Body() createHouseDto: CreateHouseDto) {
-    return this.housesService.create(createHouseDto);
+  create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
+    return this.housesService.create(user, createHouseDto);
   }
 
   @Get(':houseId')
@@ -90,8 +90,8 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only house member can invite.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(CreateHouseInvitationResponseDto)
-  createInvitation(@Body() createHouseDto: CreateHouseDto) {
-    return this.housesService.create(createHouseDto);
+  createInvitation(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
+    return this.housesService.createInvitation(user, createHouseDto);
   }
 
   @Get('introduction')
