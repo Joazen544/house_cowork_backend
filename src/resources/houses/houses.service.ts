@@ -42,8 +42,22 @@ export class HousesService {
     return this.houseRepo.findOneBy(attrs);
   }
 
-  update(id: number, updateHouseDto: UpdateHouseDto) {
-    return `This action updates a #${id} house`;
+  async update(house: House, updateHouseDto: UpdateHouseDto) {
+    const { name, description, rules } = updateHouseDto;
+
+    Object.assign(house, {
+      ...(name && { name }),
+      ...(description && { description }),
+    });
+
+    if (rules && rules.length > 0) {
+      await this.ruleRepo.delete({ house: { id: house.id } });
+
+      const newRules = rules.map((rule) => this.ruleRepo.create({ description: rule, house }));
+      house.rules = await this.ruleRepo.save(newRules);
+    }
+
+    return this.houseRepo.save(house);
   }
 
   remove(id: number) {
