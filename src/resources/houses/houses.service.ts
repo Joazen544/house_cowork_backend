@@ -5,13 +5,30 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './entities/house.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Rule } from './entities/rule.entity';
 
 @Injectable()
 export class HousesService {
-  constructor(@InjectRepository(House) private repo: Repository<House>) {}
+  constructor(
+    @InjectRepository(House) private houseRepo: Repository<House>,
+    @InjectRepository(Rule) private ruleRepo: Repository<Rule>,
+  ) {}
 
-  create(createHouseDto: CreateHouseDto) {
-    return 'This action adds a new house';
+  async create(user: User, createHouseDto: CreateHouseDto) {
+    const house = this.houseRepo.create({
+      name: createHouseDto.name,
+      description: createHouseDto.description,
+      users: [user],
+    });
+
+    const savedHouse = await this.houseRepo.save(house);
+
+    await Promise.all(
+      createHouseDto.rules.map((ruleContent) =>
+        this.ruleRepo.save(this.ruleRepo.create({ description: ruleContent, house: savedHouse })),
+      ),
+    );
+    return savedHouse;
   }
 
   findAll() {
@@ -32,6 +49,8 @@ export class HousesService {
   remove(id: number) {
     return `This action removes a #${id} house`;
   }
+
+  createInvitation(user: User, createHouseDto: CreateHouseDto) {}
 
   findOneWithInvitation(invitationCode: string) {
     return `This action looks for invitation first and if invitation not expired, will return house info`;
