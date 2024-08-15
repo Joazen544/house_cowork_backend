@@ -35,12 +35,12 @@ export class HousesService {
     return `This action returns all houses`;
   }
 
-  // findOne(attrs: FindOptionsWhere<User>) {
-  //   if (Object.values(attrs).length === 0) {
-  //     return null;
-  //   }
-  //   return this.houseRepo.findOneBy(attrs);
-  // }
+  findOne(attrs: FindOptionsWhere<User>) {
+    if (Object.values(attrs).length === 0) {
+      return null;
+    }
+    return this.houseRepo.findOneBy(attrs);
+  }
 
   update(id: number, updateHouseDto: UpdateHouseDto) {
     return `This action updates a #${id} house`;
