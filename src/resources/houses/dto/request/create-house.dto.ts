@@ -15,6 +15,6 @@ export class CreateHouseDto {
   @ApiProperty({ example: ['Pay the rent on 5th', 'Be clean', 'Be happy', 'Dogs and cats are welcome'] })
   @IsArray()
   @IsString({ each: true })
-  @IsNotEmpty()
+  @IsOptional()
   rules!: string[];
 }
