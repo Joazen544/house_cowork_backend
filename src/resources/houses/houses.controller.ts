@@ -76,8 +76,8 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: UpdateHouseDto })
   @Serialize(HouseInfoResponseDto)
-  update(@Param('houseId') houseId: string, @Body() updateHouseDto: UpdateHouseDto) {
-    return this.housesService.update(+houseId, updateHouseDto);
+  update(@CurrentHouse() house: House, @Body() updateHouseDto: UpdateHouseDto) {
+    return this.housesService.update(house, updateHouseDto);
   }
 
   @Post(':houseId/invitations')
