@@ -1,26 +1,29 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { InheritApiProperty } from 'src/decorators/inherit-api-property.decorator';
 import { TaskAccessLevel } from 'src/resources/tasks/entities/task.entity';
+import { TaskDto } from '../task.dto';
 
 export class UpdateTaskDto {
   @IsString()
-  @ApiProperty({ example: 'Take out the trash' })
+  @InheritApiProperty(TaskDto)
   title!: string;
 
   @IsString()
-  @ApiProperty({ example: 'Every week.' })
+  @InheritApiProperty(TaskDto)
   description!: string;
 
   @IsEnum(TaskAccessLevel)
-  @ApiProperty({ example: 0, enum: TaskAccessLevel })
+  @InheritApiProperty(TaskDto)
   accessLevel!: TaskAccessLevel;
 
   @IsDate()
   @Type(() => Date)
+  @InheritApiProperty(TaskDto)
   dueTime!: Date;
 
   @IsArray()
   @IsNumber({}, { each: true })
+  @InheritApiProperty(TaskDto)
   assigneesId!: number[];
 }
