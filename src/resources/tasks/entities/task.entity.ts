@@ -1,8 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from 'src/resources/houses/entities/house.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export enum TaskPublicStatus {
+export enum TaskAccessLevel {
   ALL = 0,
   ASSIGNEE = 1,
 }
@@ -11,7 +12,7 @@ export enum TaskStatus {
   OPEN = 0,
   IN_PROGRESS = 1,
   DONE = 2,
-  CANCELED = 3,
+  CANCELLED = 3,
 }
 
 @Entity()
@@ -30,11 +31,16 @@ export class Task {
 
   @Column({
     type: 'integer',
-    enum: TaskPublicStatus,
-    default: TaskPublicStatus.ALL,
+    enum: TaskAccessLevel,
+    default: TaskAccessLevel.ALL,
   })
-  publicStatus!: TaskPublicStatus;
+  publicStatus!: TaskAccessLevel;
 
+  @ApiProperty({
+    enum: TaskStatus,
+    enumName: 'TaskStatus',
+    description: 'The status of the task',
+  })
   @Column({
     type: 'integer',
     enum: TaskStatus,

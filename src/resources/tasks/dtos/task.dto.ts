@@ -4,7 +4,7 @@ import { UserDto } from 'src/resources/users/dtos/user.dto';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { HouseDto } from 'src/resources/houses/dto/house.dto';
-import { TaskPublicStatus, TaskStatus } from '../entities/task.entity';
+import { TaskAccessLevel, TaskStatus } from '../entities/task.entity';
 
 export class TaskDto {
   @Expose()
@@ -30,10 +30,10 @@ export class TaskDto {
   description!: string;
 
   @Expose()
-  @IsEnum(TaskPublicStatus)
+  @IsEnum(TaskAccessLevel)
   @IsNotEmpty()
-  @ApiProperty({ example: 0, enum: TaskPublicStatus })
-  publicStatus!: TaskPublicStatus;
+  @ApiProperty({ example: 0, enum: TaskAccessLevel })
+  publicStatus!: TaskAccessLevel;
 
   @Expose()
   @IsEnum(TaskStatus)

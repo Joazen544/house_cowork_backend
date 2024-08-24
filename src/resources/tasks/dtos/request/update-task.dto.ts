@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
-import { TaskPublicStatus } from 'src/resources/tasks/entities/task.entity';
+import { TaskAccessLevel } from 'src/resources/tasks/entities/task.entity';
 
 export class UpdateTaskDto {
   @IsString()
@@ -12,9 +12,9 @@ export class UpdateTaskDto {
   @ApiProperty({ example: 'Every week.' })
   description!: string;
 
-  @IsEnum(TaskPublicStatus)
-  @ApiProperty({ example: 0, enum: TaskPublicStatus })
-  publicStatus!: TaskPublicStatus;
+  @IsEnum(TaskAccessLevel)
+  @ApiProperty({ example: 0, enum: TaskAccessLevel })
+  publicStatus!: TaskAccessLevel;
 
   @IsDate()
   @Type(() => Date)
