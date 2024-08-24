@@ -79,7 +79,7 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(CreateHouseInvitationResponseDto)
   createInvitation(@CurrentUser() user: User, @CurrentHouse() house: House) {
-    const invitation = this.housesService.createInvitation(user, house);
+    const invitation = this.housesService.createInvitation(house);
     return { invitation };
   }
 
