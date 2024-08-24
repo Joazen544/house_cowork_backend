@@ -36,7 +36,9 @@ export class TaskDto {
     example: 0,
     enum: TaskAccessLevel,
     enumName: 'TaskAccessLevel',
-    description: 'Task access level: 0 - ALL, 1 - ASSIGNEE',
+    description: `Task access level:\n
+      ${TaskAccessLevel.ALL} - ALL,\n
+      ${TaskAccessLevel.ASSIGNEE} - ASSIGNEE`,
   })
   accessLevel!: TaskAccessLevel;
 
@@ -47,7 +49,11 @@ export class TaskDto {
     example: 1,
     enum: TaskStatus,
     enumName: 'TaskStatus',
-    description: 'Task status: 0 - TODO, 1 - IN_PROGRESS, 2 - DONE, 3 - CANCELLED',
+    description: `Task status:\n
+      ${TaskStatus.OPEN} - OPEN,\n
+      ${TaskStatus.IN_PROGRESS} - IN_PROGRESS,\n
+      ${TaskStatus.DONE} - DONE,\n
+      ${TaskStatus.CANCELLED} - CANCELLED`,
   })
   status!: TaskStatus;
 
