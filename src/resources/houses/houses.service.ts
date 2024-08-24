@@ -6,12 +6,15 @@ import { House } from './entities/house.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rule } from './entities/rule.entity';
+import { Invitation } from './entities/invitation.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class HousesService {
   constructor(
     @InjectRepository(House) private houseRepo: Repository<House>,
     @InjectRepository(Rule) private ruleRepo: Repository<Rule>,
+    @InjectRepository(Invitation) private invitationRepo: Repository<Invitation>,
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
@@ -64,7 +67,16 @@ export class HousesService {
     return `This action removes a #${id} house`;
   }
 
-  createInvitation(user: User, createHouseDto: CreateHouseDto) {}
+  createInvitation(house: House) {
+    const expirationTime = new Date(Date.now() + 5 * 60 * 1000);
+
+    const invitation = this.invitationRepo.create({
+      invitation_code: this.generateInvitationCode(),
+      house,
+      expires_at: expirationTime,
+    });
+    return invitation;
+  }
 
   findOneWithInvitation(invitationCode: string) {
     return `This action looks for invitation first and if invitation not expired, will return house info`;
@@ -80,5 +92,9 @@ export class HousesService {
 
   isUserMemberOfHouse(user: User, house: House) {
     return 'This action return if user member of a house.';
+  }
+
+  private generateInvitationCode(): string {
+    return uuidv4();
   }
 }
