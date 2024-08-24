@@ -32,13 +32,13 @@ export class TaskDto {
   @Expose()
   @IsEnum(TaskAccessLevel)
   @IsNotEmpty()
-  @ApiProperty({ example: 0, enum: TaskAccessLevel })
-  publicStatus!: TaskAccessLevel;
+  @ApiProperty({ example: 0, enum: TaskAccessLevel, enumName: 'TaskAccessLevel' })
+  accessLevel!: TaskAccessLevel;
 
   @Expose()
   @IsEnum(TaskStatus)
   @IsNotEmpty()
-  @ApiProperty({ example: 1, enum: TaskStatus })
+  @ApiProperty({ example: 1, enum: TaskStatus, enumName: 'TaskStatus' })
   status!: TaskStatus;
 
   @Expose()
