@@ -16,7 +16,7 @@ export class CreateTaskDto {
   @IsEnum(TaskAccessLevel)
   @IsNotEmpty()
   @ApiProperty({ description: '0 is for open to all.\n 1 is only for assignees.', example: 0, enum: TaskAccessLevel })
-  publicStatus!: TaskAccessLevel;
+  accessLevel!: TaskAccessLevel;
 
   @IsDate()
   @IsNotEmpty()

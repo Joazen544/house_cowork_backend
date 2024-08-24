@@ -14,7 +14,7 @@ export class UpdateTaskDto {
 
   @IsEnum(TaskAccessLevel)
   @ApiProperty({ example: 0, enum: TaskAccessLevel })
-  publicStatus!: TaskAccessLevel;
+  accessLevel!: TaskAccessLevel;
 
   @IsDate()
   @Type(() => Date)
