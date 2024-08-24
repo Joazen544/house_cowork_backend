@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { House } from './entities/house.entity';
 import { UsersModule } from 'src/resources/users/users.module';
 import { Rule } from './entities/rule.entity';
+import { Invitation } from './entities/invitation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([House, Rule]), UsersModule],
+  imports: [TypeOrmModule.forFeature([House, Rule, Invitation]), UsersModule],
   controllers: [HousesController],
   providers: [HousesService],
   exports: [HousesService],
