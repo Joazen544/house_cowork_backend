@@ -108,8 +108,8 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(CreateHouseJoinRequestResponseDto)
-  createJoinRequest(@Query('invitationCode') invitationCode: string) {
-    return this.housesService.createJoinRequest(invitationCode);
+  createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
+    return this.housesService.createJoinRequest(invitationCode, user);
   }
 
   @Get(':houseId/joinRequests')

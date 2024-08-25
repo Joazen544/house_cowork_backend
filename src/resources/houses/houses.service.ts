@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { JoinRequest } from './entities/join-request.entity';
 
 @Injectable()
 export class HousesService {
@@ -15,6 +16,7 @@ export class HousesService {
     @InjectRepository(House) private houseRepo: Repository<House>,
     @InjectRepository(Rule) private ruleRepo: Repository<Rule>,
     @InjectRepository(Invitation) private invitationRepo: Repository<Invitation>,
+    @InjectRepository(JoinRequest) private joinRequestRepo: Repository<JoinRequest>,
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
@@ -89,8 +91,15 @@ export class HousesService {
     return invitation.house;
   }
 
-  createJoinRequest(invitationCode: string) {
-    return 'This action create a join request.';
+  async createJoinRequest(invitationCode: string, user: User) {
+    const house = await this.findOneWithInvitation(invitationCode);
+    const joinRequest = this.joinRequestRepo.create({
+      house,
+      user,
+    });
+
+    // TODO: send fcm to house members
+    return joinRequest;
   }
 
   leave(user: User) {
