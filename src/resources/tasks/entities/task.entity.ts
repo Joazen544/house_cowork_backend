@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from 'src/resources/houses/entities/house.entity';
+import { TaskAssignment } from './task-assignment.entity';
 
 export enum TaskAccessLevel {
   ALL = 0,
@@ -45,9 +46,8 @@ export class Task {
   @Column({ type: 'datetime' })
   dueTime!: Date;
 
-  @ManyToMany(() => User, (user) => user.assignedTasks)
-  @JoinTable()
-  assignees!: User[];
+  @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task)
+  taskAssignments!: TaskAssignment[];
 
   @ManyToOne(() => House, (house) => house.tasks)
   house!: House;
