@@ -102,14 +102,14 @@ export class HousesController {
   @ApiBearerAuth()
   @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Create a house join request.' })
-  @ApiResponse({ status: 201, description: 'House join request created.', type: CreateHouseJoinRequestResponseDto })
+  @ApiResponse({ status: 201, description: 'House join request created.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(CreateHouseJoinRequestResponseDto)
   createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
-    return this.housesService.createJoinRequest(invitationCode, user);
+    return { result: this.housesService.createJoinRequest(invitationCode, user) };
   }
 
   @Get(':houseId/joinRequests')

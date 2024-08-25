@@ -99,7 +99,10 @@ export class HousesService {
     });
 
     // TODO: send fcm to house members
-    return joinRequest;
+    if (joinRequest) {
+      return true;
+    }
+    return false;
   }
 
   leave(user: User) {
