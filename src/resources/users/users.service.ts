@@ -1,5 +1,5 @@
 import { NotFoundException, Injectable } from '@nestjs/common';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import { Repository, FindOptionsWhere, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 
@@ -22,6 +22,14 @@ export class UsersService {
 
   find(email: string) {
     return this.repo.find({ where: { email } });
+  }
+
+  async findByIds(ids: number[]): Promise<User[]> {
+    const users = await this.repo.find({ where: { id: In(ids) } });
+    if (users.length !== ids.length) {
+      throw new NotFoundException('One or more users not found');
+    }
+    return users;
   }
 
   async update(user: User, attrs: Partial<User>) {

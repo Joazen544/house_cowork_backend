@@ -20,6 +20,7 @@ import { CurrentTask } from './decorators/current-task.decorator';
 import { Task } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
 import { SimpleResponseDto } from '../houses/dto/response/simple-response.dto';
+import { AssignTaskDto } from './dtos/request/assign-task.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -37,7 +38,7 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only house member can create task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: CreateTaskDto })
   @Serialize(CreateTaskResponseDto)
-  createTask(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User) {
+  create(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User) {
     return this.tasksService.create(createTaskDto, user);
   }
 
@@ -84,5 +85,17 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only task owner can delete the task.', type: ForbiddenErrorResponseDto })
   delete(@CurrentTask() task: Task) {
     return this.tasksService.delete(task);
+  }
+
+  @Post(':taskId/assignments')
+  @ApiBearerAuth()
+  @UseGuards(TaskOwnerGuard)
+  @ApiOperation({ summary: 'Assign a task to users.' })
+  @ApiResponse({ status: 200, description: 'Task assigned.', type: SimpleResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to assign task.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only task owner can assign the task.', type: ForbiddenErrorResponseDto })
+  @ApiBody({ type: AssignTaskDto })
+  assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
+    return { result: this.tasksService.assign(task, assignTaskDto.userIds) };
   }
 }

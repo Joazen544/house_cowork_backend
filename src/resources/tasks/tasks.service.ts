@@ -6,10 +6,16 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { House } from '../houses/entities/house.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
+import { UsersService } from '../users/users.service';
+import { TaskAssignment } from './entities/task-assignment.entity';
 
 @Injectable()
 export class TasksService {
-  constructor(@InjectRepository(Task) private repo: Repository<Task>) {}
+  constructor(
+    @InjectRepository(Task) private repo: Repository<Task>,
+    @InjectRepository(TaskAssignment) private taskAssigneeRepo: Repository<TaskAssignment>,
+    private usersService: UsersService,
+  ) {}
 
   create(taskDto: CreateTaskDto, user: User) {
     const task = this.repo.create(taskDto);
@@ -52,6 +58,16 @@ export class TasksService {
 
   async delete(task: Task) {
     await this.repo.remove(task);
+    return true;
+  }
+
+  async assign(task: Task, userIds: number[]) {
+    const users = await this.usersService.findByIds(userIds);
+    const taskAssignments = users.map((user) => ({
+      task,
+      user,
+    }));
+    await this.taskAssigneeRepo.save(taskAssignments);
     return true;
   }
 }
