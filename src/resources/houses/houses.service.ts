@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './entities/house.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
@@ -78,8 +78,15 @@ export class HousesService {
     return invitation;
   }
 
-  findOneWithInvitation(invitationCode: string) {
-    return `This action looks for invitation first and if invitation not expired, will return house info`;
+  async findOneWithInvitation(invitationCode: string) {
+    const invitation = await this.invitationRepo.findOne({
+      where: { invitation_code: invitationCode, expires_at: MoreThan(new Date()) },
+    });
+    if (!invitation) {
+      throw new NotFoundException('Invitation not found');
+    }
+
+    return invitation.house;
   }
 
   createJoinRequest(invitationCode: string) {

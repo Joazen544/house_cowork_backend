@@ -94,7 +94,7 @@ export class HousesController {
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(HouseInfoResponseDto)
   getHouseInfoFromInvitation(@Query('invitationCode') invitationCode: string) {
-    return this.housesService.findOneWithInvitation(invitationCode);
+    return { house: this.housesService.findOneWithInvitation(invitationCode) };
   }
 
   @Post('joinRequests')
