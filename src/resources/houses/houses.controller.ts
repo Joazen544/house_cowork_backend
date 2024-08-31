@@ -117,8 +117,8 @@ export class HousesController {
   @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Get all house join requests.' })
   @ApiResponse({ status: 200, description: 'House join requests got.', type: HouseJoinRequestsResponseDto })
-  @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
-  @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
+  @ApiResponse({ status: 401, description: 'Need signin to get join requests.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({ status: 403, description: 'Only house member get join requests.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseJoinRequestsResponseDto)
   getJoinRequests(@CurrentHouse() house: House) {
