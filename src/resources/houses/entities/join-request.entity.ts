@@ -2,10 +2,11 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './house.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-enum JoinRequestStatus {
-  PENDING = 'pending',
-  ACCEPTED = 'accepted',
-  REJECTED = 'rejected',
+export enum JoinRequestStatus {
+  PENDING = 0,
+  ACCEPTED = 1,
+  REJECTED = 2,
+  CANCELLED = 3,
 }
 
 @Entity()

@@ -121,8 +121,8 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseJoinRequestsResponseDto)
-  getJoinRequest(@Query('invitationCode') invitationCode: string) {
-    return this.housesService.createJoinRequest(invitationCode);
+  getJoinRequests(@CurrentHouse() house: House) {
+    return this.housesService.getPendingJoinRequests(house);
   }
 
   @Patch('joinRequests/:joinRequestId')

@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { JoinRequest } from './entities/join-request.entity';
+import { JoinRequest, JoinRequestStatus } from './entities/join-request.entity';
 
 @Injectable()
 export class HousesService {
@@ -103,6 +103,15 @@ export class HousesService {
       return true;
     }
     return false;
+  }
+
+  async getPendingJoinRequests(house: House) {
+    return this.joinRequestRepo.find({
+      where: {
+        house: house,
+        status: JoinRequestStatus.PENDING,
+      },
+    });
   }
 
   leave(user: User) {
