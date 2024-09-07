@@ -155,15 +155,15 @@ export class HousesController {
     return { result: this.joinRequestsService.answerJoinRequest(+joinRequestId, answerJoinRequestDto.result) };
   }
 
-  @Delete(':houseId/leave')
-  @ApiBearerAuth()
-  @UseGuards(HouseMemberGuard)
-  @ApiOperation({ summary: 'Leave a house.' })
-  @ApiResponse({ status: 200, description: 'Left a house.', type: SimpleResponseDto })
-  @ApiResponse({ status: 401, description: 'Need signin to leave house.', type: UnauthorizedErrorResponseDto })
-  @ApiResponse({ status: 403, description: 'Only house member can leave.', type: ForbiddenErrorResponseDto })
-  @Serialize(SimpleResponseDto)
-  leaveHouse(@CurrentUser() user: User) {
-    return this.housesService.leave(user);
-  }
+  // @Delete(':houseId/leave')
+  // @ApiBearerAuth()
+  // @UseGuards(HouseMemberGuard)
+  // @ApiOperation({ summary: 'Leave a house.' })
+  // @ApiResponse({ status: 200, description: 'Left a house.', type: SimpleResponseDto })
+  // @ApiResponse({ status: 401, description: 'Need signin to leave house.', type: UnauthorizedErrorResponseDto })
+  // @ApiResponse({ status: 403, description: 'Only house member can leave.', type: ForbiddenErrorResponseDto })
+  // @Serialize(SimpleResponseDto)
+  // leaveHouse(@CurrentUser() user: User) {
+  //   return this.housesService.leave(user);
+  // }
 }
