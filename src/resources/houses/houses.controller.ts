@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Delete, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Query,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
@@ -22,11 +34,15 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
+import { JoinRequestsService } from './join-requests.service';
 
 @Controller('houses')
 @ApiTags('Houses')
 export class HousesController {
-  constructor(private readonly housesService: HousesService) {}
+  constructor(
+    private readonly housesService: HousesService,
+    private readonly joinRequestsService: JoinRequestsService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -109,7 +125,7 @@ export class HousesController {
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(CreateHouseJoinRequestResponseDto)
   createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
-    return { result: this.housesService.createJoinRequest(invitationCode, user) };
+    return { result: this.joinRequestsService.createJoinRequest(invitationCode, user) };
   }
 
   @Get(':houseId/joinRequests')
@@ -122,7 +138,7 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseJoinRequestsResponseDto)
   getJoinRequests(@CurrentHouse() house: House) {
-    return this.housesService.getPendingJoinRequests(house);
+    return { joinRequests: this.joinRequestsService.getPendingJoinRequests(house) };
   }
 
   @Patch('joinRequests/:joinRequestId')
@@ -135,8 +151,8 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: AnswerJoinRequestDto })
   @Serialize(SimpleResponseDto)
-  answerJoinRequest(@Query('invitationCode') invitationCode: string) {
-    return this.housesService.createJoinRequest(invitationCode);
+  answerJoinRequest(@Param('joinRequestId') joinRequestId: string, @Body() answerJoinRequestDto: AnswerJoinRequestDto) {
+    return { result: this.joinRequestsService.answerJoinRequest(+joinRequestId, answerJoinRequestDto.result) };
   }
 
   @Delete(':houseId/leave')
