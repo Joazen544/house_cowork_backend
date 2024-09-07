@@ -89,12 +89,12 @@ export class HousesService {
     return invitation.house;
   }
 
-  leave(user: User) {
-    return 'This action will make user leave a house.';
-  }
+  // leave(user: User) {
+  //   return 'This action will make user leave a house.';
+  // }
 
   isUserMemberOfHouse(user: User, house: House) {
-    return 'This action return if user member of a house.';
+    return house.users.some((u) => u.id === user.id);
   }
 
   private generateInvitationCode(): string {
