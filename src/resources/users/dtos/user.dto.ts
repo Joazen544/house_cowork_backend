@@ -27,4 +27,9 @@ export class UserDto {
   @IsString()
   @Expose()
   avatar!: string;
+
+  @ApiProperty({ example: '123456789' })
+  @IsString()
+  @Expose()
+  bankAccount!: string;
 }
