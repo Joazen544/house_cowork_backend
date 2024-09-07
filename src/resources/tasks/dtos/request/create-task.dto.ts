@@ -3,6 +3,7 @@ import { IsArray, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-v
 import { InheritApiProperty } from 'src/decorators/inherit-api-property.decorator';
 import { TaskAccessLevel } from 'src/resources/tasks/entities/task.entity';
 import { TaskDto } from '../task.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @IsString()
@@ -25,8 +26,9 @@ export class CreateTaskDto {
   @Type(() => Date)
   dueTime!: Date;
 
+  // TODO: check why this is not shown on swagger
   @IsArray()
-  @InheritApiProperty(TaskDto)
+  @ApiProperty({ example: [1, 2] })
   @IsNumber({}, { each: true })
   assigneesId!: number[];
 }
