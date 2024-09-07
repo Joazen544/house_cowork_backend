@@ -6,11 +6,13 @@ import { House } from './entities/house.entity';
 import { UsersModule } from 'src/resources/users/users.module';
 import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
+import { JoinRequestsService } from './join-requests.service';
+import { JoinRequest } from './entities/join-request.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([House, Rule, Invitation]), UsersModule],
+  imports: [TypeOrmModule.forFeature([House, Rule, Invitation, JoinRequest]), UsersModule],
   controllers: [HousesController],
-  providers: [HousesService],
+  providers: [HousesService, JoinRequestsService],
   exports: [HousesService],
 })
 export class HousesModule {}
