@@ -57,7 +57,7 @@ export class JoinRequestsService {
 
     await this.joinRequestRepo.save(joinRequest);
 
-    // should send fcm to user
+    // TODO: should send fcm to user
 
     return true;
   }
