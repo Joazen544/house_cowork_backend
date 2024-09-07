@@ -20,6 +20,6 @@ export class JoinRequest {
   @ManyToOne(() => User, (user) => user.houseJoinRequests)
   user!: User;
 
-  @Column({ type: 'enum', enum: JoinRequestStatus, default: JoinRequestStatus.PENDING })
+  @Column({ type: 'integer', enum: JoinRequestStatus, default: JoinRequestStatus.PENDING })
   status!: JoinRequestStatus;
 }
