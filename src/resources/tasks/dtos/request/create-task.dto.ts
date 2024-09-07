@@ -26,7 +26,6 @@ export class CreateTaskDto {
   @Type(() => Date)
   dueTime!: Date;
 
-  // TODO: check why this is not shown on swagger
   @IsArray()
   @ApiProperty({ example: [1, 2] })
   @IsNumber({}, { each: true })
