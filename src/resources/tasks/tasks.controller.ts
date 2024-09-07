@@ -21,6 +21,7 @@ import { Task } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
 import { SimpleResponseDto } from '../houses/dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
+import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -48,6 +49,15 @@ export class TasksController {
   @ApiOperation({ summary: 'Get tasks from a house.' })
   @ApiQuery({ name: 'timeStart', required: false, type: String, example: '2024-07-11' })
   @ApiQuery({ name: 'timeEnd', required: false, type: String, example: '2024-07-15' })
+  @ApiQuery({ name: 'ownerId', required: false, type: String, example: '2' })
+  @ApiQuery({ name: 'assigneeId', required: false, type: String, example: '2' })
+  @ApiQuery({
+    name: 'assigneeStatus',
+    required: false,
+    enum: TaskAssignmentStatus,
+    example: TaskAssignmentStatus.PENDING,
+    description: 'Task assignment status: 0 for PENDING, 1 for ACCEPTED, 2 for REJECTED, 3 for CANCELLED',
+  })
   @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
