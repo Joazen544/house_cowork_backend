@@ -2,24 +2,23 @@ import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto {
-  @ApiProperty({
-    example: 'Kevin',
-  })
+  @ApiProperty({ example: 'Kevin' })
   @IsString()
   @IsOptional()
   name!: string;
 
-  @ApiProperty({
-    example: 'Handsome boy',
-  })
+  @ApiProperty({ example: 'Handsome boy' })
   @IsString()
   @IsOptional()
   nickName!: string;
 
-  @ApiProperty({
-    example: 'https://image/url',
-  })
+  @ApiProperty({ example: 'https://image/url' })
   @IsString()
   @IsOptional()
   avatar!: string;
+
+  @ApiProperty({ example: '123456789' })
+  @IsString()
+  @IsOptional()
+  bankAccount!: string;
 }
