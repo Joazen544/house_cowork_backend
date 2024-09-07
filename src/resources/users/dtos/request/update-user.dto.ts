@@ -1,23 +1,24 @@
 import { IsString, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { InheritApiProperty } from 'src/decorators/inherit-api-property.decorator';
+import { UserDto } from '../user.dto';
 
 export class UpdateUserDto {
-  @ApiProperty({ example: 'Kevin' })
+  @InheritApiProperty(UserDto)
   @IsString()
   @IsOptional()
   name!: string;
 
-  @ApiProperty({ example: 'Handsome boy' })
+  @InheritApiProperty(UserDto)
   @IsString()
   @IsOptional()
   nickName!: string;
 
-  @ApiProperty({ example: 'https://image/url' })
+  @InheritApiProperty(UserDto)
   @IsString()
   @IsOptional()
   avatar!: string;
 
-  @ApiProperty({ example: '123456789' })
+  @InheritApiProperty(UserDto)
   @IsString()
   @IsOptional()
   bankAccount!: string;
