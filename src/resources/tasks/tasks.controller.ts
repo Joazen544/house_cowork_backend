@@ -12,7 +12,7 @@ import {
 } from 'src/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
 import { HouseMemberGuard } from 'src/guards/house-member.guard';
-import { TasksResponseDto } from './dtos/response/tasks-response.dto';
+import { GetTasksResponseDto } from './dtos/response/get-tasks-response.dto';
 import { CurrentHouse } from '../houses/decorators/current-house.decorator';
 import { House } from '../houses/entities/house.entity';
 import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
@@ -58,7 +58,7 @@ export class TasksController {
     example: TaskAssignmentStatus.PENDING,
     description: 'Task assignment status: 0 for PENDING, 1 for ACCEPTED, 2 for REJECTED, 3 for CANCELLED',
   })
-  @ApiResponse({ status: 200, description: 'Task created.', type: TasksResponseDto })
+  @ApiResponse({ status: 200, description: 'Task created.', type: GetTasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
   find(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
