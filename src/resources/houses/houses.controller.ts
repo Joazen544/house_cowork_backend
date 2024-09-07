@@ -13,9 +13,8 @@ import {
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { HouseInfoResponseDto } from './dto/response/house-info-response.dto';
 import { CreateHouseInvitationResponseDto } from './dto/response/create-house-invitation-response.dto';
-import { CreateHouseJoinRequestResponseDto } from './dto/response/create-house-join-request-response.dto';
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
-import { SimpleResponseDto } from './dto/response/simple-response.dto';
+import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
 import { CurrentUser } from 'src/resources/auth/decorators/current-user.decorator';
 import { User } from 'src/resources/users/entities/user.entity';
@@ -111,7 +110,7 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
-  @Serialize(CreateHouseJoinRequestResponseDto)
+  @Serialize(SimpleResponseDto)
   createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
     return { result: this.joinRequestsService.createJoinRequest(invitationCode, user) };
   }

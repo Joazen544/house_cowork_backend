@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { HouseDto } from '../house.dto';
+import { HouseInResponseDto } from './house-in-response.dto';
 
 export class CreateHouseResponseDto {
-  @ApiProperty({ type: HouseDto })
-  house!: HouseDto;
+  @ApiProperty({ type: HouseInResponseDto })
+  house!: HouseInResponseDto;
 }

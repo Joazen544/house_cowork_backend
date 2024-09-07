@@ -19,7 +19,7 @@ import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
 import { CurrentTask } from './decorators/current-task.decorator';
 import { Task } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
-import { SimpleResponseDto } from '../houses/dto/response/simple-response.dto';
+import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
 import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 
