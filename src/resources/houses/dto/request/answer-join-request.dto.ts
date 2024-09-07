@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
-enum AnswerJoinRequestResult {
+export enum AnswerJoinRequestResult {
   ACCEPT = 'accept',
   REJECT = 'reject',
 }
