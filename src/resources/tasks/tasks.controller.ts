@@ -59,8 +59,7 @@ export class TasksController {
     description: `Task status:\n
     ${TaskStatus.OPEN} - OPEN,\n
     ${TaskStatus.IN_PROGRESS} - IN_PROGRESS,\n
-    ${TaskStatus.DONE} - DONE,\n
-    ${TaskStatus.CANCELLED} - CANCELLED`,
+    ${TaskStatus.DONE} - DONE`,
   })
   @ApiQuery({ name: 'assigneeId', required: false, type: String, example: '2' })
   @ApiQuery({
@@ -72,7 +71,6 @@ export class TasksController {
     ${TaskAssignmentStatus.PENDING} for PENDING\n
     ${TaskAssignmentStatus.ACCEPTED} for ACCEPTED\n
     ${TaskAssignmentStatus.REJECTED} for REJECTED\n
-    ${TaskAssignmentStatus.CANCELLED} for CANCELLED\n
     ${TaskAssignmentStatus.DONE} for DONE`,
   })
   @ApiResponse({ status: 200, description: 'Task created.', type: GetTasksResponseDto })
