@@ -22,6 +22,7 @@ import { UpdateTaskDto } from './dtos/request/update-task.dto';
 import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
 import { TaskAssignmentStatus } from './entities/task-assignment.entity';
+import { TaskAssigneeGuard } from 'src/guards/task-assignee.guard';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -107,5 +108,24 @@ export class TasksController {
   @ApiBody({ type: AssignTaskDto })
   assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
     return { result: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
+  }
+
+  @Patch(':taskId/response')
+  @ApiBearerAuth()
+  @UseGuards(TaskAssigneeGuard)
+  @ApiOperation({ summary: 'Respond to a task assignment.' })
+  @ApiResponse({ status: 200, description: 'Task assignment responded.', type: SimpleResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to respond to task assignment.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only task assignee can respond to the task assignment.',
+    type: ForbiddenErrorResponseDto,
+  })
+  respond(@CurrentTask() task: Task, @CurrentUser() user: User, @Body('status') status: TaskAssignmentStatus) {
+    return { result: this.tasksService.respondToAssignment(task, user, status) };
   }
 }

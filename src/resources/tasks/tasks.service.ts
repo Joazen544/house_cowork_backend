@@ -7,7 +7,7 @@ import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { House } from '../houses/entities/house.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
 import { UsersService } from '../users/users.service';
-import { TaskAssignment } from './entities/task-assignment.entity';
+import { TaskAssignment, TaskAssignmentStatus } from './entities/task-assignment.entity';
 
 @Injectable()
 export class TasksService {
@@ -68,6 +68,19 @@ export class TasksService {
       user,
     }));
     await this.taskAssigneeRepo.save(taskAssignments);
+    return true;
+  }
+
+  async isUserAssigneeOfTask(user: User, task: Task) {
+    const taskAssignee = await this.taskAssigneeRepo.findOne({ where: { task, user } });
+    return !!taskAssignee;
+  }
+
+  async respondToAssignment(task: Task, user: User, status: TaskAssignmentStatus) {
+    const result = await this.taskAssigneeRepo.update({ task, user }, { assigneeStatus: status });
+    if (!result.affected) {
+      throw new Error('Task assignment error');
+    }
     return true;
   }
 }
