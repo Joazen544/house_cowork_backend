@@ -17,7 +17,7 @@ import { CurrentHouse } from '../houses/decorators/current-house.decorator';
 import { House } from '../houses/entities/house.entity';
 import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
 import { CurrentTask } from './decorators/current-task.decorator';
-import { Task } from './entities/task.entity';
+import { Task, TaskStatus } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
 import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
@@ -51,6 +51,17 @@ export class TasksController {
   @ApiQuery({ name: 'timeStart', required: false, type: String, example: '2024-07-11' })
   @ApiQuery({ name: 'timeEnd', required: false, type: String, example: '2024-07-15' })
   @ApiQuery({ name: 'ownerId', required: false, type: String, example: '2' })
+  @ApiQuery({
+    name: 'taskStatus',
+    required: false,
+    enum: TaskStatus,
+    example: TaskStatus.DONE,
+    description: `Task status:\n
+    ${TaskStatus.OPEN} - OPEN,\n
+    ${TaskStatus.IN_PROGRESS} - IN_PROGRESS,\n
+    ${TaskStatus.DONE} - DONE,\n
+    ${TaskStatus.CANCELLED} - CANCELLED`,
+  })
   @ApiQuery({ name: 'assigneeId', required: false, type: String, example: '2' })
   @ApiQuery({
     name: 'assigneeStatus',
