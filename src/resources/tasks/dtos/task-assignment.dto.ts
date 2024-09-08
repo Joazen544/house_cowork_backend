@@ -18,7 +18,8 @@ export class TaskAssignmentDto {
     ${TaskAssignmentStatus.PENDING} - PENDING,\n
     ${TaskAssignmentStatus.ACCEPTED} - ACCEPTED,\n
     ${TaskAssignmentStatus.REJECTED} - REJECTED,\n
-    ${TaskAssignmentStatus.CANCELLED} - CANCELLED`,
+    ${TaskAssignmentStatus.CANCELLED} - CANCELLED,\n
+    ${TaskAssignmentStatus.DONE} - DONE`,
   })
   assigneeStatus!: TaskAssignmentStatus;
 }

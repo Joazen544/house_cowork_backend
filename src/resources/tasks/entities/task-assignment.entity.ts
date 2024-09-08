@@ -7,6 +7,7 @@ export enum TaskAssignmentStatus {
   ACCEPTED = 1,
   REJECTED = 2,
   CANCELLED = 3,
+  DONE = 4,
 }
 
 @Entity()
