@@ -106,6 +106,6 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only task owner can assign the task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: AssignTaskDto })
   assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
-    return { result: this.tasksService.assign(task, assignTaskDto.userIds) };
+    return { result: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
   }
 }
