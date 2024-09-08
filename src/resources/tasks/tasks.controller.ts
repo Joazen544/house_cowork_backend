@@ -69,10 +69,11 @@ export class TasksController {
     enum: TaskAssignmentStatus,
     example: TaskAssignmentStatus.PENDING,
     description: `Task assignment status:\n
-    0 for PENDING\n
-    1 for ACCEPTED\n
-    2 for REJECTED\n
-    3 for CANCELLED`,
+    ${TaskAssignmentStatus.PENDING} for PENDING\n
+    ${TaskAssignmentStatus.ACCEPTED} for ACCEPTED\n
+    ${TaskAssignmentStatus.REJECTED} for REJECTED\n
+    ${TaskAssignmentStatus.CANCELLED} for CANCELLED\n
+    ${TaskAssignmentStatus.DONE} for DONE`,
   })
   @ApiResponse({ status: 200, description: 'Task created.', type: GetTasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
