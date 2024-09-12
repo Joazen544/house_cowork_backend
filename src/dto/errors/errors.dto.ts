@@ -26,10 +26,10 @@ export class ForbiddenErrorResponseDto {
   @ApiProperty({ example: 403 })
   statusCode!: number;
 
-  @ApiProperty({ example: 'Not Found' })
+  @ApiProperty({ example: 'Forbidden' })
   error!: string;
 
-  @ApiProperty({ example: 'Something not found' })
+  @ApiProperty({ example: 'Not able to access the resource' })
   message!: string;
 }
 
