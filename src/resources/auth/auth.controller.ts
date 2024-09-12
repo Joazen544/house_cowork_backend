@@ -1,12 +1,13 @@
 import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
+import { UpdateUserResponseDto } from './dto/response/update-user-response.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto } from './dto/request/create-user.dto';
 import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from 'src/dto/errors/errors.dto';
 import { SigninUserDto } from './dto/request/signin-user.dto';
 import { Public } from './decorators/public.decorator';
+import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -29,9 +30,9 @@ export class AuthController {
 
   @Post('signin')
   @Public()
-  @Serialize(CreateUserResponseDto)
+  @Serialize(UpdateUserResponseDto)
   @ApiOperation({ summary: 'Sign in' })
-  @ApiResponse({ status: 200, description: 'User signin!', type: CreateUserResponseDto })
+  @ApiResponse({ status: 200, description: 'User signin!', type: UpdateUserResponseDto })
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: SigninUserDto })
   async signin(@Body() body: SigninUserDto) {
