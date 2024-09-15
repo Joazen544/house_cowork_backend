@@ -90,6 +90,25 @@ export class TasksController {
     return this.tasksService.findByDatePeriod(startDate, endDate, house);
   }
 
+  @Get('house/:houseId/home')
+  @ApiBearerAuth()
+  @UseGuards(HouseMemberGuard)
+  @ApiOperation({ summary: 'Get home page tasks.' })
+  @ApiResponse({ status: 200, description: 'Home page tasks found.', type: GetTasksResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to get home page tasks.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only house member can get home page tasks.',
+    type: ForbiddenErrorResponseDto,
+  })
+  findHomePageTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
+    return this.tasksService.findUserHomePageTasks(house, user);
+  }
+
   @Patch(':taskId')
   @ApiBearerAuth()
   @UseGuards(TaskOwnerGuard)
