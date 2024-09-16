@@ -3,15 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from 'src/resources/users/entities/user.entity';
 import { Injectable } from '@nestjs/common';
-import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
+import { TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { House } from '../../houses/entities/house.entity';
 
 @Injectable()
 export class TasksRepository {
-  constructor(
-    @InjectRepository(Task) private readonly taskRepo: Repository<Task>,
-    @InjectRepository(TaskAssignment) private readonly taskAssignmentRepo: Repository<TaskAssignment>,
-  ) {}
+  constructor(@InjectRepository(Task) private readonly taskRepo: Repository<Task>) {}
 
   create(task: Task) {
     return this.save(task);

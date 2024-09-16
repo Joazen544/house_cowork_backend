@@ -13,6 +13,7 @@ export enum TaskStatus {
   IN_PROGRESS = 1,
   DONE = 2,
   CANCELLED = 3,
+  REJECTED = 4,
 }
 
 @Entity()

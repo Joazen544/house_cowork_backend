@@ -11,6 +11,7 @@ import { DataSource } from 'typeorm';
 import { HousesModule } from './resources/houses/houses.module';
 import { AuthModule } from './resources/auth/auth.module';
 import { AuthGuard } from './guards/auth.guard';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
@@ -35,6 +36,7 @@ const cookieSession = require('cookie-session');
         return dataSource;
       },
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     TasksModule,

@@ -1,14 +1,14 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FindOptionsWhere } from 'typeorm';
-import { Task } from './entities/task.entity';
+import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from 'src/resources/users/entities/user.entity';
-import { CreateTaskDto } from './dtos/request/create-task.dto';
-import { House } from '../houses/entities/house.entity';
-import { UpdateTaskDto } from './dtos/request/update-task.dto';
-import { UsersService } from '../users/users.service';
-import { TaskAssignment, TaskAssignmentStatus } from './entities/task-assignment.entity';
-import { TasksRepository } from './repositories/tasks.repository';
-import { TaskAssignmentsRepository } from './repositories/task-assignments.repository';
+import { CreateTaskDto } from '../dtos/request/create-task.dto';
+import { House } from '../../houses/entities/house.entity';
+import { UpdateTaskDto } from '../dtos/request/update-task.dto';
+import { UsersService } from '../../users/users.service';
+import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
+import { TasksRepository } from '../repositories/tasks.repository';
+import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
 
 @Injectable()
 export class TasksService {
@@ -88,5 +88,31 @@ export class TasksService {
       throw new Error('Task assignment error');
     }
     return true;
+  }
+
+  async updateTaskStatusBasedOnAssignments(task: Task) {
+    if (!task) {
+      throw new Error('Task not found when update after task assignment status updated');
+    }
+
+    const taskAssignments = await this.taskAssignmentsRepository.findMany({ task });
+
+    if (taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.DONE)) {
+      task.status = TaskStatus.DONE;
+    } else if (
+      taskAssignments.every((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.REJECTED)
+    ) {
+      task.status = TaskStatus.REJECTED;
+    } else if (
+      taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.ACCEPTED)
+    ) {
+      task.status = TaskStatus.IN_PROGRESS;
+    } else if (
+      taskAssignments.every((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.PENDING)
+    ) {
+      task.status = TaskStatus.OPEN;
+    } else {
+      throw new Error('Task status not found when update after task assignment status updated');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Query, Patch, Delete } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
-import { TasksService } from './tasks.service';
+import { TasksService } from './services/tasks.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from 'src/resources/users/entities/user.entity';
 import { Serialize } from '../../interceptors/serialize.interceptor';
