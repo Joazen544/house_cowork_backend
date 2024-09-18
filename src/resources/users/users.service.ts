@@ -1,31 +1,28 @@
 import { NotFoundException, Injectable } from '@nestjs/common';
-import { Repository, FindOptionsWhere, In } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import { User } from './entities/user.entity';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-  create(email: string, password: string, name: string) {
-    const user = this.repo.create({ email, password, name });
+  async create(email: string, password: string, name: string, nickName: string) {
+    const user = this.usersRepository.create(email, password, name, nickName);
 
-    return this.repo.save(user);
+    return user;
   }
 
-  findOne(attrs: FindOptionsWhere<User>) {
-    if (Object.values(attrs).length === 0) {
-      return null;
-    }
-    return this.repo.findOneBy(attrs);
+  async findOne(attrs: FindOptionsWhere<User>) {
+    return this.usersRepository.findOne(attrs);
   }
 
-  find(email: string) {
-    return this.repo.find({ where: { email } });
+  async find(email: string) {
+    return this.usersRepository.find({ email });
   }
 
   async findByIds(ids: number[]): Promise<User[]> {
-    const users = await this.repo.find({ where: { id: In(ids) } });
+    const users = await this.usersRepository.findByIds(ids);
     if (users.length !== ids.length) {
       throw new NotFoundException('One or more users not found');
     }
@@ -34,15 +31,7 @@ export class UsersService {
 
   async update(user: User, attrs: Partial<User>) {
     Object.assign(user, attrs);
-    return await this.repo.save(user);
-  }
-
-  async remove(id: number) {
-    const user = await this.findOne({ id });
-    if (!user) {
-      throw new NotFoundException('user not found');
-    }
-    return this.repo.remove(user);
+    return await this.usersRepository.save(user);
   }
 
   areUsersInSameHouse(user1: User, user2: User) {

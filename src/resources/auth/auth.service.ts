@@ -14,9 +14,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(email: string, password: string, name: string) {
+  async signUp(email: string, password: string, name: string, nickName: string) {
     const users = await this.usersService.find(email);
-    if (users.length) {
+    if (users && users.length) {
       throw new BadRequestException('email in use');
     }
 
@@ -26,7 +26,7 @@ export class AuthService {
 
     const result = salt + '.' + hash.toString('hex');
 
-    const user = await this.usersService.create(email, result, name);
+    const user = await this.usersService.create(email, result, name, nickName);
 
     return { user, accessToken: await this.signJwt(user) };
   }

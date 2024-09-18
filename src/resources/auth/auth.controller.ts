@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserResponseDto } from './dto/response/update-user-response.dto';
@@ -23,7 +23,10 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiBody({ type: CreateUserDto })
   async create(@Body(new ValidationPipe()) body: CreateUserDto) {
-    const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name);
+    if (body.password !== body.passwordConfirm) {
+      throw new BadRequestException('Passwords do not match');
+    }
+    const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name, body.nickName);
 
     return { user, accessToken };
   }
