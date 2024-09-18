@@ -38,8 +38,8 @@ export class TasksService {
     return await this.tasksRepository.find(attrs);
   }
 
-  findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
-    return this.tasksRepository.findByDatePeriod(startDate, endDate, house);
+  async findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
+    return await this.tasksRepository.findByDatePeriod(startDate, endDate, house);
   }
 
   async findUserHomePageTasks(house: House, user: User) {
