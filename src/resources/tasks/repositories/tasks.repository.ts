@@ -32,10 +32,6 @@ export class TasksRepository {
     return this.taskRepo.findBy(attrs);
   }
 
-  update(id: number, updateData: Partial<Task>): Promise<UpdateResult> {
-    return this.taskRepo.update(id, updateData);
-  }
-
   remove(task: Task) {
     return this.taskRepo.remove(task);
   }
