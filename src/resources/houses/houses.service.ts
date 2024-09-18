@@ -3,20 +3,19 @@ import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './entities/house.entity';
-import { FindOptionsWhere, MoreThan, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Invitation } from './entities/invitation.entity';
+import { FindOptionsWhere, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { Rule } from './entities/rule.entity';
+import { InvitationsRepository } from './repositories/invitations.repository';
 
 @Injectable()
 export class HousesService {
   constructor(
-    @InjectRepository(Invitation) private invitationRepo: Repository<Invitation>,
     private readonly housesRepository: HousesRepository,
     private readonly rulesRepository: RulesRepository,
+    private readonly invitationsRepository: InvitationsRepository,
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
@@ -72,20 +71,17 @@ export class HousesService {
   //   return `This action removes a #${id} house`;
   // }
 
-  createInvitation(house: House) {
+  async createInvitation(house: House) {
     const expirationTime = new Date(Date.now() + 5 * 60 * 1000);
 
-    const invitation = this.invitationRepo.create({
-      invitation_code: this.generateInvitationCode(),
-      house,
-      expires_at: expirationTime,
-    });
+    const invitation = await this.invitationsRepository.create(this.generateInvitationCode(), house, expirationTime);
     return invitation;
   }
 
   async findOneWithInvitation(invitationCode: string) {
-    const invitation = await this.invitationRepo.findOne({
-      where: { invitation_code: invitationCode, expires_at: MoreThan(new Date()) },
+    const invitation = await this.invitationsRepository.findOne({
+      invitation_code: invitationCode,
+      expires_at: MoreThan(new Date()),
     });
     if (!invitation) {
       throw new NotFoundException('Invitation not found');
