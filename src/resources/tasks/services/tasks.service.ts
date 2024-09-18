@@ -92,6 +92,8 @@ export class TasksService {
     if (!result.affected) {
       throw new Error('Task assignment error');
     }
+
+    await this.updateTaskStatusBasedOnAssignments(task);
     return true;
   }
 
