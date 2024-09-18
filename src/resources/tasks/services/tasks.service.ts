@@ -18,22 +18,24 @@ export class TasksService {
     private usersService: UsersService,
   ) {}
 
-  create(taskDto: CreateTaskDto, user: User) {
-    const task = new Task();
-    Object.assign(task, taskDto);
-    task.owner = user;
+  async create(taskDto: CreateTaskDto, user: User) {
+    const task = this.createTaskEntity(taskDto, user);
     return this.tasksRepository.create(task);
   }
 
-  findOne(attrs: FindOptionsWhere<User>) {
-    if (Object.values(attrs).length === 0) {
-      return null;
-    }
-    return this.tasksRepository.findOne(attrs);
+  private createTaskEntity(taskDto: CreateTaskDto, user: User): Task {
+    const task = new Task();
+    Object.assign(task, taskDto);
+    task.owner = user;
+    return task;
   }
 
-  find(attrs: FindOptionsWhere<Task>) {
-    return this.tasksRepository.find(attrs);
+  async findOne(attrs: FindOptionsWhere<Task>) {
+    return await this.tasksRepository.findOne(attrs);
+  }
+
+  async find(attrs: FindOptionsWhere<Task>) {
+    return await this.tasksRepository.find(attrs);
   }
 
   findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {

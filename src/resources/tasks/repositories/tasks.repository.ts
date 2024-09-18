@@ -18,11 +18,17 @@ export class TasksRepository {
     return await this.taskRepo.save(task);
   }
 
-  findOne(attrs: FindOptionsWhere<Task>) {
-    return this.taskRepo.findOneBy(attrs);
+  findOne(attrs: FindOptionsWhere<Task>): Promise<Task | null> {
+    if (Object.keys(attrs).length === 0) {
+      return Promise.resolve(null);
+    }
+    return this.taskRepo.findOne({ where: attrs });
   }
 
   find(attrs: FindOptionsWhere<Task>) {
+    if (Object.keys(attrs).length === 0) {
+      return Promise.resolve(null);
+    }
     return this.taskRepo.findBy(attrs);
   }
 
