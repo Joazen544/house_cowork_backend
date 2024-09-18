@@ -5,44 +5,44 @@ import { User } from 'src/resources/users/entities/user.entity';
 import { House } from './entities/house.entity';
 import { FindOptionsWhere, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { HousesRepository } from './repositories/houses.repository';
+import { RulesRepository } from './repositories/rules.repository';
+import { Rule } from './entities/rule.entity';
 
 @Injectable()
 export class HousesService {
   constructor(
-    @InjectRepository(House) private houseRepo: Repository<House>,
-    @InjectRepository(Rule) private ruleRepo: Repository<Rule>,
     @InjectRepository(Invitation) private invitationRepo: Repository<Invitation>,
+    private readonly housesRepository: HousesRepository,
+    private readonly rulesRepository: RulesRepository,
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
-    const house = this.houseRepo.create({
-      name: createHouseDto.name,
-      description: createHouseDto.description,
-      users: [user],
+    const house = new House();
+
+    house.users.push(user);
+    house.name = createHouseDto.name;
+    house.description = createHouseDto.description;
+
+    const savedHouse = await this.housesRepository.create(house);
+    const rules = createHouseDto.rules.map((ruleContent) => {
+      const rule = new Rule();
+      rule.description = ruleContent;
+      return rule;
     });
 
-    const savedHouse = await this.houseRepo.save(house);
+    await this.rulesRepository.createMany(rules, savedHouse);
 
-    await Promise.all(
-      createHouseDto.rules.map((ruleContent) =>
-        this.ruleRepo.save(this.ruleRepo.create({ description: ruleContent, house: savedHouse })),
-      ),
-    );
     return savedHouse;
-  }
-
-  findAll() {
-    return `This action returns all houses`;
   }
 
   findOne(attrs: FindOptionsWhere<User>) {
     if (Object.values(attrs).length === 0) {
       return null;
     }
-    return this.houseRepo.findOneBy(attrs);
+    return this.housesRepository.findOne(attrs);
   }
 
   async update(house: House, updateHouseDto: UpdateHouseDto) {
@@ -54,13 +54,18 @@ export class HousesService {
     });
 
     if (rules && rules.length > 0) {
-      await this.ruleRepo.delete({ house: { id: house.id } });
+      await this.rulesRepository.deleteByHouse(house);
 
-      const newRules = rules.map((rule) => this.ruleRepo.create({ description: rule, house }));
-      house.rules = await this.ruleRepo.save(newRules);
+      const newRules = rules.map((rule) => {
+        const ruleEntity = new Rule();
+        ruleEntity.description = rule;
+        return ruleEntity;
+      });
+
+      await this.rulesRepository.createMany(newRules, house);
     }
 
-    return this.houseRepo.save(house);
+    return this.housesRepository.saveOne(house);
   }
 
   remove(id: number) {
