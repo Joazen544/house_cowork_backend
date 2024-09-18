@@ -50,9 +50,9 @@ export class TasksService {
     return task.owner === user;
   }
 
-  update(task: Task, updateTaskDto: UpdateTaskDto) {
+  async update(task: Task, updateTaskDto: UpdateTaskDto) {
     Object.assign(task, updateTaskDto);
-    return this.tasksRepository.save(task);
+    return await this.tasksRepository.save(task);
   }
 
   async delete(task: Task) {

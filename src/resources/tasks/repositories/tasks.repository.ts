@@ -14,8 +14,8 @@ export class TasksRepository {
     return this.save(task);
   }
 
-  async save(task: Task) {
-    return await this.taskRepo.save(task);
+  save(task: Task) {
+    return this.taskRepo.save(task);
   }
 
   findOne(attrs: FindOptionsWhere<Task>): Promise<Task | null> {
@@ -30,6 +30,10 @@ export class TasksRepository {
       return Promise.resolve(null);
     }
     return this.taskRepo.findBy(attrs);
+  }
+
+  update(id: number, updateData: Partial<Task>): Promise<UpdateResult> {
+    return this.taskRepo.update(id, updateData);
   }
 
   remove(task: Task) {
