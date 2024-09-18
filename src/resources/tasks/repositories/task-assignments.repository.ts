@@ -24,10 +24,10 @@ export class TaskAssignmentsRepository {
   }
 
   async saveOne(taskAssignment: TaskAssignment) {
-    return await this.taskAssignmentRepo.save(taskAssignment);
+    return this.taskAssignmentRepo.save(taskAssignment);
   }
 
   async saveMany(taskAssignments: TaskAssignment[]) {
-    return await this.taskAssignmentRepo.save(taskAssignments);
+    return this.taskAssignmentRepo.save(taskAssignments);
   }
 }

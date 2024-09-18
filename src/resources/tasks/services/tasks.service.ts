@@ -31,19 +31,19 @@ export class TasksService {
   }
 
   async findOne(attrs: FindOptionsWhere<Task>) {
-    return await this.tasksRepository.findOne(attrs);
+    return this.tasksRepository.findOne(attrs);
   }
 
   async find(attrs: FindOptionsWhere<Task>) {
-    return await this.tasksRepository.find(attrs);
+    return this.tasksRepository.find(attrs);
   }
 
   async findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
-    return await this.tasksRepository.findByDatePeriod(startDate, endDate, house);
+    return this.tasksRepository.findByDatePeriod(startDate, endDate, house);
   }
 
   async findUserHomePageTasks(house: House, user: User) {
-    return await this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
+    return this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
   }
 
   isUserOwnerOfTask(user: User, task: Task) {
@@ -52,7 +52,7 @@ export class TasksService {
 
   async update(task: Task, updateTaskDto: UpdateTaskDto) {
     Object.assign(task, updateTaskDto);
-    return await this.tasksRepository.save(task);
+    return this.tasksRepository.save(task);
   }
 
   async delete(task: Task) {
@@ -62,14 +62,19 @@ export class TasksService {
 
   async assign(task: Task, userIds: number[]) {
     const users = await this.usersService.findByIds(userIds);
+
+    if (users.length !== userIds.length) {
+      throw new Error('Some users were not found');
+    }
+
     const taskAssignments = users.map((user) => {
       const taskAssignment = new TaskAssignment();
       taskAssignment.task = task;
       taskAssignment.user = user;
       return taskAssignment;
     });
-    await this.taskAssignmentsRepository.createMultiple(taskAssignments);
-    return true;
+
+    return this.taskAssignmentsRepository.createMultiple(taskAssignments);
   }
 
   async isUserAssigneeOfTask(user: User, task: Task) {
