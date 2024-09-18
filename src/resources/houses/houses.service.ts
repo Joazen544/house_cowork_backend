@@ -68,9 +68,9 @@ export class HousesService {
     return this.housesRepository.saveOne(house);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} house`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} house`;
+  // }
 
   createInvitation(house: House) {
     const expirationTime = new Date(Date.now() + 5 * 60 * 1000);
