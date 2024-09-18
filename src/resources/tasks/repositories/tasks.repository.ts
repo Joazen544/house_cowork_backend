@@ -49,45 +49,33 @@ export class TasksRepository {
     return queryBuilder.getMany();
   }
 
-  findPastNotDone(user: User, house: House) {
+  findPastNotDoneTasksAndThreeDaysTasksFromToday(user: User, house: House) {
     const queryBuilder = this.taskRepo.createQueryBuilder('task');
 
     queryBuilder.leftJoinAndSelect('task.taskAssignments', 'taskAssignment');
     queryBuilder.where('task.houseId = :houseId', { houseId: house.id });
     queryBuilder.andWhere('taskAssignment.user = :user', { user });
-    queryBuilder.andWhere('taskAssignment.assigneeStatus = :assigneeStatus', {
-      assigneeStatus: TaskAssignmentStatus.ACCEPTED,
-    });
-    queryBuilder.andWhere('task.status IN (:...statuses)', { statuses: [TaskStatus.OPEN, TaskStatus.IN_PROGRESS] });
-    queryBuilder.andWhere('task.dueTime < :today', {
-      today: new Date(new Date().setHours(0, 0, 0, 0)),
-    });
-
-    return queryBuilder.getMany();
-  }
-
-  findThreeDaysTasksFromToday(user: User, house: House) {
-    const queryBuilder = this.taskRepo.createQueryBuilder('task');
-
-    queryBuilder.leftJoinAndSelect('task.taskAssignments', 'taskAssignment');
-    queryBuilder.where('task.houseId = :houseId', { houseId: house.id });
-    queryBuilder.andWhere('taskAssignment.user = :user', { user });
-    queryBuilder.andWhere('taskAssignment.assigneeStatus NOT IN (:...assigneeStatuses)', {
-      assigneeStatuses: [TaskAssignmentStatus.REJECTED, TaskAssignmentStatus.CANCELLED],
-    });
-    queryBuilder.andWhere('task.status IN (:...statuses)', {
-      statuses: [TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.DONE],
-    });
 
     const today = new Date(new Date().setHours(0, 0, 0, 0));
     const startOfFourDaysLater = new Date(today);
     startOfFourDaysLater.setDate(today.getDate() + 4);
     startOfFourDaysLater.setHours(0, 0, 0, 0);
 
-    queryBuilder.andWhere('task.dueTime >= :today AND task.dueTime < :startOfFourDaysLater', {
-      today,
-      startOfFourDaysLater,
-    });
+    queryBuilder.andWhere(
+      '(' +
+        '(task.dueTime < :today AND task.status IN (:...pastNotDoneStatuses) AND taskAssignment.assigneeStatus = :acceptedStatus)' +
+        ' OR ' +
+        '(task.dueTime >= :today AND task.dueTime < :startOfFourDaysLater AND task.status IN (:...threeDaysStatuses) AND taskAssignment.assigneeStatus NOT IN (:...rejectedStatuses))' +
+        ')',
+      {
+        today,
+        startOfFourDaysLater,
+        pastNotDoneStatuses: [TaskStatus.OPEN, TaskStatus.IN_PROGRESS],
+        acceptedStatus: TaskAssignmentStatus.ACCEPTED,
+        threeDaysStatuses: [TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.DONE],
+        rejectedStatuses: [TaskAssignmentStatus.REJECTED, TaskAssignmentStatus.CANCELLED],
+      },
+    );
 
     queryBuilder.orderBy('task.dueTime', 'ASC');
 
