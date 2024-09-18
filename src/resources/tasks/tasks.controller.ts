@@ -23,6 +23,7 @@ import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
 import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 import { TaskAssigneeGuard } from 'src/guards/task-assignee.guard';
+import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -135,12 +136,12 @@ export class TasksController {
   @ApiBearerAuth()
   @UseGuards(TaskOwnerGuard)
   @ApiOperation({ summary: 'Assign a task to users.' })
-  @ApiResponse({ status: 200, description: 'Task assigned.', type: SimpleResponseDto })
+  @ApiResponse({ status: 200, description: 'Task assigned.', type: AssignTaskResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to assign task.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only task owner can assign the task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: AssignTaskDto })
   assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
-    return { result: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
+    return { assignments: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
   }
 
   @Patch(':taskId/response')
