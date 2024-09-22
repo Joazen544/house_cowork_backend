@@ -12,6 +12,7 @@ import { HousesModule } from './modules/houses/houses.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
@@ -41,6 +42,7 @@ const cookieSession = require('cookie-session');
     UsersModule,
     TasksModule,
     HousesModule,
+    DeviceTokensModule,
   ],
   controllers: [AppController],
   providers: [

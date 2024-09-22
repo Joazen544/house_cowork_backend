@@ -3,6 +3,7 @@ import { Task } from '../../tasks/entities/task.entity';
 import { House } from 'src/modules/houses/entities/house.entity';
 import { JoinRequest } from 'src/modules/houses/entities/join-request.entity';
 import { TaskAssignment } from 'src/modules/tasks/entities/task-assignment.entity';
+import { DeviceToken } from 'src/modules/device-tokens/entities/device-token.entity';
 
 @Entity()
 @Unique(['email'])
@@ -33,4 +34,7 @@ export class User {
 
   @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.user)
   houseJoinRequests!: JoinRequest[];
+
+  @OneToMany(() => DeviceToken, (deviceToken) => deviceToken.user)
+  deviceTokens!: DeviceToken[];
 }
