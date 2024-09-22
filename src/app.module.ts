@@ -3,13 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './resources/users/users.module';
-import { TasksModule } from './resources/tasks/tasks.module';
+import { UsersModule } from './modules/users/users.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { dataSourceOptions } from './db/data-source';
 import { DataSource } from 'typeorm';
-import { HousesModule } from './resources/houses/houses.module';
-import { AuthModule } from './resources/auth/auth.module';
+import { HousesModule } from './modules/houses/houses.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
-import { TasksService } from '../resources/tasks/services/tasks.service';
+import { TasksService } from '../modules/tasks/services/tasks.service';
 
 @Injectable()
 export class TaskOwnerGuard implements CanActivate {

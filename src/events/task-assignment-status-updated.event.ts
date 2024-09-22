@@ -1,5 +1,5 @@
-import { TaskAssignment, TaskAssignmentStatus } from 'src/resources/tasks/entities/task-assignment.entity';
-import { Task } from 'src/resources/tasks/entities/task.entity';
+import { TaskAssignment, TaskAssignmentStatus } from 'src/modules/tasks/entities/task-assignment.entity';
+import { Task } from 'src/modules/tasks/entities/task.entity';
 
 export const TaskAssignmentStatusUpdatedEventName = 'task-assignment-status-updated';
 

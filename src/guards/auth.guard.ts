@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../resources/auth/auth.service';
+import { AuthService } from '../modules/auth/auth.service';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 
