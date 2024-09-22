@@ -3,26 +3,26 @@ import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './services/tasks.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from 'src/modules/users/entities/user.entity';
-import { Serialize } from '../../interceptors/serialize.interceptor';
+import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   BadRequestErrorResponseDto,
   ForbiddenErrorResponseDto,
   UnauthorizedErrorResponseDto,
-} from 'src/dto/errors/errors.dto';
+} from 'src/common/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
-import { HouseMemberGuard } from 'src/guards/house-member.guard';
+import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { GetTasksResponseDto } from './dtos/response/get-tasks-response.dto';
 import { CurrentHouse } from '../houses/decorators/current-house.decorator';
 import { House } from '../houses/entities/house.entity';
-import { TaskOwnerGuard } from 'src/guards/task-owner.guard';
+import { TaskOwnerGuard } from '../../common/guards/task-owner.guard';
 import { CurrentTask } from './decorators/current-task.decorator';
 import { Task, TaskStatus } from './entities/task.entity';
 import { UpdateTaskDto } from './dtos/request/update-task.dto';
-import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
+import { SimpleResponseDto } from '../../common/dto/response/simple-response.dto';
 import { AssignTaskDto } from './dtos/request/assign-task.dto';
 import { TaskAssignmentStatus } from './entities/task-assignment.entity';
-import { TaskAssigneeGuard } from 'src/guards/task-assignee.guard';
+import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 
 @Controller('tasks')

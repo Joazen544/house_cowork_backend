@@ -10,7 +10,7 @@ import { dataSourceOptions } from './db/data-source';
 import { DataSource } from 'typeorm';
 import { HousesModule } from './modules/houses/houses.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');

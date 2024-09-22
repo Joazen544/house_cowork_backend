@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
-import { Serialize } from '../../interceptors/serialize.interceptor';
+import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { User } from './entities/user.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -19,7 +19,7 @@ import {
   ForbiddenErrorResponseDto,
   NotFoundErrorResponseDto,
   UnauthorizedErrorResponseDto,
-} from 'src/dto/errors/errors.dto';
+} from 'src/common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 
 @Controller('users')

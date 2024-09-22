@@ -9,16 +9,16 @@ import {
   ForbiddenErrorResponseDto,
   NotFoundErrorResponseDto,
   UnauthorizedErrorResponseDto,
-} from 'src/dto/errors/errors.dto';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+} from 'src/common/dto/errors/errors.dto';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 import { HouseInfoResponseDto } from './dto/response/house-info-response.dto';
 import { CreateHouseInvitationResponseDto } from './dto/response/create-house-invitation-response.dto';
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
-import { SimpleResponseDto } from '../../dto/response/simple-response.dto';
+import { SimpleResponseDto } from '../../common/dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
 import { CurrentUser } from 'src/modules/auth/decorators/current-user.decorator';
 import { User } from 'src/modules/users/entities/user.entity';
-import { HouseMemberGuard } from 'src/guards/house-member.guard';
+import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
 import { JoinRequestsService } from './join-requests.service';
