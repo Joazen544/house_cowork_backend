@@ -23,6 +23,9 @@ export class User {
   @Column({ nullable: true })
   nickName!: string;
 
+  @Column({ nullable: true })
+  avatar!: string;
+
   @OneToMany(() => Task, (task) => task.owner)
   ownedTasks!: Task[];
 
