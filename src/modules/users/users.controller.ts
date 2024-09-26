@@ -13,7 +13,7 @@ import { UpdateUserDto } from './dtos/request/update-user.dto';
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { User } from './entities/user.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import {
   BadRequestErrorResponseDto,
   ForbiddenErrorResponseDto,
@@ -58,9 +58,10 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User info updated!', type: UserInfoResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to update user info.', type: UnauthorizedErrorResponseDto })
+  @ApiBody({ type: UpdateUserDto })
   @Serialize(UserInfoResponseDto)
-  update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
-    return { user: this.usersService.update(user, body) };
+  async update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
+    return { user: await this.usersService.update(user, body) };
   }
 
   // @Get()

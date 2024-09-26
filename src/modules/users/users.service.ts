@@ -31,7 +31,8 @@ export class UsersService {
 
   async update(user: User, attrs: Partial<User>) {
     Object.assign(user, attrs);
-    return await this.usersRepository.save(user);
+    const updatedUser = await this.usersRepository.save(user);
+    return updatedUser;
   }
 
   areUsersInSameHouse(user1: User, user2: User) {
