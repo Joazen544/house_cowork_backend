@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, NotFoundException, ForbiddenException, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
@@ -52,7 +43,7 @@ export class UsersController {
     return { user: targetUser };
   }
 
-  @Patch('/profile')
+  @Put('/profile')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update profile' })
   @ApiResponse({ status: 200, description: 'User info updated!', type: UserInfoResponseDto })
