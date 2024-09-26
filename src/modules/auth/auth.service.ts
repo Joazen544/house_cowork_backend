@@ -60,8 +60,7 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException();
     }
-
-    const user = this.usersService.findOne({ id: payload.sub });
+    const user = await this.usersService.findOne({ id: payload.sub });
     return user;
   }
 }

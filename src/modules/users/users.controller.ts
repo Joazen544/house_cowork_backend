@@ -37,7 +37,7 @@ export class UsersController {
   @Serialize(UserInfoResponseDto)
   async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
     if (id === user.id) {
-      return user;
+      return { user };
     }
 
     const targetUser = await this.usersService.findOne({ id });
@@ -49,7 +49,7 @@ export class UsersController {
     if (!isInSameHouse) {
       throw new ForbiddenException('Can only find user info in family');
     }
-    return targetUser;
+    return { user: targetUser };
   }
 
   @Patch('/profile')
