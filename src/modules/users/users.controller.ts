@@ -49,7 +49,7 @@ export class UsersController {
     if (!isInSameHouse) {
       throw new ForbiddenException('Can only find user info in family');
     }
-    return user;
+    return targetUser;
   }
 
   @Patch('/profile')
