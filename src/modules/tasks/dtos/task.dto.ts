@@ -1,9 +1,9 @@
 import { Expose, Transform, plainToClass } from 'class-transformer';
 import { User } from '../../users/entities/user.entity';
-import { UserDto } from 'src/modules/users/dtos/user.dto';
+import { UserDto } from '../../users/dtos/user.dto';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { HouseDto } from 'src/modules/houses/dto/house.dto';
+import { HouseDto } from '../../houses/dto/house.dto';
 import { TaskAccessLevel, TaskStatus } from '../entities/task.entity';
 
 export class TaskDto {
