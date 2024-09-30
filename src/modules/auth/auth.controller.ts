@@ -2,7 +2,7 @@ import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus, BadReques
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserResponseDto } from './dto/response/update-user-response.dto';
-import { Serialize } from 'src/common/interceptors/serialize.interceptor';
+import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { CreateUserDto } from './dto/request/create-user.dto';
 import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from '../../common/dto/errors/errors.dto';
 import { SigninUserDto } from './dto/request/signin-user.dto';
@@ -43,13 +43,4 @@ export class AuthController {
 
     return { user: user, accessToken: accessToken };
   }
-
-  // @Post('signout')
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Sign out' })
-  // @ApiResponse({ status: 200, description: 'User signout!' })
-  // @ApiResponse({ status: 401, description: 'Needs sign in to sign out.', type: UnauthorizedErrorResponseDto })
-  // signOut(@Session() session: any) {
-  //   session.userId = null;
-  // }
 }
