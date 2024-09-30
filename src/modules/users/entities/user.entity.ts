@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, Unique } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
-import { House } from 'src/modules/houses/entities/house.entity';
-import { JoinRequest } from 'src/modules/houses/entities/join-request.entity';
-import { TaskAssignment } from 'src/modules/tasks/entities/task-assignment.entity';
-import { DeviceToken } from 'src/modules/device-tokens/entities/device-token.entity';
+import { House } from '../../houses/entities/house.entity';
+import { JoinRequest } from '../../houses/entities/join-request.entity';
+import { TaskAssignment } from '../../tasks/entities/task-assignment.entity';
+import { DeviceToken } from '../../device-tokens/entities/device-token.entity';
 
 @Entity()
 @Unique(['email'])

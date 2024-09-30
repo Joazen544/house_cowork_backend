@@ -4,7 +4,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserResponseDto } from './dto/response/update-user-response.dto';
 import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 import { CreateUserDto } from './dto/request/create-user.dto';
-import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from 'src/common/dto/errors/errors.dto';
+import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from '../../common/dto/errors/errors.dto';
 import { SigninUserDto } from './dto/request/signin-user.dto';
 import { Public } from './decorators/public.decorator';
 import { CreateUserResponseDto } from './dto/response/create-user-response.dto';

@@ -1,5 +1,5 @@
-import { Task } from 'src/modules/tasks/entities/task.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Task } from '../../tasks/entities/task.entity';
+import { User } from '../../users/entities/user.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Rule } from './rule.entity';
 import { JoinRequest } from './join-request.entity';

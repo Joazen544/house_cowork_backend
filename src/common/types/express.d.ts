@@ -1,5 +1,5 @@
-import { User } from 'src/modules/users/entities/user.entity';
-import { House } from 'src/modules/houses/entities/house.entity';
+import { User } from '../../modules/users/entities/user.entity';
+import { House } from '../../modules/houses/entities/house.entity';
 
 declare global {
   namespace Express {

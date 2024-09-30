@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { House } from './entities/house.entity';
 import { FindOptionsWhere, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';

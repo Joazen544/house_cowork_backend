@@ -10,7 +10,7 @@ import {
   ForbiddenErrorResponseDto,
   NotFoundErrorResponseDto,
   UnauthorizedErrorResponseDto,
-} from 'src/common/dto/errors/errors.dto';
+} from '../../common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 
 @Controller('users')
@@ -54,25 +54,4 @@ export class UsersController {
   async update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
     return { user: await this.usersService.update(user, body) };
   }
-
-  // @Get()
-  // findAllUsers(@Query('email') email: string) {
-  //   return this.usersService.find(email);
-  // }
-
-  // @Delete(':id')
-  // removeUser(@Param('id', ParseIntPipe) id: number) {
-  //   return this.usersService.remove(id);
-  // }
-
-  // @Get('who')
-  // @Serialize(CreateUserResponseDto)
-  // whoAmI(@CurrentUser() user: User) {
-  //   if (!user) {
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   const accessToken = 'asdf';
-  //   return { user: user, accessToken: accessToken };
-  // }
 }

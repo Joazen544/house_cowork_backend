@@ -1,4 +1,4 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { House } from './house.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 

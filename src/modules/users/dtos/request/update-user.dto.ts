@@ -1,5 +1,5 @@
 import { IsString, IsOptional } from 'class-validator';
-import { InheritApiProperty } from 'src/common/decorators/inherit-api-property.decorator';
+import { InheritApiProperty } from '../../../../common/decorators/inherit-api-property.decorator';
 import { UserDto } from '../user.dto';
 
 export class UpdateUserDto {

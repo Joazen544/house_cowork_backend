@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { FindOptionsWhere } from 'typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { CreateTaskDto } from '../dtos/request/create-task.dto';
 import { House } from '../../houses/entities/house.entity';
 import { UpdateTaskDto } from '../dtos/request/update-task.dto';

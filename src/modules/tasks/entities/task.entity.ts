@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { House } from 'src/modules/houses/entities/house.entity';
+import { House } from '../../houses/entities/house.entity';
 import { TaskAssignment } from './task-assignment.entity';
 
 export enum TaskAccessLevel {

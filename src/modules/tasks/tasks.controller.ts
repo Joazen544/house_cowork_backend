@@ -2,14 +2,14 @@ import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Query, Pa
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './services/tasks.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   BadRequestErrorResponseDto,
   ForbiddenErrorResponseDto,
   UnauthorizedErrorResponseDto,
-} from 'src/common/dto/errors/errors.dto';
+} from '../../common/dto/errors/errors.dto';
 import { CreateTaskResponseDto } from './dtos/response/create-task-response.dto';
 import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { GetTasksResponseDto } from './dtos/response/get-tasks-response.dto';
