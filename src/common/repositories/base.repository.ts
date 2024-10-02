@@ -20,6 +20,13 @@ export class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.findOne({ where: data });
   }
 
+  async find(data: FindOptionsWhere<T>): Promise<T[]> {
+    if (Object.keys(data).length === 0) {
+      return Promise.resolve([]);
+    }
+    return await this.repository.findBy(data);
+  }
+
   async findAll(): Promise<T[]> {
     return await this.repository.find();
   }
