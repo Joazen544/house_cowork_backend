@@ -20,7 +20,7 @@ export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteCon
     throw new Error(`Invalid DATABASE_TYPE: ${type}`);
   }
 
-  const normarlDatabaseProperties = {
+  const normalDatabaseProperties = {
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     migrations: ['dist/db/migrations/*js'],
     synchronize: true,
@@ -34,14 +34,14 @@ export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteCon
       database: process.env.DATABASE_NAME,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      ...normarlDatabaseProperties,
+      ...normalDatabaseProperties,
     };
   } else {
     console.log('type is sqlite');
     return {
       type: 'sqlite',
       database: process.env.DATABASE_NAME || '',
-      ...normarlDatabaseProperties,
+      ...normalDatabaseProperties,
     };
   }
 };
