@@ -8,7 +8,7 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(email: string, password: string, name: string, nickName: string) {
-    const user = this.usersRepository.create(email, password, name, nickName);
+    const user = this.usersRepository.create({ email, password, name, nickName });
 
     return user;
   }

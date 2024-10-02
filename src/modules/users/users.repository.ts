@@ -2,14 +2,12 @@ import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
+import { BaseRepository } from 'src/common/repositories/base.repository';
 
 @Injectable()
-export class UsersRepository {
-  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>) {}
-
-  create(email: string, password: string, name: string, nickName: string) {
-    const user = this.userRepo.create({ email, password, name, nickName });
-    return this.userRepo.save(user);
+export class UsersRepository extends BaseRepository<User> {
+  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>) {
+    super(User);
   }
 
   save(user: User) {
@@ -21,13 +19,6 @@ export class UsersRepository {
       return Promise.resolve(null);
     }
     return this.userRepo.findOne({ where: attrs });
-  }
-
-  find(attrs: FindOptionsWhere<User>) {
-    if (Object.keys(attrs).length === 0) {
-      return Promise.resolve(null);
-    }
-    return this.userRepo.findBy(attrs);
   }
 
   findByIds(ids: number[]) {
