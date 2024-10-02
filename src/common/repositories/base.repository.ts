@@ -1,4 +1,4 @@
-import { Repository, EntityTarget, ObjectLiteral, DeepPartial } from 'typeorm';
+import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere } from 'typeorm';
 import AppDataSource from '../../db/data-source';
 
 export class BaseRepository<T extends ObjectLiteral> {
@@ -13,8 +13,11 @@ export class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.save(entity);
   }
 
-  async findOne(data: Partial<T>): Promise<T | null> {
-    return await this.repository.findOne({ where: { ...data } });
+  async findOne(data: FindOptionsWhere<T>): Promise<T | null> {
+    if (Object.keys(data).length === 0) {
+      return Promise.resolve(null);
+    }
+    return await this.repository.findOne({ where: data });
   }
 
   async findAll(): Promise<T[]> {
