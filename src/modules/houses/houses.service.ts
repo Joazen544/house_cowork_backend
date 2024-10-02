@@ -84,8 +84,8 @@ export class HousesService {
 
   async findOneWithInvitation(invitationCode: string) {
     const invitation = await this.invitationsRepository.findOne({
-      invitation_code: invitationCode,
-      expires_at: MoreThan(new Date()),
+      invitationCode: invitationCode,
+      expiresAt: MoreThan(new Date()),
     });
     if (!invitation) {
       throw new NotFoundException('Invitation not found');

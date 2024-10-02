@@ -9,7 +9,7 @@ export class InvitationsRepository {
   constructor(@InjectRepository(Invitation) private readonly invitationRepo: Repository<Invitation>) {}
 
   create(invitationCode: string, house: House, expiresAt: Date) {
-    const newInvitation = this.invitationRepo.create({ invitation_code: invitationCode, house, expires_at: expiresAt });
+    const newInvitation = this.invitationRepo.create({ invitationCode, house, expiresAt });
     return this.saveOne(newInvitation);
   }
 

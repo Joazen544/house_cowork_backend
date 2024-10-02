@@ -2,21 +2,21 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeo
 import { House } from './house.entity';
 
 @Entity()
-@Unique(['invitation_code'])
+@Unique(['invitationCode'])
 export class Invitation {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  invitation_code!: string;
+  invitationCode!: string;
 
   @ManyToOne(() => House, (house) => house.invitations)
   house!: House;
 
   @Column({ type: 'datetime' })
-  expires_at!: Date;
+  expiresAt!: Date;
 
   get isExpired(): boolean {
-    return new Date() > this.expires_at;
+    return new Date() > this.expiresAt;
   }
 }
