@@ -1,9 +1,10 @@
+import { InjectDataSource } from '@nestjs/typeorm';
 import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere, DataSource } from 'typeorm';
 
 export class BaseRepository<T extends ObjectLiteral> {
   private repository: Repository<T>;
 
-  constructor(entity: EntityTarget<T>, dataSource: DataSource) {
+  constructor(entity: EntityTarget<T>, @InjectDataSource() dataSource: DataSource) {
     this.repository = dataSource.getRepository(entity);
   }
 
