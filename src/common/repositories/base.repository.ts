@@ -1,16 +1,10 @@
-import { Inject } from '@nestjs/common';
 import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere, DataSource } from 'typeorm';
-import { DATA_SOURCE } from '../constant';
 
 export class BaseRepository<T extends ObjectLiteral> {
   private repository: Repository<T>;
 
-  constructor(
-    @Inject(DATA_SOURCE)
-    private dataSource: DataSource,
-    entity: EntityTarget<T>,
-  ) {
-    this.repository = this.dataSource.getRepository(entity);
+  constructor(entity: EntityTarget<T>, dataSource: DataSource) {
+    this.repository = dataSource.getRepository(entity);
   }
 
   async create(data: Partial<T>): Promise<T> {

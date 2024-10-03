@@ -13,7 +13,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
-import { DATA_SOURCE } from './common/constant';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
@@ -26,8 +25,6 @@ const AppDataSource = new DataSource(dataSourceOptions);
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
       useFactory: async () => {
         if (!AppDataSource.isInitialized) {
           await AppDataSource.initialize();
@@ -52,10 +49,6 @@ const AppDataSource = new DataSource(dataSourceOptions);
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    },
-    {
-      provide: DATA_SOURCE,
-      useValue: AppDataSource,
     },
   ],
 })

@@ -10,7 +10,7 @@ export class UsersRepository extends BaseRepository<User> {
     @InjectRepository(User) private readonly userRepo: Repository<User>,
     @InjectDataSource() dataSource: DataSource,
   ) {
-    super(dataSource, User);
+    super(User, dataSource);
   }
 
   save(user: User) {
