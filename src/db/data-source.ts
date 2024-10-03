@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
@@ -14,7 +13,7 @@ const isValidDatabaseType = (type: any): type is 'postgres' | 'sqlite' => {
   return validDatabaseTypes.includes(type);
 };
 
-export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnectionOptions => {
+const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnectionOptions => {
   const type = process.env.DATABASE_TYPE;
   if (!isValidDatabaseType(type)) {
     throw new Error(`Invalid DATABASE_TYPE: ${type}`);
@@ -47,7 +46,3 @@ export const createDataSourceOptions = (): PostgresConnectionOptions | SqliteCon
 };
 
 export const dataSourceOptions: PostgresConnectionOptions | SqliteConnectionOptions = createDataSourceOptions();
-
-const AppDataSource = new DataSource(dataSourceOptions);
-
-export default AppDataSource;

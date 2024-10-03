@@ -1,13 +1,16 @@
-import { FindOptionsWhere, In, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, FindOptionsWhere, In, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from 'src/common/repositories/base.repository';
 
 @Injectable()
 export class UsersRepository extends BaseRepository<User> {
-  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>) {
-    super(User);
+  constructor(
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectDataSource() dataSource: DataSource,
+  ) {
+    super(dataSource, User);
   }
 
   save(user: User) {

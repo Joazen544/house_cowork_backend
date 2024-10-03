@@ -1,11 +1,16 @@
-import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere } from 'typeorm';
-import AppDataSource from '../../db/data-source';
+import { Inject } from '@nestjs/common';
+import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere, DataSource } from 'typeorm';
+import { DATA_SOURCE } from '../constant';
 
 export class BaseRepository<T extends ObjectLiteral> {
   private repository: Repository<T>;
 
-  constructor(entity: EntityTarget<T>) {
-    this.repository = AppDataSource.getRepository(entity);
+  constructor(
+    @Inject(DATA_SOURCE)
+    private dataSource: DataSource,
+    entity: EntityTarget<T>,
+  ) {
+    this.repository = this.dataSource.getRepository(entity);
   }
 
   async create(data: Partial<T>): Promise<T> {
