@@ -41,8 +41,4 @@ export class User {
 
   @OneToMany(() => DeviceToken, (deviceToken) => deviceToken.user)
   deviceTokens!: DeviceToken[];
-
-  houses(): House[] {
-    return this.houseMembers.map((houseMember) => houseMember.house);
-  }
 }
