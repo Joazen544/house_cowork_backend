@@ -52,7 +52,7 @@ export class HousesService {
 
   private async addUserToHouse(queryRunner: QueryRunner, user: User, house: House) {
     const houseUser = new HouseUser();
-    houseUser.user = user;
+    houseUser.member = user;
     houseUser.house = house;
     await queryRunner.manager.save(houseUser);
   }
@@ -132,8 +132,9 @@ export class HousesService {
   //   return 'This action will make user leave a house.';
   // }
 
-  isUserMemberOfHouse(user: User, house: House) {
-    return house.users().some((u) => u.id === user.id);
+  async isUserMemberOfHouse(user: User, house: House) {
+    const users = await house.members();
+    return users.some((u) => u.id === user.id);
   }
 
   private generateInvitationCode(): string {

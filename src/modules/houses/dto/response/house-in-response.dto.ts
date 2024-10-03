@@ -5,5 +5,5 @@ import { HouseDto } from '../house.dto';
 export class HouseInResponseDto extends OmitType(HouseDto, ['members'] as const) {
   @Expose()
   @ApiProperty({ example: [1, 2] })
-  membersId!: number[];
+  memberIds!: number[];
 }

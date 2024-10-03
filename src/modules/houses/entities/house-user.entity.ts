@@ -12,10 +12,10 @@ export class HouseUser {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, (user) => user.houseUsers)
-  user!: User;
+  @ManyToOne(() => User, (user) => user.houseMembers, { lazy: true })
+  member!: User;
 
-  @ManyToOne(() => House, (house) => house.houseUsers)
+  @ManyToOne(() => House, (house) => house.houseMembers)
   house!: House;
 
   @Column({

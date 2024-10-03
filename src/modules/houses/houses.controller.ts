@@ -41,8 +41,9 @@ export class HousesController {
   @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
   @ApiBody({ type: CreateHouseDto })
   @Serialize(CreateHouseResponseDto)
-  create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
-    return this.housesService.create(user, createHouseDto);
+  async create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
+    const house = await this.housesService.create(user, createHouseDto);
+    return { house };
   }
 
   @Get('own')
@@ -67,8 +68,10 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only house member can get house info.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseInfoResponseDto)
-  findOne(@CurrentHouse() house: House) {
-    return { house };
+  async findOne(@CurrentHouse() house: House) {
+    const members = await house.members();
+    const houseInfo = { ...house, memberIds: members.map((user) => user.id) };
+    return { house: houseInfo };
   }
 
   @Patch(':houseId')

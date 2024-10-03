@@ -33,8 +33,8 @@ export class User {
   @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.user)
   taskAssignments!: TaskAssignment[];
 
-  @OneToMany(() => HouseUser, (houseUser) => houseUser.user)
-  houseUsers!: HouseUser[];
+  @OneToMany(() => HouseUser, (houseMember) => houseMember.member, { eager: true })
+  houseMembers!: HouseUser[];
 
   @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.user)
   houseJoinRequests!: JoinRequest[];
@@ -43,6 +43,6 @@ export class User {
   deviceTokens!: DeviceToken[];
 
   houses(): House[] {
-    return this.houseUsers.map((houseUser) => houseUser.house);
+    return this.houseMembers.map((houseMember) => houseMember.house);
   }
 }

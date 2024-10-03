@@ -20,19 +20,21 @@ export class House {
   @OneToMany(() => Rule, (rule) => rule.house)
   rules!: Rule[];
 
-  @OneToMany(() => HouseUser, (houseUser) => houseUser.house)
-  houseUsers!: HouseUser[];
+  @OneToMany(() => HouseUser, (houseMember) => houseMember.house, { eager: true })
+  houseMembers!: HouseUser[];
 
   @OneToMany(() => Task, (task) => task.house)
   tasks!: Task[];
 
-  @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.house)
+  @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.house, { lazy: true })
   joinRequests!: JoinRequest[];
 
   @OneToMany(() => Invitation, (invitation) => invitation.house)
   invitations!: Invitation[];
 
-  users(): User[] {
-    return this.houseUsers.map((houseUser) => houseUser.user);
+  async members(): Promise<User[]> {
+    const houseMembers = await this.houseMembers;
+    const users = await Promise.all(houseMembers.map(async (houseMember) => await houseMember.member));
+    return users;
   }
 }
