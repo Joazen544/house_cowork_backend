@@ -68,7 +68,7 @@ export class HousesService {
       await this.rulesRepository.createMany(newRules, house);
     }
 
-    return this.housesRepository.saveOne(house);
+    return this.housesRepository.save(house);
   }
 
   // remove(id: number) {
