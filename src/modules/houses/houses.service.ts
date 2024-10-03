@@ -9,7 +9,7 @@ import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { Rule } from './entities/rule.entity';
 import { InvitationsRepository } from './repositories/invitations.repository';
-import { HouseUser } from './entities/house-user.entity';
+import { HouseMember } from './entities/house-member.entity';
 
 @Injectable()
 export class HousesService {
@@ -51,10 +51,10 @@ export class HousesService {
   }
 
   private async addUserToHouse(queryRunner: QueryRunner, user: User, house: House) {
-    const houseUser = new HouseUser();
-    houseUser.member = user;
-    houseUser.house = house;
-    await queryRunner.manager.save(houseUser);
+    const houseMember = new HouseMember();
+    houseMember.member = user;
+    houseMember.house = house;
+    await queryRunner.manager.save(houseMember);
   }
 
   private async addRulesToHouse(queryRunner: QueryRunner, rules: string[], house: House) {
@@ -133,8 +133,15 @@ export class HousesService {
   // }
 
   async isUserMemberOfHouse(user: User, house: House) {
-    const users = await house.members();
+    const users = await this.getHouseMembers(house);
     return users.some((u) => u.id === user.id);
+  }
+
+  async getHouseMembers(house: House) {
+    const houseMembers = await this.housesRepository.getHouseMembers(house);
+
+    console.log(houseMembers);
+    return houseMembers;
   }
 
   private generateInvitationCode(): string {

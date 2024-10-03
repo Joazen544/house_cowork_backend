@@ -2,13 +2,13 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from './house.entity';
 
-export enum HouseUserStatus {
+export enum HouseMemberStatus {
   JOINED = 0,
   LEFT = 1,
 }
 
 @Entity()
-export class HouseUser {
+export class HouseMember {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -20,8 +20,8 @@ export class HouseUser {
 
   @Column({
     type: 'integer',
-    enum: HouseUserStatus,
-    default: HouseUserStatus.JOINED,
+    enum: HouseMemberStatus,
+    default: HouseMemberStatus.JOINED,
   })
-  status!: HouseUserStatus;
+  status!: HouseMemberStatus;
 }

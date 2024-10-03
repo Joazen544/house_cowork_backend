@@ -69,7 +69,7 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseInfoResponseDto)
   async findOne(@CurrentHouse() house: House) {
-    const members = await house.members();
+    const members = await this.housesService.getHouseMembers(house);
     const houseInfo = { ...house, memberIds: members.map((user) => user.id) };
     return { house: houseInfo };
   }

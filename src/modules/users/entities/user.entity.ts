@@ -3,8 +3,8 @@ import { Task } from '../../tasks/entities/task.entity';
 import { JoinRequest } from '../../houses/entities/join-request.entity';
 import { TaskAssignment } from '../../tasks/entities/task-assignment.entity';
 import { DeviceToken } from '../../device-tokens/entities/device-token.entity';
-import { HouseUser } from 'src/modules/houses/entities/house-user.entity';
-import { House } from 'src/modules/houses/entities/house.entity';
+import { HouseMember } from '../../houses/entities/house-member.entity';
+import { House } from '../../houses/entities/house.entity';
 
 @Entity()
 @Unique(['email'])
@@ -33,8 +33,8 @@ export class User {
   @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.user)
   taskAssignments!: TaskAssignment[];
 
-  @OneToMany(() => HouseUser, (houseMember) => houseMember.member, { eager: true })
-  houseMembers!: HouseUser[];
+  @OneToMany(() => HouseMember, (houseMember) => houseMember.member, { eager: true })
+  houseMembers!: HouseMember[];
 
   @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.user)
   houseJoinRequests!: JoinRequest[];
