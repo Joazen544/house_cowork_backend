@@ -39,4 +39,8 @@ export class BaseRepository<T extends ObjectLiteral> {
   async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }
+
+  save(entity: T) {
+    return this.repository.save(entity);
+  }
 }

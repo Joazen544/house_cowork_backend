@@ -1,39 +1,19 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { House } from '../../houses/entities/house.entity';
+import { BaseRepository } from 'src/common/repositories/base.repository';
 
 @Injectable()
-export class TasksRepository {
-  constructor(@InjectRepository(Task) private readonly taskRepo: Repository<Task>) {}
-
-  create(task: Task) {
-    return this.save(task);
-  }
-
-  save(task: Task) {
-    return this.taskRepo.save(task);
-  }
-
-  findOne(attrs: FindOptionsWhere<Task>): Promise<Task | null> {
-    if (Object.keys(attrs).length === 0) {
-      return Promise.resolve(null);
-    }
-    return this.taskRepo.findOne({ where: attrs });
-  }
-
-  find(attrs: FindOptionsWhere<Task>) {
-    if (Object.keys(attrs).length === 0) {
-      return Promise.resolve(null);
-    }
-    return this.taskRepo.findBy(attrs);
-  }
-
-  remove(task: Task) {
-    return this.taskRepo.remove(task);
+export class TasksRepository extends BaseRepository<Task> {
+  constructor(
+    @InjectRepository(Task) private readonly taskRepo: Repository<Task>,
+    @InjectDataSource() dataSource: DataSource,
+  ) {
+    super(Task, dataSource);
   }
 
   findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {

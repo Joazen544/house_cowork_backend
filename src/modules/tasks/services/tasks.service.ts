@@ -51,12 +51,11 @@ export class TasksService {
   }
 
   async update(task: Task, updateTaskDto: UpdateTaskDto) {
-    Object.assign(task, updateTaskDto);
-    return this.tasksRepository.save(task);
+    return this.tasksRepository.update(task.id, updateTaskDto);
   }
 
   async delete(task: Task) {
-    await this.tasksRepository.remove(task);
+    await this.tasksRepository.delete(task.id);
     return true;
   }
 
