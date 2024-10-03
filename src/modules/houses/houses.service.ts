@@ -78,7 +78,11 @@ export class HousesService {
   async createInvitation(house: House) {
     const expirationTime = new Date(Date.now() + 5 * 60 * 1000);
 
-    const invitation = await this.invitationsRepository.create(this.generateInvitationCode(), house, expirationTime);
+    const invitation = await this.invitationsRepository.create({
+      invitationCode: this.generateInvitationCode(),
+      house,
+      expiresAt: expirationTime,
+    });
     return invitation;
   }
 
