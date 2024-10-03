@@ -71,11 +71,11 @@ export class HousesService {
     return this.housesRepository.findHousesByUser(user);
   }
 
-  findOne(attrs: FindOptionsWhere<User>) {
+  findOne(attrs: FindOptionsWhere<House>) {
     if (Object.values(attrs).length === 0) {
       return null;
     }
-    return this.housesRepository.findOne(attrs);
+    return this.housesRepository.findOne({ where: attrs });
   }
 
   async update(house: House, updateHouseDto: UpdateHouseDto) {
@@ -118,8 +118,10 @@ export class HousesService {
 
   async findOneWithInvitation(invitationCode: string) {
     const invitation = await this.invitationsRepository.findOne({
-      invitationCode: invitationCode,
-      expiresAt: MoreThan(new Date()),
+      where: {
+        invitationCode: invitationCode,
+        expiresAt: MoreThan(new Date()),
+      },
     });
     if (!invitation) {
       throw new NotFoundException('Invitation not found');

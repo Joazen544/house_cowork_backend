@@ -1,5 +1,14 @@
 import { InjectDataSource } from '@nestjs/typeorm';
-import { Repository, EntityTarget, ObjectLiteral, DeepPartial, FindOptionsWhere, DataSource } from 'typeorm';
+import {
+  Repository,
+  EntityTarget,
+  ObjectLiteral,
+  DeepPartial,
+  FindOptionsWhere,
+  DataSource,
+  FindOneOptions,
+  FindManyOptions,
+} from 'typeorm';
 
 export class BaseRepository<T extends ObjectLiteral> {
   private repository: Repository<T>;
@@ -13,18 +22,18 @@ export class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.save(entity);
   }
 
-  async findOne(data: FindOptionsWhere<T>): Promise<T | null> {
+  async findOne(data: FindOneOptions<T>): Promise<T | null> {
     if (Object.keys(data).length === 0) {
       return Promise.resolve(null);
     }
-    return await this.repository.findOne({ where: data });
+    return await this.repository.findOne(data);
   }
 
-  async find(data: FindOptionsWhere<T>): Promise<T[]> {
+  async find(data: FindManyOptions<T>): Promise<T[]> {
     if (Object.keys(data).length === 0) {
       return Promise.resolve([]);
     }
-    return await this.repository.findBy(data);
+    return await this.repository.find(data);
   }
 
   async findAll(): Promise<T[]> {

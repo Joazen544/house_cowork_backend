@@ -16,12 +16,4 @@ export class TaskAssignmentsRepository extends BaseRepository<TaskAssignment> {
   createMultiple(taskAssignments: TaskAssignment[]) {
     return this.saveMany(taskAssignments);
   }
-
-  findOne(attrs: FindOptionsWhere<TaskAssignment>) {
-    return this.taskAssignmentRepo.findOne({ where: attrs });
-  }
-
-  findMany(attrs: FindOptionsWhere<TaskAssignment>) {
-    return this.taskAssignmentRepo.find({ where: attrs });
-  }
 }

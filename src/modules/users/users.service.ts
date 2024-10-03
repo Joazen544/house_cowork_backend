@@ -14,11 +14,11 @@ export class UsersService {
   }
 
   async findOne(attrs: FindOptionsWhere<User>) {
-    return this.usersRepository.findOne(attrs);
+    return this.usersRepository.findOne({ where: attrs });
   }
 
   async find(email: string) {
-    return this.usersRepository.find({ email });
+    return this.usersRepository.find({ where: { email } });
   }
 
   async findByIds(ids: number[]): Promise<User[]> {

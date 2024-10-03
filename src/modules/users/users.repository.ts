@@ -1,4 +1,4 @@
-import { DataSource, FindOptionsWhere, In, Repository } from 'typeorm';
+import { DataSource, FindOneOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
@@ -17,14 +17,19 @@ export class UsersRepository extends BaseRepository<User> {
     return this.userRepo.save(user);
   }
 
-  findOne(attrs: FindOptionsWhere<User>): Promise<User | null> {
-    if (Object.keys(attrs).length === 0) {
-      return Promise.resolve(null);
-    }
-    return this.userRepo.findOne({ where: attrs });
-  }
-
   findByIds(ids: number[]) {
     return this.userRepo.findBy({ id: In(ids) });
+  }
+
+  async areUsersInSameHouse(user1Id: number, user2Id: number): Promise<boolean> {
+    const user1 = await this.findOne({ where: { id: user1Id }, relations: ['houseMembers', 'houseMembers.house'] });
+    const user2 = await this.findOne({ where: { id: user2Id }, relations: ['houseMembers', 'houseMembers.house'] });
+
+    if (!user1 || !user2) {
+      return false;
+    }
+
+    const user1HouseIds = new Set(user1.houseMembers.map(({ house }) => house.id));
+    return user2.houseMembers.some(({ house }) => user1HouseIds.has(house.id));
   }
 }

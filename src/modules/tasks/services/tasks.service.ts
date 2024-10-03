@@ -31,11 +31,11 @@ export class TasksService {
   }
 
   async findOne(attrs: FindOptionsWhere<Task>) {
-    return this.tasksRepository.findOne(attrs);
+    return this.tasksRepository.findOne({ where: attrs });
   }
 
   async find(attrs: FindOptionsWhere<Task>) {
-    return this.tasksRepository.find(attrs);
+    return this.tasksRepository.find({ where: attrs });
   }
 
   async findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
@@ -77,12 +77,12 @@ export class TasksService {
   }
 
   async isUserAssigneeOfTask(user: User, task: Task) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOne({ task, user });
+    const taskAssignment = await this.taskAssignmentsRepository.findOne({ where: { task, user } });
     return !!taskAssignment;
   }
 
   async respondToAssignment(task: Task, user: User, status: TaskAssignmentStatus) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOne({ task, user });
+    const taskAssignment = await this.taskAssignmentsRepository.findOne({ where: { task, user } });
     if (!taskAssignment) {
       throw new ForbiddenException('Task assignment not found, user is not assignee of this task.');
     }
@@ -103,7 +103,7 @@ export class TasksService {
       throw new Error('Task not found when update after task assignment status updated');
     }
 
-    const taskAssignments = await this.taskAssignmentsRepository.findMany({ task });
+    const taskAssignments = await this.taskAssignmentsRepository.find({ where: { task } });
 
     if (taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.DONE)) {
       task.status = TaskStatus.DONE;
