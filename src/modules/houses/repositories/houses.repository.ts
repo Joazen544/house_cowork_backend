@@ -1,4 +1,4 @@
-import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { House } from '../entities/house.entity';
@@ -11,13 +11,5 @@ export class HousesRepository extends BaseRepository<House> {
     @InjectDataSource() dataSource: DataSource,
   ) {
     super(House, dataSource);
-  }
-
-  findOne(attrs: FindOptionsWhere<House>) {
-    return this.houseRepo.findOneBy(attrs);
-  }
-
-  findMany(attrs: FindOptionsWhere<House>) {
-    return this.houseRepo.findBy(attrs);
   }
 }
