@@ -22,14 +22,29 @@ export class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.save(entity);
   }
 
-  async findOne(data: FindOneOptions<T>): Promise<T | null> {
+  async findOneBy(data: FindOptionsWhere<T>): Promise<T | null> {
+    if (Object.keys(data).length === 0) {
+      return Promise.resolve(null);
+    }
+    return await this.findOne({ where: data });
+  }
+
+  private async findOne(data: FindOneOptions<T>): Promise<T | null> {
     if (Object.keys(data).length === 0) {
       return Promise.resolve(null);
     }
     return await this.repository.findOne(data);
   }
 
-  async find(data: FindManyOptions<T>): Promise<T[]> {
+  async findBy(data: FindOptionsWhere<T>): Promise<T[] | []> {
+    if (Object.keys(data).length === 0) {
+      return Promise.resolve([]);
+    }
+
+    return await this.repository.find({ where: data });
+  }
+
+  private async find(data: FindManyOptions<T>): Promise<T[]> {
     if (Object.keys(data).length === 0) {
       return Promise.resolve([]);
     }

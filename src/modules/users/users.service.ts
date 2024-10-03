@@ -14,11 +14,11 @@ export class UsersService {
   }
 
   async findOne(attrs: FindOptionsWhere<User>) {
-    return this.usersRepository.findOne({ where: attrs });
+    return this.usersRepository.findOneBy(attrs);
   }
 
   async find(email: string) {
-    return this.usersRepository.find({ where: { email } });
+    return this.usersRepository.findBy({ email });
   }
 
   async findByIds(ids: number[]): Promise<User[]> {
@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   areUsersInSameHouse(user1: User, user2: User) {
-    const user1HouseIds = new Set(user1.houseMembers.map(({ house }) => house.id));
-    return user2.houseMembers.some(({ house }) => user1HouseIds.has(house.id));
+    const areUsersInSameHouse = this.usersRepository.areUsersInSameHouse(user1.id, user2.id);
+    return areUsersInSameHouse;
   }
 }

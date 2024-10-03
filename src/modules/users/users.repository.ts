@@ -1,4 +1,4 @@
-import { DataSource, FindOneOptions, FindOptionsWhere, In, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
@@ -22,14 +22,16 @@ export class UsersRepository extends BaseRepository<User> {
   }
 
   async areUsersInSameHouse(user1Id: number, user2Id: number): Promise<boolean> {
-    const user1 = await this.findOne({ where: { id: user1Id }, relations: ['houseMembers', 'houseMembers.house'] });
-    const user2 = await this.findOne({ where: { id: user2Id }, relations: ['houseMembers', 'houseMembers.house'] });
+    const result = await this.userRepo
+      .createQueryBuilder('user1')
+      .innerJoin('user1.houseMembers', 'hm1')
+      .innerJoin('hm1.house', 'house')
+      .innerJoin('house.houseMembers', 'hm2')
+      .innerJoin('hm2.user', 'user2')
+      .where('user1.id = :user1Id', { user1Id })
+      .andWhere('user2.id = :user2Id', { user2Id })
+      .getCount();
 
-    if (!user1 || !user2) {
-      return false;
-    }
-
-    const user1HouseIds = new Set(user1.houseMembers.map(({ house }) => house.id));
-    return user2.houseMembers.some(({ house }) => user1HouseIds.has(house.id));
+    return result > 0;
   }
 }

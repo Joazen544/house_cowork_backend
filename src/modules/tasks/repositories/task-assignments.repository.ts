@@ -1,4 +1,4 @@
-import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { TaskAssignment } from '../entities/task-assignment.entity';
