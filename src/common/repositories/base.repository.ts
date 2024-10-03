@@ -40,7 +40,11 @@ export class BaseRepository<T extends ObjectLiteral> {
     await this.repository.delete(id);
   }
 
-  save(entity: T) {
+  async save(entity: T) {
     return this.repository.save(entity);
+  }
+
+  async saveMany(entities: T[]) {
+    return await this.repository.save(entities);
   }
 }

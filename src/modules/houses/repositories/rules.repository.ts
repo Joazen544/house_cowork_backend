@@ -1,16 +1,17 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Rule } from '../entities/rule.entity';
 import { House } from '../entities/house.entity';
+import { BaseRepository } from 'src/common/repositories/base.repository';
 
 @Injectable()
-export class RulesRepository {
-  constructor(@InjectRepository(Rule) private readonly ruleRepo: Repository<Rule>) {}
-
-  createOne(rule: Rule, house: House) {
-    rule.house = house;
-    return this.saveOne(rule);
+export class RulesRepository extends BaseRepository<Rule> {
+  constructor(
+    @InjectRepository(Rule) private readonly ruleRepo: Repository<Rule>,
+    @InjectDataSource() dataSource: DataSource,
+  ) {
+    super(Rule, dataSource);
   }
 
   createMany(rules: Rule[], house: House) {
@@ -18,22 +19,6 @@ export class RulesRepository {
       rule.house = house;
     });
     return this.saveMany(rules);
-  }
-
-  async saveOne(rule: Rule) {
-    return await this.ruleRepo.save(rule);
-  }
-
-  async saveMany(rules: Rule[]) {
-    return await this.ruleRepo.save(rules);
-  }
-
-  findOne(attrs: FindOptionsWhere<Rule>) {
-    return this.ruleRepo.findOneBy(attrs);
-  }
-
-  find(attrs: FindOptionsWhere<Rule>) {
-    return this.ruleRepo.findBy(attrs);
   }
 
   deleteByHouse(house: House) {
