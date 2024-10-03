@@ -87,8 +87,10 @@ export class TasksService {
       throw new ForbiddenException('Task assignment not found, user is not assignee of this task.');
     }
 
-    const result = await this.taskAssignmentsRepository.update(taskAssignment, { assigneeStatus: status });
-    if (!result.affected) {
+    const updatedTaskAssignment = await this.taskAssignmentsRepository.update(taskAssignment.id, {
+      assigneeStatus: status,
+    });
+    if (!updatedTaskAssignment) {
       throw new Error('Task assignment error');
     }
 
