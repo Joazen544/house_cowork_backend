@@ -22,6 +22,7 @@ import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
 import { JoinRequestsService } from './join-requests.service';
+import { HousesByMemberResponseDto } from './dto/response/houses-by-member-response.dto';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -42,6 +43,19 @@ export class HousesController {
   @Serialize(CreateHouseResponseDto)
   create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
     return this.housesService.create(user, createHouseDto);
+  }
+
+  @Get('own')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get houses by user' })
+  @ApiResponse({ status: 200, description: 'Houses got.', type: HouseInfoResponseDto })
+  @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
+  @Serialize(HousesByMemberResponseDto)
+  async findOwnHouses(@CurrentUser() user: User) {
+    const houses = await this.housesService.findHousesByUser(user);
+    const houseIds = houses.map((house) => house.id);
+    return { houseIds };
   }
 
   @Get(':houseId')

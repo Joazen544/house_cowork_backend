@@ -9,7 +9,7 @@ export class CreateHouseDto {
 
   @ApiProperty({ example: 'This is a warm house' })
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   description!: string;
 
   @ApiProperty({ example: ['Pay the rent on 5th', 'Be clean', 'Be happy', 'Dogs and cats are welcome'] })

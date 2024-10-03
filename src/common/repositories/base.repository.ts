@@ -47,4 +47,8 @@ export class BaseRepository<T extends ObjectLiteral> {
   async saveMany(entities: T[]) {
     return await this.repository.save(entities);
   }
+
+  getQueryRunner() {
+    return this.repository.manager.connection.createQueryRunner();
+  }
 }

@@ -3,7 +3,7 @@ import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from '../users/entities/user.entity';
 import { House } from './entities/house.entity';
-import { FindOptionsWhere, MoreThan } from 'typeorm';
+import { FindOptionsWhere, MoreThan, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
@@ -20,25 +20,55 @@ export class HousesService {
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
+    const queryRunner = this.housesRepository.getQueryRunner();
+    await queryRunner.startTransaction();
+
+    try {
+      const house = this.createHouseEntity(createHouseDto);
+      const savedHouse = await queryRunner.manager.save(house);
+
+      await this.addUserToHouse(queryRunner, user, savedHouse);
+
+      if (createHouseDto.rules && createHouseDto.rules.length > 0) {
+        await this.addRulesToHouse(queryRunner, createHouseDto.rules, savedHouse);
+      }
+
+      await queryRunner.commitTransaction();
+      return savedHouse;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new Error(`Failed to create house: ${(error as Error).message}`);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  private createHouseEntity(createHouseDto: CreateHouseDto): House {
     const house = new House();
+    house.name = createHouseDto.name;
+    house.description = createHouseDto.description;
+    return house;
+  }
+
+  private async addUserToHouse(queryRunner: QueryRunner, user: User, house: House) {
     const houseUser = new HouseUser();
     houseUser.user = user;
     houseUser.house = house;
-    house.houseUsers.push(houseUser);
+    await queryRunner.manager.save(houseUser);
+  }
 
-    house.name = createHouseDto.name;
-    house.description = createHouseDto.description;
-
-    const savedHouse = await this.housesRepository.create(house);
-    const rules = createHouseDto.rules.map((ruleContent) => {
+  private async addRulesToHouse(queryRunner: QueryRunner, rules: string[], house: House) {
+    const ruleEntities = rules.map((ruleContent) => {
       const rule = new Rule();
       rule.description = ruleContent;
+      rule.house = house;
       return rule;
     });
+    await queryRunner.manager.save(ruleEntities);
+  }
 
-    await this.rulesRepository.createMany(rules, savedHouse);
-
-    return savedHouse;
+  findHousesByUser(user: User) {
+    return this.housesRepository.findHousesByUser(user);
   }
 
   findOne(attrs: FindOptionsWhere<User>) {
