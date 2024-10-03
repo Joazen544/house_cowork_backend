@@ -36,9 +36,7 @@ export class UsersService {
   }
 
   areUsersInSameHouse(user1: User, user2: User) {
-    const user1HouseIds = new Set(user1.houses().map((house) => house.id));
-    const user2HouseIds = new Set(user2.houses().map((house) => house.id));
-
-    return [...user1HouseIds].some((houseId) => user2HouseIds.has(houseId));
+    const user1HouseIds = new Set(user1.houseMembers.map(({ house }) => house.id));
+    return user2.houseMembers.some(({ house }) => user1HouseIds.has(house.id));
   }
 }

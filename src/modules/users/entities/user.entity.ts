@@ -4,7 +4,6 @@ import { JoinRequest } from '../../houses/entities/join-request.entity';
 import { TaskAssignment } from '../../tasks/entities/task-assignment.entity';
 import { DeviceToken } from '../../device-tokens/entities/device-token.entity';
 import { HouseMember } from '../../houses/entities/house-member.entity';
-import { House } from '../../houses/entities/house.entity';
 
 @Entity()
 @Unique(['email'])
