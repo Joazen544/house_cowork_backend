@@ -32,7 +32,6 @@ export class HousesRepository extends BaseRepository<House> {
       where: { house: { id: house.id } },
       relations: ['member'],
     });
-    console.log(houseMembers);
     return houseMembers.map((houseMember) => houseMember.member);
   }
 
