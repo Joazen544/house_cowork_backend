@@ -1,20 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { InheritApiProperty } from 'src/common/decorators/inherit-api-property.decorator';
+import { HouseDto } from '../house.dto';
 
 export class CreateHouseDto {
-  @ApiProperty({ example: 'No 10 Floor 5' })
   @IsString()
   @IsNotEmpty()
+  @InheritApiProperty(HouseDto)
   name!: string;
 
-  @ApiProperty({ example: 'This is a warm house' })
   @IsString()
   @IsNotEmpty()
+  @InheritApiProperty(HouseDto)
   description!: string;
 
-  @ApiProperty({ example: ['Pay the rent on 5th', 'Be clean', 'Be happy', 'Dogs and cats are welcome'] })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
+  @InheritApiProperty(HouseDto)
   rules!: string[];
 }
