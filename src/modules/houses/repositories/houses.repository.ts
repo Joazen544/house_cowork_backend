@@ -28,10 +28,7 @@ export class HousesRepository extends BaseRepository<House> {
   }
 
   async getHouseMembers(house: House) {
-    const houseMembers = await this.HouseMemberRepo.find({
-      where: { house: { id: house.id } },
-      relations: ['member'],
-    });
+    const houseMembers = house.houseMembers;
     return houseMembers.map((houseMember) => houseMember.member);
   }
 

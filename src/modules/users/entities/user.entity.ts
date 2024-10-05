@@ -32,7 +32,7 @@ export class User {
   @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.user)
   taskAssignments!: TaskAssignment[];
 
-  @OneToMany(() => HouseMember, (houseMember) => houseMember.member, { eager: true })
+  @OneToMany(() => HouseMember, (houseMember) => houseMember.member, { lazy: true })
   houseMembers!: HouseMember[];
 
   @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.user)

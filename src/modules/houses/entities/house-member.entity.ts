@@ -12,7 +12,7 @@ export class HouseMember {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, (user) => user.houseMembers, { lazy: true })
+  @ManyToOne(() => User, (user) => user.houseMembers, { eager: true })
   member!: User;
 
   @ManyToOne(() => House, (house) => house.houseMembers)

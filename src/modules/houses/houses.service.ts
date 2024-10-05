@@ -118,6 +118,12 @@ export class HousesService {
     return houseMembers;
   }
 
+  formatHouseInfoInResponse(house: House) {
+    const houseMembers = house.houseMembers;
+    const memberIds = houseMembers.map((houseMember) => houseMember.member.id);
+    return { ...house, memberIds };
+  }
+
   private generateInvitationCode(): string {
     return uuidv4();
   }
