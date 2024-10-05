@@ -43,7 +43,8 @@ export class HousesController {
   @Serialize(CreateHouseResponseDto)
   async create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
     const house = await this.housesService.create(user, createHouseDto);
-    return { house };
+    const houseInResponse = this.housesService.formatHouseInfoInResponse(house);
+    return { house: houseInResponse };
   }
 
   @Get('own')

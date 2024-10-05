@@ -20,7 +20,7 @@ export class HousesService {
   ) {}
 
   async create(user: User, createHouseDto: CreateHouseDto) {
-    return await this.dataSource.transaction(async (transactionalEntityManager) => {
+    const savedHouse = await this.dataSource.transaction(async (transactionalEntityManager) => {
       const house = this.createHouseEntity(createHouseDto);
       const savedHouse = await this.housesRepository.createHouseWithTransaction(
         transactionalEntityManager,
@@ -28,11 +28,14 @@ export class HousesService {
         house,
         createHouseDto.rules,
       );
-
-      const relatedRules = await this.rulesRepository.findBy({ house: savedHouse });
-      savedHouse.rules = relatedRules;
       return savedHouse;
     });
+    const wholeHouse = await this.findOne({ id: savedHouse.id });
+
+    if (!wholeHouse) {
+      throw new NotFoundException('House not created');
+    }
+    return wholeHouse;
   }
 
   private createHouseEntity(createHouseDto: CreateHouseDto): House {
