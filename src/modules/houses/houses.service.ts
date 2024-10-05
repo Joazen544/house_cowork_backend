@@ -22,12 +22,16 @@ export class HousesService {
   async create(user: User, createHouseDto: CreateHouseDto) {
     return await this.dataSource.transaction(async (transactionalEntityManager) => {
       const house = this.createHouseEntity(createHouseDto);
-      return await this.housesRepository.createHouseWithTransaction(
+      const savedHouse = await this.housesRepository.createHouseWithTransaction(
         transactionalEntityManager,
         user,
         house,
         createHouseDto.rules,
       );
+
+      const relatedRules = await this.rulesRepository.findBy({ house: savedHouse });
+      savedHouse.rules = relatedRules;
+      return savedHouse;
     });
   }
 
@@ -111,7 +115,6 @@ export class HousesService {
   async getHouseMembers(house: House) {
     const houseMembers = await this.housesRepository.getHouseMembers(house);
 
-    console.log(houseMembers);
     return houseMembers;
   }
 

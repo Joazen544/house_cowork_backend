@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { HousesService } from '../../modules/houses/houses.service';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class HouseMemberGuard implements CanActivate {
 
     const house = await this.housesService.findOne({ id: houseId });
     if (!house) {
-      throw new ForbiddenException('House not found');
+      throw new NotFoundException('House not found');
     }
 
     const isMember = await this.housesService.isUserMemberOfHouse(user, house);
