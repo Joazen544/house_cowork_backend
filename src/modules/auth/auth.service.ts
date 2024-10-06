@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async signUp(email: string, password: string, name: string, nickName: string) {
-    const users = await this.usersService.find(email);
+    const users = await this.usersService.findByEmail(email);
     if (users && users.length) {
       throw new EmailInUseException();
     }
