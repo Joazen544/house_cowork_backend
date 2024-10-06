@@ -35,27 +35,27 @@ describe('UsersController', () => {
   describe('findOne', () => {
     it('should return user info if user is the same', async () => {
       const user: User = { id: 1 } as User;
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
+      jest.spyOn(usersService, 'findOneBy').mockResolvedValue(user);
       const result = await controller.findOne(1, user);
       expect(result).toEqual({ user });
     });
 
     it('should throw NotFoundException if user not found', async () => {
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(null);
+      jest.spyOn(usersService, 'findOneBy').mockResolvedValue(null);
       await expect(controller.findOne(2, { id: 1 } as User)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw ForbiddenException if users are not in the same house', async () => {
       const targetUser: User = { id: 2 } as User;
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(targetUser);
-      jest.spyOn(usersService, 'areUsersInSameHouse').mockReturnValue(false);
+      jest.spyOn(usersService, 'findOneBy').mockResolvedValue(targetUser);
+      jest.spyOn(usersService, 'areUsersInSameHouse').mockResolvedValue(false);
       await expect(controller.findOne(2, { id: 1 } as User)).rejects.toThrow(ForbiddenException);
     });
 
     it('should return target user info if users are in the same house', async () => {
       const targetUser: User = { id: 2 } as User;
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(targetUser);
-      jest.spyOn(usersService, 'areUsersInSameHouse').mockReturnValue(true);
+      jest.spyOn(usersService, 'findOneBy').mockResolvedValue(targetUser);
+      jest.spyOn(usersService, 'areUsersInSameHouse').mockResolvedValue(true);
       const result = await controller.findOne(2, { id: 1 } as User);
       expect(result).toEqual({ user: targetUser });
     });
