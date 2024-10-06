@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JoinRequestStatus } from './entities/join-request.entity';
 import { User } from '../users/entities/user.entity';
 import { HousesService } from './houses.service';
@@ -60,7 +60,7 @@ export class JoinRequestsService {
     } else if (result === AnswerJoinRequestResult.REJECT) {
       joinRequest.status = JoinRequestStatus.REJECTED;
     } else {
-      throw new BadRequestException('Invalid result');
+      throw new Error('Invalid result');
     }
 
     await this.joinRequestsRepository.save(joinRequest);
