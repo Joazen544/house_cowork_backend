@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere } from 'typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
@@ -9,6 +9,7 @@ import { UsersService } from '../../users/users.service';
 import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
+import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
 
 @Injectable()
 export class TasksService {
@@ -84,7 +85,7 @@ export class TasksService {
   async respondToAssignment(task: Task, user: User, status: TaskAssignmentStatus) {
     const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
     if (!taskAssignment) {
-      throw new ForbiddenException('Task assignment not found, user is not assignee of this task.');
+      throw new TaskAssignmentNotFoundException();
     }
 
     const updatedTaskAssignment = await this.taskAssignmentsRepository.update(taskAssignment.id, {

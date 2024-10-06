@@ -37,6 +37,7 @@ import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
+import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -180,6 +181,13 @@ export class TasksController {
     type: ForbiddenErrorResponseDto,
   })
   respond(@CurrentTask() task: Task, @CurrentUser() user: User, @Body('status') status: TaskAssignmentStatus) {
-    return { result: this.tasksService.respondToAssignment(task, user, status) };
+    try {
+      return { result: this.tasksService.respondToAssignment(task, user, status) };
+    } catch (error) {
+      if (error instanceof TaskAssignmentNotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 }

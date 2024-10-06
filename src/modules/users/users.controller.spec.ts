@@ -35,6 +35,7 @@ describe('UsersController', () => {
   describe('findOne', () => {
     it('should return user info if user is the same', async () => {
       const user: User = { id: 1 } as User;
+      jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
       const result = await controller.findOne(1, user);
       expect(result).toEqual({ user });
     });
