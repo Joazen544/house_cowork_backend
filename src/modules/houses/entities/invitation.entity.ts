@@ -1,8 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { House } from './house.entity';
 
 @Entity()
-@Unique(['invitationCode'])
 export class Invitation {
   @PrimaryGeneratedColumn()
   id!: number;
