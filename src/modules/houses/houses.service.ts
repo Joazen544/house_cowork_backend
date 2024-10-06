@@ -9,6 +9,7 @@ import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { Rule } from './entities/rule.entity';
 import { InvitationsRepository } from './repositories/invitations.repository';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class HousesService {
@@ -56,31 +57,28 @@ export class HousesService {
     return this.housesRepository.findOneBy(attrs);
   }
 
+  @Transactional()
   async update(house: House, updateHouseDto: UpdateHouseDto) {
-    return this.dataSource.transaction(async (transactionalEntityManager) => {
-      const { name, description, rules } = updateHouseDto;
+    const { name, description, rules } = updateHouseDto;
 
-      Object.assign(house, {
-        ...(name && { name }),
-        ...(description && { description }),
-      });
-
-      const rulesToDelete = await this.rulesRepository.findBy({ house });
-      if (rulesToDelete.length > 0) {
-        await transactionalEntityManager.delete(Rule, rulesToDelete);
-      }
-      if (rules && rules.length > 0) {
-        const newRules = rules.map((rule) => {
-          const ruleEntity = new Rule();
-          ruleEntity.description = rule;
-          return ruleEntity;
-        });
-        house.rules = newRules;
-      }
-
-      await transactionalEntityManager.save(house);
-      return house;
+    Object.assign(house, {
+      ...(name && { name }),
+      ...(description && { description }),
     });
+    await this.housesRepository.save(house);
+
+    await this.rulesRepository.deleteByHouse(house);
+    if (rules && rules.length > 0) {
+      const newRules = rules.map((rule) => {
+        const ruleEntity = new Rule();
+        ruleEntity.description = rule;
+        return ruleEntity;
+      });
+      house.rules = newRules;
+    }
+
+    await this.housesRepository.save(house);
+    return house;
   }
 
   // remove(id: number) {

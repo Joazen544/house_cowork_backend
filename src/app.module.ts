@@ -13,10 +13,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
-
-const AppDataSource = new DataSource(dataSourceOptions);
 
 @Module({
   imports: [
@@ -26,10 +25,13 @@ const AppDataSource = new DataSource(dataSourceOptions);
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async () => {
-        if (!AppDataSource.isInitialized) {
-          await AppDataSource.initialize();
+        return dataSourceOptions;
+      },
+      async dataSourceFactory(options) {
+        if (!options) {
+          throw new Error('Invalid options passed to dataSourceFactory');
         }
-        return AppDataSource.options;
+        return addTransactionalDataSource(new DataSource(options));
       },
     }),
     EventEmitterModule.forRoot(),
