@@ -98,8 +98,8 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only house member can invite.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(CreateHouseInvitationResponseDto)
-  createInvitation(@CurrentUser() user: User, @CurrentHouse() house: House) {
-    const invitation = this.housesService.createInvitation(house);
+  async createInvitation(@CurrentHouse() house: House) {
+    const invitation = await this.housesService.createInvitation(house);
     return { invitation };
   }
 

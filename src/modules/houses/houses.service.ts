@@ -4,12 +4,11 @@ import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from '../users/entities/user.entity';
 import { House } from './entities/house.entity';
 import { FindOptionsWhere, MoreThan } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { Rule } from './entities/rule.entity';
 import { InvitationsRepository } from './repositories/invitations.repository';
-import { Transactional } from 'typeorm-transactional';
+import { IsolationLevel, Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class HousesService {
@@ -96,11 +95,13 @@ export class HousesService {
   //   return `This action removes a #${id} house`;
   // }
 
+  @Transactional({ isolationLevel: IsolationLevel.SERIALIZABLE })
   async createInvitation(house: House) {
     const expirationTime = this.calculateExpirationTime(5);
+    const invitationCode = await this.generateInvitationCode();
 
     const invitation = await this.invitationsRepository.create({
-      invitationCode: this.generateInvitationCode(),
+      invitationCode,
       house,
       expiresAt: expirationTime,
     });
@@ -147,7 +148,26 @@ export class HousesService {
     return { ...house, memberIds, rules };
   }
 
-  private generateInvitationCode(): string {
-    return uuidv4();
+  private async generateInvitationCode(): Promise<string> {
+    let code: string = '';
+    let isUnique = false;
+    const maxRetries = 10;
+    let retries = 0;
+
+    while (!isUnique && retries < maxRetries) {
+      code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const existingInvitation = await this.invitationsRepository.findOneBy({
+        invitationCode: code,
+        expiresAt: MoreThan(new Date()),
+      });
+      if (!existingInvitation) {
+        isUnique = true;
+      }
+      retries++;
+    }
+    if (retries >= maxRetries) {
+      throw new Error('Failed to generate a unique invitation code');
+    }
+    return code;
   }
 }
