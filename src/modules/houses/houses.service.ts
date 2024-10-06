@@ -57,26 +57,30 @@ export class HousesService {
   }
 
   async update(house: House, updateHouseDto: UpdateHouseDto) {
-    const { name, description, rules } = updateHouseDto;
+    return this.dataSource.transaction(async (transactionalEntityManager) => {
+      const { name, description, rules } = updateHouseDto;
 
-    Object.assign(house, {
-      ...(name && { name }),
-      ...(description && { description }),
-    });
-
-    if (rules && rules.length > 0) {
-      await this.rulesRepository.deleteByHouse(house);
-
-      const newRules = rules.map((rule) => {
-        const ruleEntity = new Rule();
-        ruleEntity.description = rule;
-        return ruleEntity;
+      Object.assign(house, {
+        ...(name && { name }),
+        ...(description && { description }),
       });
 
-      await this.rulesRepository.createMany(newRules, house);
-    }
+      const rulesToDelete = await this.rulesRepository.findBy({ house });
+      if (rulesToDelete.length > 0) {
+        await transactionalEntityManager.delete(Rule, rulesToDelete);
+      }
+      if (rules && rules.length > 0) {
+        const newRules = rules.map((rule) => {
+          const ruleEntity = new Rule();
+          ruleEntity.description = rule;
+          return ruleEntity;
+        });
+        console.log(newRules);
+        house.rules = newRules;
+      }
 
-    return this.housesRepository.save(house);
+      return transactionalEntityManager.save(house);
+    });
   }
 
   // remove(id: number) {
@@ -124,7 +128,8 @@ export class HousesService {
   formatHouseInfoInResponse(house: House) {
     const houseMembers = house.houseMembers;
     const memberIds = houseMembers.map((houseMember) => houseMember.member.id);
-    return { ...house, memberIds };
+    const rules = house.rules.map((rule) => rule.description);
+    return { ...house, memberIds, rules };
   }
 
   private generateInvitationCode(): string {
