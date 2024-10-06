@@ -172,6 +172,9 @@ export class HousesController {
       if (error instanceof JoinRequestExistedException) {
         throw new BadRequestException(error.message);
       }
+      if (error instanceof MemberAlreadyExistsException) {
+        throw new BadRequestException(error.message);
+      }
       throw error;
     }
   }

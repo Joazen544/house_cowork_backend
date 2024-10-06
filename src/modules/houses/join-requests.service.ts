@@ -7,6 +7,7 @@ import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { JoinRequestNotFoundException } from 'src/common/exceptions/houses/join-request-not-found.exception';
+import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 
 @Injectable()
 export class JoinRequestsService {
@@ -17,6 +18,10 @@ export class JoinRequestsService {
 
   async createJoinRequest(invitationCode: string, user: User) {
     const house = await this.housesService.findOneWithInvitation(invitationCode);
+    const isUserInHouse = await this.housesService.isUserMemberOfHouse(user, house);
+    if (isUserInHouse) {
+      throw new MemberAlreadyExistsException();
+    }
     const existingRequest = await this.joinRequestsRepository.findOneBy({
       house,
       user,
