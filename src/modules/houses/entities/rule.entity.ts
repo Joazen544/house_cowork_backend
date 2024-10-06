@@ -9,6 +9,6 @@ export class Rule {
   @Column()
   description!: string;
 
-  @ManyToOne(() => House, (house) => house.rules)
+  @ManyToOne(() => House, (house) => house.rules, { onDelete: 'CASCADE', cascade: true })
   house!: House;
 }
