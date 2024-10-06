@@ -38,6 +38,7 @@ import { JoinRequestsService } from './join-requests.service';
 import { HousesByMemberResponseDto } from './dto/response/houses-by-member-response.dto';
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
+import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -57,9 +58,16 @@ export class HousesController {
   @ApiBody({ type: CreateHouseDto })
   @Serialize(CreateHouseResponseDto)
   async create(@CurrentUser() user: User, @Body() createHouseDto: CreateHouseDto) {
-    const house = await this.housesService.create(user, createHouseDto);
-    const houseInResponse = this.housesService.formatHouseInfoInResponse(house);
-    return { house: houseInResponse };
+    try {
+      const house = await this.housesService.create(user, createHouseDto);
+      const houseInResponse = this.housesService.formatHouseInfoInResponse(house);
+      return { house: houseInResponse };
+    } catch (error) {
+      if (error instanceof MemberAlreadyExistsException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Get('own')
