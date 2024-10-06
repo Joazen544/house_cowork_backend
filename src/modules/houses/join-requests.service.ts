@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JoinRequestStatus } from './entities/join-request.entity';
 import { User } from '../users/entities/user.entity';
 import { HousesService } from './houses.service';
@@ -6,6 +6,7 @@ import { House } from './entities/house.entity';
 import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
+import { JoinRequestNotFoundException } from 'src/common/exceptions/houses/join-request-not-found.exception';
 
 @Injectable()
 export class JoinRequestsService {
@@ -52,7 +53,7 @@ export class JoinRequestsService {
   async answerJoinRequest(joinRequestId: number, result: string) {
     const joinRequest = await this.getJoinRequest(joinRequestId);
     if (!joinRequest) {
-      throw new NotFoundException('Join request not found');
+      throw new JoinRequestNotFoundException();
     }
 
     if (result === AnswerJoinRequestResult.ACCEPT) {

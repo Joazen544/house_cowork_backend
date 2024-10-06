@@ -39,6 +39,7 @@ import { HousesByMemberResponseDto } from './dto/response/houses-by-member-respo
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
+import { JoinRequestNotFoundException } from 'src/common/exceptions/houses/join-request-not-found.exception';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -199,7 +200,14 @@ export class HousesController {
   @ApiBody({ type: AnswerJoinRequestDto })
   @Serialize(SimpleResponseDto)
   answerJoinRequest(@Param('joinRequestId') joinRequestId: string, @Body() answerJoinRequestDto: AnswerJoinRequestDto) {
-    return { result: this.joinRequestsService.answerJoinRequest(+joinRequestId, answerJoinRequestDto.result) };
+    try {
+      return { result: this.joinRequestsService.answerJoinRequest(+joinRequestId, answerJoinRequestDto.result) };
+    } catch (error) {
+      if (error instanceof JoinRequestNotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   // @Delete(':houseId/leave')
