@@ -16,7 +16,7 @@ export class House {
   @Column()
   description!: string;
 
-  @OneToMany(() => Rule, (rule) => rule.house, { eager: true })
+  @OneToMany(() => Rule, (rule) => rule.house, { eager: true, cascade: true })
   rules!: Rule[];
 
   @OneToMany(() => HouseMember, (houseMember) => houseMember.house, { eager: true })
