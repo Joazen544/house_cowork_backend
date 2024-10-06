@@ -1,15 +1,15 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { InheritApiProperty } from 'src/common/decorators/inherit-api-property.decorator';
 import { HouseDto } from '../house.dto';
 
 export class UpdateHouseDto {
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   @InheritApiProperty(HouseDto)
   name!: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   @InheritApiProperty(HouseDto)
   description!: string;
 
