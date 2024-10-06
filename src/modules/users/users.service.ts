@@ -1,7 +1,8 @@
-import { NotFoundException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
+import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +25,7 @@ export class UsersService {
   async findByIds(ids: number[]): Promise<User[]> {
     const users = await this.usersRepository.findByIds(ids);
     if (users.length !== ids.length) {
-      throw new NotFoundException('One or more users not found');
+      throw new UsersNotFoundException();
     }
     return users;
   }
