@@ -1,4 +1,16 @@
-import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, Get, Query, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Query,
+  Patch,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './services/tasks.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -24,6 +36,7 @@ import { AssignTaskDto } from './dtos/request/assign-task.dto';
 import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
+import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -141,7 +154,14 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only task owner can assign the task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: AssignTaskDto })
   assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
-    return { assignments: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
+    try {
+      return { assignments: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
+    } catch (error) {
+      if (error instanceof UsersNotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Patch(':taskId/response')
