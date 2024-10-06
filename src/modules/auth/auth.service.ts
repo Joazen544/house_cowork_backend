@@ -5,9 +5,9 @@ import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { User } from '../users/entities/user.entity';
 import { EmailInUseException } from '../../common/exceptions/auth/email-in-use.exception';
-import { WrongPasswordException } from 'src/common/exceptions/auth/wrong-password.exception';
-import { EmailNotFoundException } from 'src/common/exceptions/auth/email-not-found.exception';
-import { JwtVerifyException } from 'src/common/exceptions/auth/jwt-validate.exception';
+import { WrongPasswordException } from '../../common/exceptions/auth/wrong-password.exception';
+import { EmailNotFoundException } from '../../common/exceptions/auth/email-not-found.exception';
+import { JwtVerifyException } from '../../common/exceptions/auth/jwt-verify.exception';
 
 const scrypt = promisify(_scrypt);
 

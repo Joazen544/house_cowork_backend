@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from '../users/entities/user.entity';
@@ -10,6 +10,7 @@ import { Rule } from './entities/rule.entity';
 import { InvitationsRepository } from './repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
+import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 
 @Injectable()
 export class HousesService {
@@ -46,7 +47,7 @@ export class HousesService {
     if (!isUserMemberOfHouse) {
       await this.housesRepository.addMemberToHouse(user, house);
     } else {
-      throw new BadRequestException('User is already a member of the house');
+      throw new MemberAlreadyExistsException();
     }
   }
 
