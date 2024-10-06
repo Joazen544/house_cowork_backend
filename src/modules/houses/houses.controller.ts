@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, HttpCode, HttpStatus, Query, UseGuards, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, HttpCode, HttpStatus, Query, UseGuards, Param, Put } from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
@@ -73,7 +73,7 @@ export class HousesController {
     return { house: this.housesService.formatHouseInfoInResponse(house) };
   }
 
-  @Patch(':houseId')
+  @Put(':houseId')
   @ApiBearerAuth()
   @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Update house info.' })
