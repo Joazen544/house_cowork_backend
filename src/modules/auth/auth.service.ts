@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   async signIn(email: string, password: string) {
-    const user = await this.usersService.findOne({ email });
+    const user = await this.usersService.findOneBy({ email });
     if (!user) {
       throw new EmailNotFoundException();
     }
@@ -64,7 +64,7 @@ export class AuthService {
     } catch {
       throw new JwtVerifyException();
     }
-    const user = this.usersService.findOne({ id: payload.sub });
+    const user = this.usersService.findOneBy({ id: payload.sub });
     return user;
   }
 }

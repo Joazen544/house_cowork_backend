@@ -13,7 +13,7 @@ export class UsersService {
     return user;
   }
 
-  async findOne(attrs: FindOptionsWhere<User>) {
+  async findOneBy(attrs: FindOptionsWhere<User>) {
     return this.usersRepository.findOneBy(attrs);
   }
 
