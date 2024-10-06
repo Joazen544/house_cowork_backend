@@ -75,11 +75,11 @@ export class HousesService {
           ruleEntity.description = rule;
           return ruleEntity;
         });
-        console.log(newRules);
         house.rules = newRules;
       }
 
-      return transactionalEntityManager.save(house);
+      await transactionalEntityManager.save(house);
+      return house;
     });
   }
 

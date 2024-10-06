@@ -49,8 +49,6 @@ export class HousesRepository extends BaseRepository<House> {
       });
       await manager.save(ruleEntities);
     }
-    console.log('savedHouse');
-    console.log(savedHouse);
     return savedHouse;
   }
 }
