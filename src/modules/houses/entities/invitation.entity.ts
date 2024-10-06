@@ -9,7 +9,7 @@ export class Invitation {
   @Column()
   invitationCode!: string;
 
-  @ManyToOne(() => House, (house) => house.invitations)
+  @ManyToOne(() => House, (house) => house.invitations, { onDelete: 'CASCADE', eager: true })
   house!: House;
 
   @Column({ type: 'datetime' })

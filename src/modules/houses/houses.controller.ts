@@ -103,18 +103,21 @@ export class HousesController {
     return { invitation };
   }
 
-  @Get('introduction')
+  @Get('introduction/:invitationCode')
   @ApiBearerAuth()
-  @UseGuards(HouseMemberGuard)
+  @UseGuards()
   @ApiOperation({ summary: 'Get house info from invitation.' })
   @ApiResponse({ status: 200, description: 'House info got.', type: HouseInfoResponseDto })
+  @ApiResponse({ status: 400, description: 'Bad request, invitation code is invalid.' })
   @ApiResponse({ status: 401, description: 'Needs sign in to get introduction.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only not house member can read info.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(HouseInfoResponseDto)
-  getHouseInfoFromInvitation(@Query('invitationCode') invitationCode: string) {
-    return { house: this.housesService.findOneWithInvitation(invitationCode) };
+  async getHouseInfoFromInvitation(@Param('invitationCode') invitationCode: string) {
+    const house = await this.housesService.findOneWithInvitation(invitationCode);
+
+    return { house: this.housesService.formatHouseInfoInResponse(house) };
   }
 
   @Post('joinRequests')

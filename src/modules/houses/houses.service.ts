@@ -123,7 +123,8 @@ export class HousesService {
       throw new NotFoundException('Invitation not found');
     }
 
-    return invitation.house;
+    const house = invitation.house;
+    return house;
   }
 
   // leave(user: User) {
