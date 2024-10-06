@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { User } from '../users/entities/user.entity';
+import { EmailInUseException } from '../../common/exceptions/auth/email-in-use.exception';
 
 const scrypt = promisify(_scrypt);
 
@@ -17,7 +18,7 @@ export class AuthService {
   async signUp(email: string, password: string, name: string, nickName: string) {
     const users = await this.usersService.find(email);
     if (users && users.length) {
-      throw new BadRequestException('email in use');
+      throw new EmailInUseException();
     }
 
     const salt = randomBytes(8).toString('hex');

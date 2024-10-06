@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from '../users/entities/user.entity';
@@ -9,6 +9,7 @@ import { RulesRepository } from './repositories/rules.repository';
 import { Rule } from './entities/rule.entity';
 import { InvitationsRepository } from './repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
+import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 
 @Injectable()
 export class HousesService {
@@ -120,7 +121,7 @@ export class HousesService {
       expiresAt: MoreThan(new Date()),
     });
     if (!invitation) {
-      throw new NotFoundException('Invitation not found');
+      throw new InvitationNotFoundException();
     }
 
     const house = invitation.house;

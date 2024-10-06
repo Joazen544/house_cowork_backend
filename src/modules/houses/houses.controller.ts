@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, HttpCode, HttpStatus, Query, UseGuards, Param, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  HttpCode,
+  HttpStatus,
+  Query,
+  UseGuards,
+  Param,
+  Put,
+  BadRequestException,
+} from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
@@ -23,6 +36,8 @@ import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
 import { JoinRequestsService } from './join-requests.service';
 import { HousesByMemberResponseDto } from './dto/response/houses-by-member-response.dto';
+import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
+import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -115,15 +130,21 @@ export class HousesController {
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(HouseInfoResponseDto)
   async getHouseInfoFromInvitation(@Param('invitationCode') invitationCode: string) {
-    const house = await this.housesService.findOneWithInvitation(invitationCode);
-
-    return { house: this.housesService.formatHouseInfoInResponse(house) };
+    try {
+      const house = await this.housesService.findOneWithInvitation(invitationCode);
+      return { house: this.housesService.formatHouseInfoInResponse(house) };
+    } catch (error) {
+      if (error instanceof InvitationNotFoundException) {
+        throw new BadRequestException('Invitation code is invalid.');
+      }
+      throw error;
+    }
   }
 
   @Post('joinRequests')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @UseGuards(HouseMemberGuard)
+  @UseGuards()
   @ApiOperation({ summary: 'Create a house join request.' })
   @ApiResponse({ status: 201, description: 'House join request created.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
@@ -131,8 +152,19 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
   @Serialize(SimpleResponseDto)
-  createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
-    return { result: this.joinRequestsService.createJoinRequest(invitationCode, user) };
+  async createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
+    try {
+      const result = await this.joinRequestsService.createJoinRequest(invitationCode, user);
+      return { result };
+    } catch (error) {
+      if (error instanceof InvitationNotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      if (error instanceof JoinRequestExistedException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Get(':houseId/joinRequests')

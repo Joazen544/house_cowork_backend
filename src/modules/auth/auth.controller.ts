@@ -8,6 +8,7 @@ import { BadRequestErrorResponseDto, NotFoundErrorResponseDto } from '../../comm
 import { SigninUserDto } from './dto/request/signin-user.dto';
 import { Public } from './decorators/public.decorator';
 import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
+import { EmailInUseException } from 'src/common/exceptions/auth/email-in-use.exception';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -26,9 +27,17 @@ export class AuthController {
     if (body.password !== body.passwordConfirm) {
       throw new BadRequestException('Passwords do not match');
     }
-    const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name, body.nickName);
 
-    return { user, accessToken };
+    try {
+      const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name, body.nickName);
+
+      return { user, accessToken };
+    } catch (error) {
+      if (error instanceof EmailInUseException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Post('signin')

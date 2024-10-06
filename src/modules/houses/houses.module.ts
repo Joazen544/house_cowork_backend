@@ -12,11 +12,19 @@ import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { InvitationsRepository } from './repositories/invitations.repository';
 import { HouseMember } from './entities/house-member.entity';
+import { JoinRequestsRepository } from './repositories/join-requests.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([House, HouseMember, Rule, Invitation, JoinRequest]), UsersModule],
   controllers: [HousesController],
-  providers: [HousesService, JoinRequestsService, HousesRepository, RulesRepository, InvitationsRepository],
+  providers: [
+    HousesService,
+    JoinRequestsService,
+    HousesRepository,
+    RulesRepository,
+    InvitationsRepository,
+    JoinRequestsRepository,
+  ],
   exports: [HousesService],
 })
 export class HousesModule {}

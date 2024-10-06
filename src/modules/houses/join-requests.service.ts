@@ -1,22 +1,32 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { JoinRequest, JoinRequestStatus } from './entities/join-request.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { JoinRequestStatus } from './entities/join-request.entity';
 import { User } from '../users/entities/user.entity';
 import { HousesService } from './houses.service';
 import { House } from './entities/house.entity';
 import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
+import { JoinRequestsRepository } from './repositories/join-requests.repository';
+import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 
 @Injectable()
 export class JoinRequestsService {
   constructor(
-    @InjectRepository(JoinRequest) private joinRequestRepo: Repository<JoinRequest>,
+    private readonly joinRequestsRepository: JoinRequestsRepository,
     private readonly housesService: HousesService,
   ) {}
 
   async createJoinRequest(invitationCode: string, user: User) {
     const house = await this.housesService.findOneWithInvitation(invitationCode);
-    const joinRequest = this.joinRequestRepo.create({
+    const existingRequest = await this.joinRequestsRepository.findOneBy({
+      house,
+      user,
+      status: JoinRequestStatus.PENDING,
+    });
+
+    if (existingRequest) {
+      throw new JoinRequestExistedException();
+    }
+
+    const joinRequest = await this.joinRequestsRepository.create({
       house,
       user,
     });
@@ -29,16 +39,14 @@ export class JoinRequestsService {
   }
 
   async getPendingJoinRequests(house: House) {
-    return this.joinRequestRepo.find({
-      where: {
-        house: house,
-        status: JoinRequestStatus.PENDING,
-      },
+    return this.joinRequestsRepository.findBy({
+      house,
+      status: JoinRequestStatus.PENDING,
     });
   }
 
   getJoinRequest(joinRequestId: number) {
-    return this.joinRequestRepo.findOne({ where: { id: joinRequestId } });
+    return this.joinRequestsRepository.findOneBy({ id: joinRequestId });
   }
 
   async answerJoinRequest(joinRequestId: number, result: string) {
@@ -55,7 +63,7 @@ export class JoinRequestsService {
       throw new BadRequestException('Invalid result');
     }
 
-    await this.joinRequestRepo.save(joinRequest);
+    await this.joinRequestsRepository.save(joinRequest);
 
     // TODO: should send fcm to user
 
