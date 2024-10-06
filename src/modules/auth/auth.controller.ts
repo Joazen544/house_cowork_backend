@@ -1,4 +1,13 @@
-import { Body, Controller, Post, ValidationPipe, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  ValidationPipe,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserResponseDto } from './dto/response/update-user-response.dto';
@@ -9,6 +18,8 @@ import { SigninUserDto } from './dto/request/signin-user.dto';
 import { Public } from './decorators/public.decorator';
 import { CreateUserResponseDto } from './dto/response/create-user-response.dto';
 import { EmailInUseException } from 'src/common/exceptions/auth/email-in-use.exception';
+import { WrongPasswordException } from 'src/common/exceptions/auth/wrong-password.exception';
+import { EmailNotFoundException } from 'src/common/exceptions/auth/email-not-found.exception';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -48,8 +59,18 @@ export class AuthController {
   @ApiResponse({ status: 404, description: 'User not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: SigninUserDto })
   async signin(@Body() body: SigninUserDto) {
-    const { user, accessToken } = await this.authService.signIn(body.email, body.password);
+    try {
+      const { user, accessToken } = await this.authService.signIn(body.email, body.password);
 
-    return { user: user, accessToken: accessToken };
+      return { user: user, accessToken: accessToken };
+    } catch (error) {
+      if (error instanceof WrongPasswordException) {
+        throw new NotFoundException('User not found');
+      }
+      if (error instanceof EmailNotFoundException) {
+        throw new NotFoundException('User not found');
+      }
+      throw error;
+    }
   }
 }

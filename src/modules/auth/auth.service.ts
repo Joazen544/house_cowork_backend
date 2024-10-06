@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 import { User } from '../users/entities/user.entity';
 import { EmailInUseException } from '../../common/exceptions/auth/email-in-use.exception';
+import { WrongPasswordException } from 'src/common/exceptions/auth/wrong-password.exception';
+import { EmailNotFoundException } from 'src/common/exceptions/auth/email-not-found.exception';
+import { JwtVerifyException } from 'src/common/exceptions/auth/jwt-validate.exception';
 
 const scrypt = promisify(_scrypt);
 
@@ -35,7 +38,7 @@ export class AuthService {
   async signIn(email: string, password: string) {
     const user = await this.usersService.findOne({ email });
     if (!user) {
-      throw new NotFoundException('user not found');
+      throw new EmailNotFoundException();
     }
 
     const [salt, storedHash] = user.password.split('.');
@@ -43,7 +46,7 @@ export class AuthService {
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
     if (storedHash !== hash.toString('hex')) {
-      throw new BadRequestException('Bad password');
+      throw new WrongPasswordException();
     }
 
     return { user, accessToken: await this.signJwt(user) };
@@ -59,7 +62,7 @@ export class AuthService {
     try {
       payload = await this.jwtService.verifyAsync(token);
     } catch {
-      throw new UnauthorizedException();
+      throw new JwtVerifyException();
     }
     const user = this.usersService.findOne({ id: payload.sub });
     return user;
