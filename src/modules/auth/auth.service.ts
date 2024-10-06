@@ -7,7 +7,6 @@ import { User } from '../users/entities/user.entity';
 import { EmailInUseException } from '../../common/exceptions/auth/email-in-use.exception';
 import { WrongPasswordException } from '../../common/exceptions/auth/wrong-password.exception';
 import { EmailNotFoundException } from '../../common/exceptions/auth/email-not-found.exception';
-import { JwtVerifyException } from '../../common/exceptions/auth/jwt-verify.exception';
 
 const scrypt = promisify(_scrypt);
 
@@ -58,12 +57,8 @@ export class AuthService {
   }
 
   async validateToken(token: string) {
-    let payload;
-    try {
-      payload = await this.jwtService.verifyAsync(token);
-    } catch {
-      throw new JwtVerifyException();
-    }
+    const payload = await this.jwtService.verifyAsync(token);
+
     const user = this.usersService.findOneBy({ id: payload.sub });
     return user;
   }
