@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Unique } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from './house.entity';
 
@@ -8,6 +8,7 @@ export enum HouseMemberStatus {
 }
 
 @Entity()
+@Unique(['member', 'house'])
 export class HouseMember {
   @PrimaryGeneratedColumn()
   id!: number;

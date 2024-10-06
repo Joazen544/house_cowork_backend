@@ -1,11 +1,10 @@
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { House } from '../entities/house.entity';
 import { BaseRepository } from 'src/common/repositories/base.repository';
 import { User } from 'src/modules/users/entities/user.entity';
 import { HouseMember } from '../entities/house-member.entity';
-import { Rule } from '../entities/rule.entity';
 
 @Injectable()
 export class HousesRepository extends BaseRepository<House> {
@@ -29,26 +28,17 @@ export class HousesRepository extends BaseRepository<House> {
 
   async getHouseMembers(house: House) {
     const houseMembers = house.houseMembers;
+    if (!houseMembers) {
+      return [];
+    }
     return houseMembers.map((houseMember) => houseMember.member);
   }
 
-  async createHouseWithTransaction(manager: EntityManager, user: User, house: House, rules: string[]): Promise<House> {
-    const savedHouse = await manager.save(house);
-
+  async addMemberToHouse(user: User, house: House): Promise<House> {
     const houseMember = new HouseMember();
     houseMember.member = user;
-    houseMember.house = savedHouse;
-    await manager.save(houseMember);
-
-    if (rules && rules.length > 0) {
-      const ruleEntities = rules.map((ruleContent) => {
-        const rule = new Rule();
-        rule.description = ruleContent;
-        rule.house = savedHouse;
-        return rule;
-      });
-      await manager.save(ruleEntities);
-    }
-    return savedHouse;
+    houseMember.house = house;
+    await this.HouseMemberRepo.save(houseMember);
+    return house;
   }
 }

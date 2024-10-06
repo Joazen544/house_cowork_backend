@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { User } from '../users/entities/user.entity';
 import { House } from './entities/house.entity';
-import { DataSource, FindOptionsWhere, MoreThan } from 'typeorm';
+import { FindOptionsWhere, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
@@ -14,29 +14,40 @@ import { Transactional } from 'typeorm-transactional';
 @Injectable()
 export class HousesService {
   constructor(
-    private readonly dataSource: DataSource,
     private readonly housesRepository: HousesRepository,
     private readonly rulesRepository: RulesRepository,
     private readonly invitationsRepository: InvitationsRepository,
   ) {}
 
+  @Transactional()
   async create(user: User, createHouseDto: CreateHouseDto) {
-    const savedHouse = await this.dataSource.transaction(async (transactionalEntityManager) => {
-      const house = this.createHouseEntity(createHouseDto);
-      const savedHouse = await this.housesRepository.createHouseWithTransaction(
-        transactionalEntityManager,
-        user,
-        house,
-        createHouseDto.rules,
-      );
-      return savedHouse;
-    });
+    const house = this.createHouseEntity(createHouseDto);
+    if (createHouseDto.rules && createHouseDto.rules.length > 0) {
+      const ruleEntities = createHouseDto.rules.map((ruleContent) => {
+        const rule = new Rule();
+        rule.description = ruleContent;
+        return rule;
+      });
+      house.rules = ruleEntities;
+    }
+    const savedHouse = await this.housesRepository.save(house);
+    await this.addMemberToHouse(user, savedHouse);
+
     const wholeHouse = await this.findOne({ id: savedHouse.id });
 
     if (!wholeHouse) {
-      throw new NotFoundException('House not created');
+      throw new Error('House not created');
     }
     return wholeHouse;
+  }
+
+  private async addMemberToHouse(user: User, house: House) {
+    const isUserMemberOfHouse = await this.isUserMemberOfHouse(user, house);
+    if (!isUserMemberOfHouse) {
+      await this.housesRepository.addMemberToHouse(user, house);
+    } else {
+      throw new BadRequestException('User is already a member of the house');
+    }
   }
 
   private createHouseEntity(createHouseDto: CreateHouseDto): House {
@@ -125,8 +136,8 @@ export class HousesService {
 
   formatHouseInfoInResponse(house: House) {
     const houseMembers = house.houseMembers;
-    const memberIds = houseMembers.map((houseMember) => houseMember.member.id);
-    const rules = house.rules.map((rule) => rule.description);
+    const memberIds = houseMembers ? houseMembers.map((houseMember) => houseMember.member.id) : [];
+    const rules = house.rules ? house.rules.map((rule) => rule.description) : [];
     return { ...house, memberIds, rules };
   }
 
