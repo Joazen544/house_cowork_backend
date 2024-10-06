@@ -18,8 +18,8 @@ export class JoinRequestsService {
 
   async createJoinRequest(invitationCode: string, user: User) {
     const house = await this.housesService.findOneWithInvitation(invitationCode);
-    const isUserInHouse = await this.housesService.isUserMemberOfHouse(user, house);
-    if (isUserInHouse) {
+    const isUserMemberOfHouse = await this.housesService.isUserMemberOfHouse(user, house);
+    if (isUserMemberOfHouse) {
       throw new MemberAlreadyExistsException();
     }
     const existingRequest = await this.joinRequestsRepository.findOneBy({
