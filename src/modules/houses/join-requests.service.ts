@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { JoinRequestStatus } from './entities/join-request.entity';
+import { JoinRequest, JoinRequestStatus } from './entities/join-request.entity';
 import { User } from '../users/entities/user.entity';
 import { HousesService } from './houses.service';
 import { House } from './entities/house.entity';
 import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
-import { JoinRequestNotFoundException } from 'src/common/exceptions/houses/join-request-not-found.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 
 @Injectable()
@@ -51,16 +50,11 @@ export class JoinRequestsService {
     });
   }
 
-  getJoinRequest(joinRequestId: number) {
-    return this.joinRequestsRepository.findOneBy({ id: joinRequestId });
+  async findOneById(joinRequestId: number) {
+    return await this.joinRequestsRepository.findOneBy({ id: joinRequestId });
   }
 
-  async answerJoinRequest(joinRequestId: number, result: string) {
-    const joinRequest = await this.getJoinRequest(joinRequestId);
-    if (!joinRequest) {
-      throw new JoinRequestNotFoundException();
-    }
-
+  async answerJoinRequest(joinRequest: JoinRequest, result: string) {
     if (result === AnswerJoinRequestResult.ACCEPT) {
       joinRequest.status = JoinRequestStatus.ACCEPTED;
     } else if (result === AnswerJoinRequestResult.REJECT) {

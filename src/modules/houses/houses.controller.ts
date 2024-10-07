@@ -11,6 +11,8 @@ import {
   Param,
   Put,
   BadRequestException,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { HousesService } from './houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
@@ -39,7 +41,6 @@ import { HousesByMemberResponseDto } from './dto/response/houses-by-member-respo
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
-import { JoinRequestNotFoundException } from 'src/common/exceptions/houses/join-request-not-found.exception';
 
 @Controller('houses')
 @ApiTags('Houses')
@@ -200,7 +201,7 @@ export class HousesController {
     return { joinRequests: joinRequestsInResponse };
   }
 
-  @Patch('joinRequests/:joinRequestId')
+  @Patch(':houseId/joinRequests/:joinRequestId')
   @ApiBearerAuth()
   @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Accept or reject a request.' })
@@ -210,15 +211,19 @@ export class HousesController {
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiBody({ type: AnswerJoinRequestDto })
   @Serialize(SimpleResponseDto)
-  answerJoinRequest(@Param('joinRequestId') joinRequestId: string, @Body() answerJoinRequestDto: AnswerJoinRequestDto) {
-    try {
-      return { result: this.joinRequestsService.answerJoinRequest(+joinRequestId, answerJoinRequestDto.result) };
-    } catch (error) {
-      if (error instanceof JoinRequestNotFoundException) {
-        throw new BadRequestException(error.message);
-      }
-      throw error;
+  async answerJoinRequest(
+    @Param('joinRequestId') joinRequestId: string,
+    @CurrentHouse() house: House,
+    @Body() answerJoinRequestDto: AnswerJoinRequestDto,
+  ) {
+    const joinRequest = await this.joinRequestsService.findOneById(+joinRequestId);
+    if (!joinRequest) {
+      throw new NotFoundException('Join request not found.');
     }
+    if (joinRequest.house.id !== house.id) {
+      throw new ForbiddenException('Only house member can answer join request.');
+    }
+    return { result: this.joinRequestsService.answerJoinRequest(joinRequest, answerJoinRequestDto.result) };
   }
 
   // @Delete(':houseId/leave')
