@@ -7,6 +7,7 @@ import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class JoinRequestsService {
@@ -54,6 +55,7 @@ export class JoinRequestsService {
     return await this.joinRequestsRepository.findOneBy({ id: joinRequestId });
   }
 
+  @Transactional()
   async answerJoinRequest(joinRequest: JoinRequest, result: string) {
     if (result === AnswerJoinRequestResult.ACCEPT) {
       joinRequest.status = JoinRequestStatus.ACCEPTED;
@@ -64,6 +66,8 @@ export class JoinRequestsService {
     }
 
     await this.joinRequestsRepository.save(joinRequest);
+
+    await this.housesService.addMemberToHouse(joinRequest.user, joinRequest.house);
 
     // TODO: should send fcm to user
 

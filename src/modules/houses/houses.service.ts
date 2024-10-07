@@ -42,7 +42,7 @@ export class HousesService {
     return wholeHouse;
   }
 
-  private async addMemberToHouse(user: User, house: House) {
+  async addMemberToHouse(user: User, house: House) {
     const isUserMemberOfHouse = await this.isUserMemberOfHouse(user, house);
     if (!isUserMemberOfHouse) {
       await this.housesRepository.addMemberToHouse(user, house);

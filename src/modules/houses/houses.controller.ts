@@ -223,7 +223,15 @@ export class HousesController {
     if (joinRequest.house.id !== house.id) {
       throw new ForbiddenException('Only house member can answer join request.');
     }
-    return { result: this.joinRequestsService.answerJoinRequest(joinRequest, answerJoinRequestDto.result) };
+    try {
+      return { result: await this.joinRequestsService.answerJoinRequest(joinRequest, answerJoinRequestDto.result) };
+    } catch (error) {
+      if (error instanceof MemberAlreadyExistsException) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw error;
+    }
   }
 
   // @Delete(':houseId/leave')
