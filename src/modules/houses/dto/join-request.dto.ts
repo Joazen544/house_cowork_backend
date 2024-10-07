@@ -1,5 +1,7 @@
 import { IsEnum, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+import { UserDto } from 'src/modules/users/dtos/user.dto';
 
 enum JoinRequestStatus {
   PENDING = 0,
@@ -10,17 +12,15 @@ enum JoinRequestStatus {
 export class JoinRequestDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
+  @Expose()
   id!: number;
 
-  @ApiProperty({ example: 14 })
-  @IsNumber()
-  houseId!: number;
-
-  @ApiProperty({ example: 20 })
-  @IsNumber()
-  userId!: number;
+  @ApiProperty({ type: UserDto })
+  @Expose()
+  user!: UserDto;
 
   @ApiProperty({ example: 0 })
   @IsEnum(JoinRequestStatus)
-  status!: JoinRequestStatus;
+  @Expose()
+  status!: string;
 }

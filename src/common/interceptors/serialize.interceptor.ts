@@ -18,9 +18,9 @@ class SerializeInterceptor implements NestInterceptor {
         const options: ClassTransformOptions = {
           excludeExtraneousValues: true,
           enableImplicitConversion: true,
-          exposeDefaultValues: true,
         };
-        return plainToClass(this.dto, data, options);
+        const returnData = plainToClass(this.dto, data, options);
+        return returnData;
       }),
     );
   }

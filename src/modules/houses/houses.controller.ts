@@ -188,8 +188,16 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only house member get join requests.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseJoinRequestsResponseDto)
-  getJoinRequests(@CurrentHouse() house: House) {
-    return { joinRequests: this.joinRequestsService.getPendingJoinRequests(house) };
+  async getJoinRequests(@CurrentHouse() house: House) {
+    const joinRequests = await this.joinRequestsService.getPendingJoinRequests(house);
+    const joinRequestsInResponse = joinRequests.map((joinRequest) => {
+      return {
+        id: joinRequest.id,
+        user: joinRequest.user,
+        status: joinRequest.status,
+      };
+    });
+    return { joinRequests: joinRequestsInResponse };
   }
 
   @Patch('joinRequests/:joinRequestId')

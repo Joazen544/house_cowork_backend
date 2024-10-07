@@ -14,10 +14,10 @@ export class JoinRequest {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => House, (house) => house.joinRequests)
+  @ManyToOne(() => House, (house) => house.joinRequests, { eager: true })
   house!: House;
 
-  @ManyToOne(() => User, (user) => user.houseJoinRequests)
+  @ManyToOne(() => User, (user) => user.houseJoinRequests, { eager: true })
   user!: User;
 
   @Column({ type: 'integer', enum: JoinRequestStatus, default: JoinRequestStatus.PENDING })
