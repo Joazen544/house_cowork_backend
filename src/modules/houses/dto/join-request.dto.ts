@@ -22,5 +22,5 @@ export class JoinRequestDto {
   @ApiProperty({ example: 0 })
   @IsEnum(JoinRequestStatus)
   @Expose()
-  status!: string;
+  status!: JoinRequestStatus;
 }
