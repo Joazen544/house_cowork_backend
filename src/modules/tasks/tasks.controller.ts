@@ -38,6 +38,7 @@ import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
+import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -56,8 +57,15 @@ export class TasksController {
   @ApiBody({ type: CreateTaskDto })
   @Serialize(CreateTaskResponseDto)
   async create(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User, @CurrentHouse() house: House) {
-    const task = await this.tasksService.create(createTaskDto, user, house);
-    return { task: this.tasksService.toTaskInResponseDto(task) };
+    try {
+      const task = await this.tasksService.create(createTaskDto, user, house);
+      return { task: this.tasksService.toTaskInResponseDto(task) };
+    } catch (error) {
+      if (error instanceof UserNotMemberOfHouseException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Get('house/:houseId')
