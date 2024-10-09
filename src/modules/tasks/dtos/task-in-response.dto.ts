@@ -1,5 +1,5 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 import { TaskDto } from './task.dto';
 import { TaskAssignmentDto } from './task-assignment.dto';
@@ -11,6 +11,7 @@ export class TaskInResponseDto extends OmitType(TaskDto, ['owner', 'assignees', 
   ownerId!: number;
 
   @Expose()
-  @ApiProperty({ type: TaskAssignmentDto, isArray: true })
+  @ApiProperty({ type: [TaskAssignmentDto] })
+  @Type(() => TaskAssignmentDto)
   assignees!: TaskAssignmentDto[];
 }

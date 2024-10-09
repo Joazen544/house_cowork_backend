@@ -21,7 +21,7 @@ export class Task {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, (user) => user.ownedTasks)
+  @ManyToOne(() => User, (user) => user.ownedTasks, { eager: true })
   owner!: User;
 
   @Column()
@@ -47,7 +47,7 @@ export class Task {
   @Column({ type: 'datetime' })
   dueTime!: Date;
 
-  @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task)
+  @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task, { eager: true, cascade: true })
   taskAssignments!: TaskAssignment[];
 
   @ManyToOne(() => House, (house) => house.tasks)

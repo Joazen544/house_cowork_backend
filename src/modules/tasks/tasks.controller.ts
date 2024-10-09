@@ -55,8 +55,9 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Only house member can create task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: CreateTaskDto })
   @Serialize(CreateTaskResponseDto)
-  create(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User) {
-    return this.tasksService.create(createTaskDto, user);
+  async create(@Body() createTaskDto: CreateTaskDto, @CurrentUser() user: User, @CurrentHouse() house: House) {
+    const task = await this.tasksService.create(createTaskDto, user, house);
+    return { task: this.tasksService.toTaskInResponseDto(task) };
   }
 
   @Get('house/:houseId')

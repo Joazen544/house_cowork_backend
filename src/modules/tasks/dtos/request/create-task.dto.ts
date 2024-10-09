@@ -29,5 +29,5 @@ export class CreateTaskDto {
   @IsArray()
   @ApiProperty({ example: [1, 2] })
   @IsNumber({}, { each: true })
-  assigneesId!: number[];
+  assigneeIds!: number[];
 }

@@ -15,7 +15,7 @@ export class TaskAssignment {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => User, (user) => user.taskAssignments)
+  @ManyToOne(() => User, (user) => user.taskAssignments, { eager: true })
   user!: User;
 
   @ManyToOne(() => Task, (task) => task.taskAssignments)

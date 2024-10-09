@@ -10,25 +10,54 @@ import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignmen
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
 import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
+import { HousesService } from 'src/modules/houses/houses.service';
+import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
 
 @Injectable()
 export class TasksService {
   constructor(
     private readonly tasksRepository: TasksRepository,
     private readonly taskAssignmentsRepository: TaskAssignmentsRepository,
+    private readonly housesService: HousesService,
     private usersService: UsersService,
   ) {}
 
-  async create(taskDto: CreateTaskDto, user: User) {
-    const task = this.createTaskEntity(taskDto, user);
-    return this.tasksRepository.create(task);
+  async create(taskDto: CreateTaskDto, user: User, house: House) {
+    const task = this.createTaskEntity(taskDto, user, house);
+    const isAllAssigneesMemberOfHouse = await this.checkIfAllAssigneesMemberOfHouse(taskDto.assigneeIds, house);
+
+    if (!isAllAssigneesMemberOfHouse) {
+      throw new UserNotMemberOfHouseException();
+    }
+
+    const assignedUsers = await this.usersService.findByIds(taskDto.assigneeIds);
+
+    task.taskAssignments = assignedUsers.map((assigneeUser) => {
+      const taskAssignment = new TaskAssignment();
+      taskAssignment.user = assigneeUser;
+      return taskAssignment;
+    });
+
+    const createdTask = await this.tasksRepository.create(task);
+    const wholeTask = await this.tasksRepository.findOneBy({ id: createdTask.id });
+
+    if (!wholeTask) {
+      throw new Error('Task creation failed');
+    }
+    return wholeTask;
   }
 
-  private createTaskEntity(taskDto: CreateTaskDto, user: User): Task {
+  private createTaskEntity(taskDto: CreateTaskDto, user: User, house: House): Task {
     const task = new Task();
     Object.assign(task, taskDto);
     task.owner = user;
+    task.house = house;
     return task;
+  }
+
+  private async checkIfAllAssigneesMemberOfHouse(assigneeIds: number[], house: House) {
+    const houseMembers = await this.housesService.getHouseMembers(house);
+    return assigneeIds.every((assigneeId) => houseMembers.some((member) => member.id === assigneeId));
   }
 
   async findOne(attrs: FindOptionsWhere<Task>) {
@@ -49,6 +78,17 @@ export class TasksService {
 
   isUserOwnerOfTask(user: User, task: Task) {
     return task.owner === user;
+  }
+
+  toTaskInResponseDto(task: Task) {
+    return {
+      ...task,
+      ownerId: task.owner.id,
+      assignees: task.taskAssignments.map((assignment) => ({
+        assigneeId: assignment.user.id,
+        assigneeStatus: assignment.assigneeStatus,
+      })),
+    };
   }
 
   async update(task: Task, updateTaskDto: UpdateTaskDto) {
