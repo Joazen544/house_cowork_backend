@@ -132,7 +132,6 @@ export class TasksController {
   @Serialize(GetTasksResponseDto)
   async findHomePageTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
     const tasks = await this.tasksService.findUserHomePageTasks(house, user);
-    console.log(tasks);
     return { tasks };
   }
 
