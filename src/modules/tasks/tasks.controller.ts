@@ -129,8 +129,11 @@ export class TasksController {
     description: 'Only house member can get home page tasks.',
     type: ForbiddenErrorResponseDto,
   })
-  findHomePageTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
-    return this.tasksService.findUserHomePageTasks(house, user);
+  @Serialize(GetTasksResponseDto)
+  async findHomePageTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
+    const tasks = await this.tasksService.findUserHomePageTasks(house, user);
+    console.log(tasks);
+    return { tasks };
   }
 
   @Patch(':taskId')
