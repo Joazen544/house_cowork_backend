@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
@@ -60,5 +60,20 @@ export class TasksRepository extends BaseRepository<Task> {
     queryBuilder.orderBy('task.dueTime', 'ASC');
 
     return queryBuilder.getMany();
+  }
+
+  async findAssignedTasks(house: House, user: User) {
+    const tasksAssignedToUser = await this.taskRepo.find({
+      where: {
+        house,
+        taskAssignments: {
+          user,
+          assigneeStatus: TaskAssignmentStatus.PENDING,
+        },
+        status: In([TaskStatus.OPEN, TaskStatus.IN_PROGRESS]),
+      },
+    });
+
+    return tasksAssignedToUser;
   }
 }

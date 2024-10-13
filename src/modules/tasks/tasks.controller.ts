@@ -135,6 +135,27 @@ export class TasksController {
     return { tasks };
   }
 
+  @Get('house/:houseId/assigned')
+  @ApiBearerAuth()
+  @UseGuards(HouseMemberGuard)
+  @ApiOperation({ summary: 'Get assigned tasks.' })
+  @ApiResponse({ status: 200, description: 'Assigned tasks found.', type: GetTasksResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to get assigned tasks.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only house member can get assigned tasks.',
+    type: ForbiddenErrorResponseDto,
+  })
+  @Serialize(GetTasksResponseDto)
+  async findAssignedTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
+    const tasks = await this.tasksService.findAssignedTasks(house, user);
+    return { tasks };
+  }
+
   @Patch(':taskId')
   @ApiBearerAuth()
   @UseGuards(TaskOwnerGuard)

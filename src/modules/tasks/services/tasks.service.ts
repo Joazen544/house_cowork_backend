@@ -76,6 +76,11 @@ export class TasksService {
     return this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
   }
 
+  async findAssignedTasks(house: House, user: User) {
+    const tasks = await this.tasksRepository.findAssignedTasks(house, user);
+    return tasks.map((task) => this.toTaskInResponseDto(task));
+  }
+
   isUserOwnerOfTask(user: User, task: Task) {
     return task.owner === user;
   }
