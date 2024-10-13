@@ -62,15 +62,20 @@ export class TasksRepository extends BaseRepository<Task> {
     return queryBuilder.getMany();
   }
 
-  async findAssignedTasks(house: House, user: User) {
+  async findAssignedTasks(
+    house: House,
+    user: User,
+    taskStatuses: TaskStatus[],
+    taskAssignmentStatuses: TaskAssignmentStatus[],
+  ) {
     const tasksAssignedToUser = await this.taskRepo.find({
       where: {
         house,
         taskAssignments: {
           user,
-          assigneeStatus: TaskAssignmentStatus.PENDING,
+          assigneeStatus: In(taskAssignmentStatuses),
         },
-        status: In([TaskStatus.OPEN, TaskStatus.IN_PROGRESS]),
+        status: In(taskStatuses),
       },
     });
 

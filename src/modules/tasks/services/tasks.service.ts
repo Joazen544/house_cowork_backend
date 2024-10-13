@@ -77,7 +77,12 @@ export class TasksService {
   }
 
   async findAssignedTasks(house: House, user: User) {
-    const tasks = await this.tasksRepository.findAssignedTasks(house, user);
+    const tasks = await this.tasksRepository.findAssignedTasks(
+      house,
+      user,
+      [TaskStatus.OPEN, TaskStatus.IN_PROGRESS],
+      [TaskAssignmentStatus.PENDING],
+    );
     return tasks.map((task) => this.toTaskInResponseDto(task));
   }
 
