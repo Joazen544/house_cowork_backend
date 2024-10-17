@@ -127,6 +127,42 @@ export class TasksService {
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
   }
 
+  async isTaskAccepted(task: Task) {
+    const acceptedAssignments = await this.taskAssignmentsRepository.findBy({
+      task,
+      assigneeStatus: TaskAssignmentStatus.ACCEPTED,
+    });
+    return acceptedAssignments.length > 0;
+  }
+
+  async reject(task: Task, user: User) {
+    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
+    if (!taskAssignment) {
+      throw new TaskAssignmentNotFoundException();
+    }
+
+    await this.taskAssignmentsRepository.update(taskAssignment.id, {
+      assigneeStatus: TaskAssignmentStatus.REJECTED,
+    });
+
+    await this.updateTaskStatusBasedOnAssignments(task);
+    return true;
+  }
+
+  async accept(task: Task, user: User) {
+    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
+    if (!taskAssignment) {
+      throw new TaskAssignmentNotFoundException();
+    }
+
+    await this.taskAssignmentsRepository.update(taskAssignment.id, {
+      assigneeStatus: TaskAssignmentStatus.ACCEPTED,
+    });
+
+    await this.updateTaskStatusBasedOnAssignments(task);
+    return true;
+  }
+
   async isUserAssigneeOfTask(user: User, task: Task) {
     const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
     return !!taskAssignment;

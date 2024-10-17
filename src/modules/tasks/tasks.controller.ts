@@ -39,6 +39,7 @@ import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
 import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
+import { AcceptOrRejectTaskAssignmentDto } from './dtos/request/accept-or-reject-task-assignment.dto';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -212,9 +213,22 @@ export class TasksController {
     description: 'Only task assignee can respond to the task assignment.',
     type: ForbiddenErrorResponseDto,
   })
-  respond(@CurrentTask() task: Task, @CurrentUser() user: User, @Body('status') status: TaskAssignmentStatus) {
+  @ApiBody({ type: AcceptOrRejectTaskAssignmentDto })
+  async acceptOrReject(
+    @CurrentTask() task: Task,
+    @CurrentUser() user: User,
+    @Body('status') status: TaskAssignmentStatus,
+  ) {
     try {
-      return { result: this.tasksService.respondToAssignment(task, user, status) };
+      const isTaskAccepted = await this.tasksService.isTaskAccepted(task);
+      if (isTaskAccepted && status === TaskAssignmentStatus.ACCEPTED) {
+        throw new BadRequestException('Task is already accepted by someone.');
+      }
+
+      if (status === TaskAssignmentStatus.REJECTED) {
+        return { result: this.tasksService.reject(task, user) };
+      }
+      return { result: this.tasksService.accept(task, user) };
     } catch (error) {
       if (error instanceof TaskAssignmentNotFoundException) {
         throw new BadRequestException(error.message);
