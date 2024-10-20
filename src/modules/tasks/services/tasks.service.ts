@@ -12,6 +12,7 @@ import { TaskAssignmentsRepository } from '../repositories/task-assignments.repo
 import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
 import { HousesService } from 'src/modules/houses/houses.service';
 import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
+import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
 
 @Injectable()
 export class TasksService {
