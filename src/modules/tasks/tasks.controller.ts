@@ -220,7 +220,7 @@ export class TasksController {
     @Body('status') status: TaskAssignmentStatus,
   ) {
     try {
-      if (status === TaskAssignmentStatus.ACCEPTED && (await this.tasksService.isTaskAccepted(task))) {
+      if (status === TaskAssignmentStatus.ACCEPTED && (await this.tasksService.isTaskAcceptable(task))) {
         throw new BadRequestException('Task is already accepted by someone.');
       }
 

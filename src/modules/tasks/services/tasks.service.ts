@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, In } from 'typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 import { CreateTaskDto } from '../dtos/request/create-task.dto';
@@ -127,12 +127,12 @@ export class TasksService {
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
   }
 
-  async isTaskAccepted(task: Task) {
+  async isTaskAcceptable(task: Task) {
     const acceptedAssignments = await this.taskAssignmentsRepository.findBy({
       task,
-      assigneeStatus: TaskAssignmentStatus.ACCEPTED,
+      assigneeStatus: In([TaskAssignmentStatus.ACCEPTED, TaskAssignmentStatus.DONE, TaskAssignmentStatus.CANCELLED]),
     });
-    return acceptedAssignments.length > 0;
+    return acceptedAssignments.length === 0;
   }
 
   async reject(task: Task, user: User) {
