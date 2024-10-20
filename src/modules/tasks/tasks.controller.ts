@@ -37,9 +37,9 @@ import { TaskAssignmentStatus } from './entities/task-assignment.entity';
 import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
-import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
 import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
 import { AcceptOrRejectTaskAssignmentDto } from './dtos/request/accept-or-reject-task-assignment.dto';
+import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
 
 @Controller('tasks')
 @ApiTags('Tasks')
@@ -220,17 +220,10 @@ export class TasksController {
     @Body('status') status: TaskAssignmentStatus,
   ) {
     try {
-      if (status === TaskAssignmentStatus.ACCEPTED && (await this.tasksService.isTaskAcceptable(task))) {
-        throw new BadRequestException('Task is already accepted by someone.');
-      }
-
-      if (status === TaskAssignmentStatus.REJECTED) {
-        return { result: this.tasksService.reject(task, user) };
-      }
-      return { result: this.tasksService.accept(task, user) };
+      return { result: this.tasksService.acceptOrRejectTask(task, user, status) };
     } catch (error) {
-      if (error instanceof TaskAssignmentNotFoundException) {
-        throw new BadRequestException(error.message);
+      if (error instanceof TaskIsNotAcceptableException) {
+        throw new Error(error.message);
       }
       throw error;
     }

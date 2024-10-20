@@ -127,6 +127,13 @@ export class TasksService {
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
   }
 
+  async acceptOrRejectTask(task: Task, user: User, status: TaskAssignmentStatus) {
+    if (status === TaskAssignmentStatus.ACCEPTED && (await this.isTaskAcceptable(task))) {
+      throw new TaskIsNotAcceptableException();
+    }
+    return this.reject(task, user);
+  }
+
   async isTaskAcceptable(task: Task) {
     const acceptedAssignments = await this.taskAssignmentsRepository.findBy({
       task,
