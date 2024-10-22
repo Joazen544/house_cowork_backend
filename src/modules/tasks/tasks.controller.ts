@@ -223,7 +223,7 @@ export class TasksController {
       return { result: this.tasksService.acceptOrRejectTask(task, user, status) };
     } catch (error) {
       if (error instanceof TaskIsNotAcceptableException) {
-        throw new Error(error.message);
+        throw new BadRequestException(error.message);
       }
       throw error;
     }
