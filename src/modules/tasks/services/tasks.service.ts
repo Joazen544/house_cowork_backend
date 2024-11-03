@@ -9,11 +9,8 @@ import { UsersService } from '../../users/users.service';
 import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
-import { TaskAssignmentNotFoundException } from '../../../common/exceptions/tasks/task-assignment-not-found.exception';
 import { HousesService } from '../../houses/houses.service';
 import { UserNotMemberOfHouseException } from '../../../common/exceptions/houses/user-not-member-of-house-exception';
-import { TaskIsNotAcceptableException } from '../../../common/exceptions/tasks/task-is-not-acceptable.exception';
-import { UserIsNotAcceptorException } from '../../../common/exceptions/tasks/user-is-not-acceptor.exception';
 
 @Injectable()
 export class TasksService {

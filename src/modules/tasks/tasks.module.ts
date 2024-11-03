@@ -8,10 +8,12 @@ import { HousesModule } from '../houses/houses.module';
 import { TaskAssignment } from './entities/task-assignment.entity';
 import { TasksRepository } from './repositories/tasks.repository';
 import { TaskAssignmentsRepository } from './repositories/task-assignments.repository';
+import { TaskAssigneeService } from './services/task-assignee-service';
+import { RespondToTaskService } from './services/respond-to-task-service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Task, TaskAssignment]), UsersModule, HousesModule],
   controllers: [TasksController],
-  providers: [TasksService, TasksRepository, TaskAssignmentsRepository],
+  providers: [TasksService, TaskAssigneeService, RespondToTaskService, TasksRepository, TaskAssignmentsRepository],
 })
 export class TasksModule {}
