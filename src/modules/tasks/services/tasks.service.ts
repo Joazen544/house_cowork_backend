@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere, In } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 import { CreateTaskDto } from '../dtos/request/create-task.dto';
@@ -9,10 +9,11 @@ import { UsersService } from '../../users/users.service';
 import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
-import { TaskAssignmentNotFoundException } from 'src/common/exceptions/tasks/task-assignment-not-found.exception';
-import { HousesService } from 'src/modules/houses/houses.service';
-import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
-import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
+import { TaskAssignmentNotFoundException } from '../../../common/exceptions/tasks/task-assignment-not-found.exception';
+import { HousesService } from '../../houses/houses.service';
+import { UserNotMemberOfHouseException } from '../../../common/exceptions/houses/user-not-member-of-house-exception';
+import { TaskIsNotAcceptableException } from '../../../common/exceptions/tasks/task-is-not-acceptable.exception';
+import { UserIsNotAcceptorException } from '../../../common/exceptions/tasks/user-is-not-acceptor.exception';
 
 @Injectable()
 export class TasksService {
@@ -126,96 +127,5 @@ export class TasksService {
     });
 
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
-  }
-
-  async acceptOrRejectTask(task: Task, user: User, status: TaskAssignmentStatus) {
-    if (status === TaskAssignmentStatus.ACCEPTED && (await this.isTaskAcceptable(task))) {
-      throw new TaskIsNotAcceptableException();
-    }
-    return this.reject(task, user);
-  }
-
-  async isTaskAcceptable(task: Task) {
-    const acceptedAssignments = await this.taskAssignmentsRepository.findBy({
-      task,
-      assigneeStatus: In([TaskAssignmentStatus.ACCEPTED, TaskAssignmentStatus.DONE, TaskAssignmentStatus.CANCELLED]),
-    });
-    return acceptedAssignments.length === 0;
-  }
-
-  async reject(task: Task, user: User) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
-    if (!taskAssignment) {
-      throw new TaskAssignmentNotFoundException();
-    }
-
-    await this.taskAssignmentsRepository.update(taskAssignment.id, {
-      assigneeStatus: TaskAssignmentStatus.REJECTED,
-    });
-
-    await this.updateTaskStatusBasedOnAssignments(task);
-    return true;
-  }
-
-  async accept(task: Task, user: User) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
-    if (!taskAssignment) {
-      throw new TaskAssignmentNotFoundException();
-    }
-
-    await this.taskAssignmentsRepository.update(taskAssignment.id, {
-      assigneeStatus: TaskAssignmentStatus.ACCEPTED,
-    });
-
-    await this.updateTaskStatusBasedOnAssignments(task);
-    return true;
-  }
-
-  async isUserAssigneeOfTask(user: User, task: Task) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
-    return !!taskAssignment;
-  }
-
-  async respondToAssignment(task: Task, user: User, status: TaskAssignmentStatus) {
-    const taskAssignment = await this.taskAssignmentsRepository.findOneBy({ task, user });
-    if (!taskAssignment) {
-      throw new TaskAssignmentNotFoundException();
-    }
-
-    const updatedTaskAssignment = await this.taskAssignmentsRepository.update(taskAssignment.id, {
-      assigneeStatus: status,
-    });
-    if (!updatedTaskAssignment) {
-      throw new Error('Task assignment error');
-    }
-
-    await this.updateTaskStatusBasedOnAssignments(task);
-    return true;
-  }
-
-  async updateTaskStatusBasedOnAssignments(task: Task) {
-    if (!task) {
-      throw new Error('Task not found when update after task assignment status updated');
-    }
-
-    const taskAssignments = await this.taskAssignmentsRepository.findBy({ task });
-
-    if (taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.DONE)) {
-      task.status = TaskStatus.DONE;
-    } else if (
-      taskAssignments.every((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.REJECTED)
-    ) {
-      task.status = TaskStatus.REJECTED;
-    } else if (
-      taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.ACCEPTED)
-    ) {
-      task.status = TaskStatus.IN_PROGRESS;
-    } else if (
-      taskAssignments.every((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.PENDING)
-    ) {
-      task.status = TaskStatus.OPEN;
-    } else {
-      throw new Error('Task status not found when update after task assignment status updated');
-    }
   }
 }

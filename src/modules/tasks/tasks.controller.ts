@@ -10,6 +10,7 @@ import {
   Patch,
   Delete,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dtos/request/create-task.dto';
 import { TasksService } from './services/tasks.service';
@@ -38,13 +39,17 @@ import { TaskAssigneeGuard } from '../../common/guards/task-assignee.guard';
 import { AssignTaskResponseDto } from './dtos/response/assign-task-reponse.dto';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user-not-member-of-house-exception';
-import { AcceptOrRejectTaskAssignmentDto } from './dtos/request/accept-or-reject-task-assignment.dto';
 import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
+import { UserIsNotAcceptorException } from 'src/common/exceptions/tasks/user-is-not-acceptor.exception';
+import { RespondToTaskService } from './services/respond-to-task-service';
 
 @Controller('tasks')
 @ApiTags('Tasks')
 export class TasksController {
-  constructor(private tasksService: TasksService) {}
+  constructor(
+    private tasksService: TasksService,
+    private respondToTaskService: RespondToTaskService,
+  ) {}
 
   @Post('house/:houseId')
   @HttpCode(HttpStatus.CREATED)
@@ -198,7 +203,7 @@ export class TasksController {
     }
   }
 
-  @Patch(':taskId/response')
+  @Patch(':taskId/accept')
   @ApiBearerAuth()
   @UseGuards(TaskAssigneeGuard)
   @ApiOperation({ summary: 'Respond to a task assignment.' })
@@ -213,19 +218,78 @@ export class TasksController {
     description: 'Only task assignee can respond to the task assignment.',
     type: ForbiddenErrorResponseDto,
   })
-  @ApiBody({ type: AcceptOrRejectTaskAssignmentDto })
-  async acceptOrReject(
-    @CurrentTask() task: Task,
-    @CurrentUser() user: User,
-    @Body('status') status: TaskAssignmentStatus,
-  ) {
+  async accep(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
-      return { result: this.tasksService.acceptOrRejectTask(task, user, status) };
+      return { result: this.respondToTaskService.accept(task, user) };
     } catch (error) {
       if (error instanceof TaskIsNotAcceptableException) {
         throw new BadRequestException(error.message);
       }
       throw error;
     }
+  }
+
+  @Patch(':taskId/reject')
+  @ApiBearerAuth()
+  @UseGuards(TaskAssigneeGuard)
+  @ApiOperation({ summary: 'Reject a task assignment.' })
+  @ApiResponse({ status: 200, description: 'Task assignment rejected.', type: SimpleResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to complete task.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only task assignee can complete the task.',
+    type: ForbiddenErrorResponseDto,
+  })
+  async reject(@CurrentTask() task: Task, @CurrentUser() user: User) {
+    return { result: this.respondToTaskService.reject(task, user) };
+  }
+
+  @Patch(':taskId/complete')
+  @ApiBearerAuth()
+  @UseGuards(TaskAssigneeGuard)
+  @ApiOperation({ summary: 'Complete a task.' })
+  @ApiResponse({ status: 200, description: 'Task completed.', type: SimpleResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to complete task.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only task assignee can complete the task.',
+    type: ForbiddenErrorResponseDto,
+  })
+  async complete(@CurrentTask() task: Task, @CurrentUser() user: User) {
+    try {
+      return { result: this.respondToTaskService.complete(task, user) };
+    } catch (error) {
+      if (error instanceof UserIsNotAcceptorException) {
+        throw new ForbiddenException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @Patch(':taskId/pending')
+  @ApiBearerAuth()
+  @UseGuards(TaskAssigneeGuard)
+  @ApiOperation({ summary: 'Pending a task.' })
+  @ApiResponse({ status: 200, description: 'Task pending.', type: SimpleResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Needs sign in to pending task.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Only task assignee can pending the task.',
+    type: ForbiddenErrorResponseDto,
+  })
+  async pending(@CurrentTask() task: Task, @CurrentUser() user: User) {
+    return { result: this.respondToTaskService.pending(task, user) };
   }
 }
