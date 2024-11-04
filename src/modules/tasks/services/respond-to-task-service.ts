@@ -9,6 +9,10 @@ import { TaskAssignmentsRepository } from '../repositories/task-assignments.repo
 import { Transactional } from 'typeorm-transactional';
 import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
 import { TaskIsNotRejectableException } from 'src/common/exceptions/tasks/task-is-not-rejectable.exception';
+import { TaskIsCancelledException } from 'src/common/exceptions/tasks/task-is-cancelled.exception';
+import { TaskIsNotPendingableException } from 'src/common/exceptions/tasks/task-is-not-pendingable.exception';
+import { TaskIsNotCompletableException } from 'src/common/exceptions/tasks/task-is-not-completable.exception';
+import { TaskProcessorVerificationService } from './task-processor-verification-service';
 
 export interface TaskStatusResponse {
   taskStatus: TaskStatus;
@@ -26,6 +30,7 @@ export class RespondToTaskService {
   constructor(
     private readonly tasksRepository: TasksRepository,
     private readonly taskAssignmentsRepository: TaskAssignmentsRepository,
+    private readonly taskProcessorVerificationService: TaskProcessorVerificationService,
   ) {}
 
   async accept(task: Task, user: User): Promise<TaskStatusResponse> {
@@ -57,7 +62,7 @@ export class RespondToTaskService {
   }
 
   private async respondToTask(task: Task, user: User, taskAssignmentStatus: TaskAssignmentStatusAvailable) {
-    this.checkIfTaskAbleToBeResponded(task, taskAssignmentStatus);
+    this.checkIfTaskAbleToBeResponded(task, user, taskAssignmentStatus);
     const taskAssignment = await this.getTaskAssignment(task, user);
 
     const taskStatusResponse = await this.updateAssignmentStatusAndTaskStatus(
@@ -71,36 +76,52 @@ export class RespondToTaskService {
     return taskStatusResponse;
   }
 
-  private checkIfTaskAbleToBeResponded(task: Task, taskAssignmentStatus: TaskAssignmentStatusAvailable) {
+  private async checkIfTaskAbleToBeResponded(
+    task: Task,
+    user: User,
+    taskAssignmentStatus: TaskAssignmentStatusAvailable,
+  ) {
+    if (task.status === TaskStatus.CANCELLED) {
+      throw new TaskIsCancelledException();
+    }
+
     if (taskAssignmentStatus === TaskAssignmentStatus.ACCEPTED) {
-      if ([TaskStatus.OPEN, TaskStatus.REJECTED].includes(task.status)) {
-        return true;
+      const taskStatusesAvailableToAccept = [TaskStatus.OPEN, TaskStatus.REJECTED];
+      if (taskStatusesAvailableToAccept.includes(task.status)) {
+        return;
       }
-      throw new TaskIsNotAcceptableException([TaskStatus.OPEN, TaskStatus.REJECTED]);
+      throw new TaskIsNotAcceptableException(taskStatusesAvailableToAccept);
     }
 
     if (taskAssignmentStatus === TaskAssignmentStatus.REJECTED) {
-      if ([TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.DONE].includes(task.status)) {
-        return true;
+      const taskStatusesAvailableToReject = [TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.DONE];
+      if (taskStatusesAvailableToReject.includes(task.status)) {
+        return;
       }
-      throw new TaskIsNotRejectableException();
+      throw new TaskIsNotRejectableException(taskStatusesAvailableToReject);
     }
 
     if (taskAssignmentStatus === TaskAssignmentStatus.PENDING) {
-      if ([TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.REJECTED].includes(task.status)) {
-        return true;
+      if ([TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.REJECTED, TaskStatus.DONE].includes(task.status)) {
+        return;
       }
-      return false;
+      throw new TaskIsNotPendingableException([
+        TaskStatus.OPEN,
+        TaskStatus.IN_PROGRESS,
+        TaskStatus.REJECTED,
+        TaskStatus.DONE,
+      ]);
     }
 
     if (taskAssignmentStatus === TaskAssignmentStatus.DONE) {
-      if ([TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.REJECTED].includes(task.status)) {
-        return true;
+      if (
+        task.status !== TaskStatus.IN_PROGRESS ||
+        !(await this.taskProcessorVerificationService.isUserProcessorOfTask(user, task))
+      ) {
+        throw new TaskIsNotCompletableException();
       }
-      return false;
+      return;
     }
-
-    return false;
   }
 
   @Transactional()

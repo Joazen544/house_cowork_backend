@@ -4,7 +4,7 @@ import { User } from 'src/modules/users/entities/user.entity';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
 
 @Injectable()
-export class TaskAssigneeService {
+export class TaskAssigneeVerificationService {
   constructor(private readonly taskAssignmentsRepository: TaskAssignmentsRepository) {}
 
   async isUserAssigneeOfTask(user: User, task: Task): Promise<boolean> {

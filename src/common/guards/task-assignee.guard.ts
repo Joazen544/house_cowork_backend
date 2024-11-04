@@ -1,12 +1,12 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { TasksService } from '../../modules/tasks/services/tasks.service';
-import { TaskAssigneeService } from '../../modules/tasks/services/task-assignee-service';
+import { TaskAssigneeVerificationService } from '../../modules/tasks/services/task-assignee-verification-service';
 
 @Injectable()
 export class TaskAssigneeGuard implements CanActivate {
   constructor(
     private readonly tasksService: TasksService,
-    private readonly taskAssigneeService: TaskAssigneeService,
+    private readonly taskAssigneeVerificationService: TaskAssigneeVerificationService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -23,7 +23,7 @@ export class TaskAssigneeGuard implements CanActivate {
       throw new ForbiddenException('Task not found');
     }
 
-    const isAssignee = await this.taskAssigneeService.isUserAssigneeOfTask(user, task);
+    const isAssignee = await this.taskAssigneeVerificationService.isUserAssigneeOfTask(user, task);
     if (!isAssignee) {
       throw new ForbiddenException('User is not assignee of this task');
     }
