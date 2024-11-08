@@ -53,6 +53,7 @@ export class AuthController {
 
   @Post('signin')
   @Public()
+  @HttpCode(HttpStatus.OK)
   @Serialize(UpdateUserResponseDto)
   @ApiOperation({ summary: 'Sign in' })
   @ApiResponse({ status: 200, description: 'User signin!', type: UpdateUserResponseDto })
