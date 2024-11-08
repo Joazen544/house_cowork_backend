@@ -13,7 +13,7 @@ import {
 } from '../../common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 @ApiTags('Users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
