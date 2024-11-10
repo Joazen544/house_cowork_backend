@@ -3,7 +3,6 @@ import { HousesService } from './houses.service';
 import { HousesController } from './houses.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { House } from './entities/house.entity';
-import { UsersModule } from '../../modules/users/users.module';
 import { Rule } from './entities/rule.entity';
 import { Invitation } from './entities/invitation.entity';
 import { JoinRequestsService } from './join-requests.service';
@@ -16,11 +15,7 @@ import { JoinRequestsRepository } from './repositories/join-requests.repository'
 import { HouseMembersModule } from '../house-members/house-members.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([House, HouseMember, Rule, Invitation, JoinRequest]),
-    UsersModule,
-    HouseMembersModule,
-  ],
+  imports: [TypeOrmModule.forFeature([House, HouseMember, Rule, Invitation, JoinRequest]), HouseMembersModule],
   controllers: [HousesController],
   providers: [
     HousesService,
