@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { House } from '../entities/house.entity';
 import { BaseRepository } from 'src/common/repositories/base.repository';
 import { User } from 'src/modules/users/entities/user.entity';
-import { HouseMember } from '../entities/house-member.entity';
+import { HouseMember } from '../../house-members/house-member.entity';
 
 @Injectable()
 export class HousesRepository extends BaseRepository<House> {

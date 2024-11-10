@@ -12,11 +12,15 @@ import {
   UnauthorizedErrorResponseDto,
 } from '../../common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
+import { HouseMembersService } from '../house-members/house-members.service';
 
 @Controller({ path: 'users', version: '1' })
 @ApiTags('Users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private houseMembersService: HouseMembersService,
+  ) {}
 
   @Get(':id/profile')
   @ApiBearerAuth()
@@ -36,7 +40,7 @@ export class UsersController {
       throw new NotFoundException('user not found');
     }
 
-    const isInSameHouse = await this.usersService.areUsersInSameHouse(user, targetUser);
+    const isInSameHouse = await this.houseMembersService.areUsersInSameHouse(user, targetUser);
     if (!isInSameHouse) {
       throw new ForbiddenException('Can only find user info in family');
     }

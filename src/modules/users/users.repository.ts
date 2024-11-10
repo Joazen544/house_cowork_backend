@@ -20,18 +20,4 @@ export class UsersRepository extends BaseRepository<User> {
   findByIds(ids: number[]) {
     return this.userRepo.findBy({ id: In(ids) });
   }
-
-  async areUsersInSameHouse(user1Id: number, user2Id: number): Promise<boolean> {
-    const result = await this.userRepo
-      .createQueryBuilder('user1')
-      .innerJoin('user1.houseMembers', 'hm1')
-      .innerJoin('hm1.house', 'house')
-      .innerJoin('house.houseMembers', 'hm2')
-      .innerJoin('hm2.user', 'user2')
-      .where('user1.id = :user1Id', { user1Id })
-      .andWhere('user2.id = :user2Id', { user2Id })
-      .getCount();
-
-    return result > 0;
-  }
 }

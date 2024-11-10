@@ -14,6 +14,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
+import { HouseMembersModule } from './modules/house-members/house-members.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
@@ -40,6 +41,7 @@ const cookieSession = require('cookie-session');
     TasksModule,
     HousesModule,
     DeviceTokensModule,
+    HouseMembersModule,
   ],
   controllers: [AppController],
   providers: [

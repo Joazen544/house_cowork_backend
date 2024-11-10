@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from 'src/common/repositories/base.repository';
-import { HouseMember } from '../houses/entities/house-member.entity';
+import { HouseMember } from './house-member.entity';
 
 @Injectable()
 export class HouseMembersRepository extends BaseRepository<HouseMember> {

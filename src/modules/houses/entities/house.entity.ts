@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Rule } from './rule.entity';
 import { JoinRequest } from './join-request.entity';
 import { Invitation } from './invitation.entity';
-import { HouseMember } from './house-member.entity';
+import { HouseMember } from '../../house-members/house-member.entity';
 
 @Entity()
 export class House {

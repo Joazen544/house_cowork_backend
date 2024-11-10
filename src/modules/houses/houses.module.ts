@@ -11,11 +11,16 @@ import { JoinRequest } from './entities/join-request.entity';
 import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { InvitationsRepository } from './repositories/invitations.repository';
-import { HouseMember } from './entities/house-member.entity';
+import { HouseMember } from '../house-members/house-member.entity';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
+import { HouseMembersModule } from '../house-members/house-members.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([House, HouseMember, Rule, Invitation, JoinRequest]), UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([House, HouseMember, Rule, Invitation, JoinRequest]),
+    UsersModule,
+    HouseMembersModule,
+  ],
   controllers: [HousesController],
   providers: [
     HousesService,

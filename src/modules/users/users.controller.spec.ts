@@ -4,11 +4,12 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
+import { HouseMembersService } from '../house-members/house-members.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
   let usersService: UsersService;
-
+  let houseMembersService: HouseMembersService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -21,11 +22,20 @@ describe('UsersController', () => {
             update: jest.fn(),
           },
         },
+        {
+          provide: HouseMembersService,
+          useValue: {
+            findOne: jest.fn(),
+            areUsersInSameHouse: jest.fn(),
+            update: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
     usersService = module.get<UsersService>(UsersService);
+    houseMembersService = module.get<HouseMembersService>(HouseMembersService);
   });
 
   it('should be defined', () => {
@@ -48,14 +58,14 @@ describe('UsersController', () => {
     it('should throw ForbiddenException if users are not in the same house', async () => {
       const targetUser: User = { id: 2 } as User;
       jest.spyOn(usersService, 'findOneBy').mockResolvedValue(targetUser);
-      jest.spyOn(usersService, 'areUsersInSameHouse').mockResolvedValue(false);
+      jest.spyOn(houseMembersService, 'areUsersInSameHouse').mockResolvedValue(false);
       await expect(controller.findOne(2, { id: 1 } as User)).rejects.toThrow(ForbiddenException);
     });
 
     it('should return target user info if users are in the same house', async () => {
       const targetUser: User = { id: 2 } as User;
       jest.spyOn(usersService, 'findOneBy').mockResolvedValue(targetUser);
-      jest.spyOn(usersService, 'areUsersInSameHouse').mockResolvedValue(true);
+      jest.spyOn(houseMembersService, 'areUsersInSameHouse').mockResolvedValue(true);
       const result = await controller.findOne(2, { id: 1 } as User);
       expect(result).toEqual({ user: targetUser });
     });

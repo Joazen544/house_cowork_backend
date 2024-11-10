@@ -35,9 +35,4 @@ export class UsersService {
     const updatedUser = await this.usersRepository.save(user);
     return updatedUser;
   }
-
-  areUsersInSameHouse(user1: User, user2: User) {
-    const areUsersInSameHouse = this.usersRepository.areUsersInSameHouse(user1.id, user2.id);
-    return areUsersInSameHouse;
-  }
 }
