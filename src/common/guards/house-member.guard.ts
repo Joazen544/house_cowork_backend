@@ -1,9 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, NotFoundException } from '@nestjs/common';
-import { HousesService } from '../../modules/houses/houses.service';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { HouseMembersService } from 'src/modules/house-members/house-members.service';
 
 @Injectable()
 export class HouseMemberGuard implements CanActivate {
-  constructor(private readonly housesService: HousesService) {}
+  constructor(private readonly houseMembersService: HouseMembersService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -14,17 +14,12 @@ export class HouseMemberGuard implements CanActivate {
       throw new ForbiddenException('User or house not found');
     }
 
-    const house = await this.housesService.findOne({ id: houseId });
-    if (!house) {
-      throw new NotFoundException('House not found');
-    }
-
-    const isMember = await this.housesService.isUserMemberOfHouse(user, house);
-    if (!isMember) {
+    const houseMember = await this.houseMembersService.findOneByHouseIdAndUserId(houseId, user.id);
+    if (!houseMember) {
       throw new ForbiddenException('User is not a member of this house');
     }
 
-    request.currentHouse = house;
+    request.currentHouse = houseMember.house;
     return true;
   }
 }

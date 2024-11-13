@@ -40,4 +40,8 @@ export class HouseMembersRepository extends BaseRepository<HouseMember> {
     await this.houseMemberRepo.save(houseMember);
     return houseMember;
   }
+
+  async findByHouseId(houseId: number): Promise<HouseMember[]> {
+    return this.houseMemberRepo.findBy({ house: { id: houseId } });
+  }
 }

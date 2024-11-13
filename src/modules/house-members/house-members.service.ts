@@ -15,4 +15,14 @@ export class HouseMembersService {
   addMemberToHouse(user: User, house: House) {
     return this.houseMembersRepository.addMemberToHouse(user, house);
   }
+
+  async getHouseMembers(houseId: number) {
+    const houseMembers = await this.houseMembersRepository.findByHouseId(houseId);
+
+    return houseMembers;
+  }
+
+  async findOneByHouseIdAndUserId(houseId: number, userId: number) {
+    return this.houseMembersRepository.findOneBy({ houseId: houseId, memberId: userId });
+  }
 }

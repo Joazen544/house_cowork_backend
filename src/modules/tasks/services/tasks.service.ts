@@ -8,15 +8,15 @@ import { UpdateTaskDto } from '../dtos/request/update-task.dto';
 import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
-import { HousesService } from '../../houses/houses.service';
 import { UserNotMemberOfHouseException } from '../../../common/exceptions/houses/user-not-member-of-house-exception';
+import { HouseMembersService } from 'src/modules/house-members/house-members.service';
 
 @Injectable()
 export class TasksService {
   constructor(
     private readonly tasksRepository: TasksRepository,
     private readonly taskAssignmentsRepository: TaskAssignmentsRepository,
-    private readonly housesService: HousesService,
+    private readonly houseMembersService: HouseMembersService,
   ) {}
 
   async create(taskDto: CreateTaskDto, user: User, house: House) {
@@ -51,7 +51,7 @@ export class TasksService {
   }
 
   private async checkIfAllAssigneesMemberOfHouse(assigneeIds: number[], house: House) {
-    const houseMembers = await this.housesService.getHouseMembers(house);
+    const houseMembers = await this.houseMembersService.getHouseMembers(house.id);
     return assigneeIds.every((assigneeId) => houseMembers.some((member) => member.id === assigneeId));
   }
 

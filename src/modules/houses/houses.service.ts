@@ -136,14 +136,8 @@ export class HousesService {
   // }
 
   async isUserMemberOfHouse(user: User, house: House) {
-    const users = await this.getHouseMembers(house);
+    const users = await this.houseMembersService.getHouseMembers(house.id);
     return users.some((u) => u.id === user.id);
-  }
-
-  async getHouseMembers(house: House) {
-    const houseMembers = await this.housesRepository.getHouseMembers(house);
-
-    return houseMembers;
   }
 
   formatHouseInfoInResponse(house: House) {
