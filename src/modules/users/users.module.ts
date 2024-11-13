@@ -10,6 +10,6 @@ import { HouseMembersModule } from '../house-members/house-members.module';
   imports: [TypeOrmModule.forFeature([User]), HouseMembersModule],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
-  exports: [UsersService],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

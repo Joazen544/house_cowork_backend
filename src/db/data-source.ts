@@ -23,6 +23,7 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     migrations: ['dist/db/migrations/*js'],
     synchronize: true,
+    autoLoadEntities: true,
     migration: true,
   };
 

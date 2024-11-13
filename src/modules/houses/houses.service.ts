@@ -11,6 +11,7 @@ import { InvitationsRepository } from './repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
+import { HouseMembersService } from '../house-members/house-members.service';
 
 @Injectable()
 export class HousesService {
@@ -18,6 +19,7 @@ export class HousesService {
     private readonly housesRepository: HousesRepository,
     private readonly rulesRepository: RulesRepository,
     private readonly invitationsRepository: InvitationsRepository,
+    private readonly houseMembersService: HouseMembersService,
   ) {}
 
   @Transactional()
@@ -45,7 +47,7 @@ export class HousesService {
   async addMemberToHouse(user: User, house: House) {
     const isUserMemberOfHouse = await this.isUserMemberOfHouse(user, house);
     if (!isUserMemberOfHouse) {
-      await this.housesRepository.addMemberToHouse(user, house);
+      await this.houseMembersService.addMemberToHouse(user, house);
     } else {
       throw new MemberAlreadyExistsException();
     }

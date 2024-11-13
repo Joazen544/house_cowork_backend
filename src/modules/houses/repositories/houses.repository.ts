@@ -9,7 +9,6 @@ import { HouseMember } from '../../house-members/house-member.entity';
 @Injectable()
 export class HousesRepository extends BaseRepository<House> {
   constructor(
-    @InjectRepository(House) private readonly houseRepo: Repository<House>,
     @InjectRepository(HouseMember) private readonly HouseMemberRepo: Repository<HouseMember>,
     @InjectDataSource() dataSource: DataSource,
   ) {
@@ -32,13 +31,5 @@ export class HousesRepository extends BaseRepository<House> {
       return [];
     }
     return houseMembers.map((houseMember) => houseMember.member);
-  }
-
-  async addMemberToHouse(user: User, house: House): Promise<House> {
-    const houseMember = new HouseMember();
-    houseMember.member = user;
-    houseMember.house = house;
-    await this.HouseMemberRepo.save(houseMember);
-    return house;
   }
 }
