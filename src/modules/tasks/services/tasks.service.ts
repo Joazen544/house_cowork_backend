@@ -5,7 +5,6 @@ import { User } from '../../users/entities/user.entity';
 import { CreateTaskDto } from '../dtos/request/create-task.dto';
 import { House } from '../../houses/entities/house.entity';
 import { UpdateTaskDto } from '../dtos/request/update-task.dto';
-import { UsersService } from '../../users/users.service';
 import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignment.entity';
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
@@ -18,7 +17,6 @@ export class TasksService {
     private readonly tasksRepository: TasksRepository,
     private readonly taskAssignmentsRepository: TaskAssignmentsRepository,
     private readonly housesService: HousesService,
-    private usersService: UsersService,
   ) {}
 
   async create(taskDto: CreateTaskDto, user: User, house: House) {
@@ -29,11 +27,9 @@ export class TasksService {
       throw new UserNotMemberOfHouseException();
     }
 
-    const assignedUsers = await this.usersService.findByIds(taskDto.assigneeIds);
-
-    task.taskAssignments = assignedUsers.map((assigneeUser) => {
+    task.taskAssignments = taskDto.assigneeIds.map((assigneeUserId) => {
       const taskAssignment = new TaskAssignment();
-      taskAssignment.user = assigneeUser;
+      taskAssignment.userId = assigneeUserId;
       return taskAssignment;
     });
 
@@ -110,16 +106,10 @@ export class TasksService {
   }
 
   async assign(task: Task, userIds: number[]) {
-    const users = await this.usersService.findByIds(userIds);
-
-    if (users.length !== userIds.length) {
-      throw new Error('Some users were not found');
-    }
-
-    const taskAssignments = users.map((user) => {
+    const taskAssignments = userIds.map((userId) => {
       const taskAssignment = new TaskAssignment();
       taskAssignment.task = task;
-      taskAssignment.user = user;
+      taskAssignment.userId = userId;
       return taskAssignment;
     });
 

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Task } from './task.entity';
 
@@ -15,7 +15,11 @@ export class TaskAssignment {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column()
+  userId!: number;
+
   @ManyToOne(() => User, (user) => user.taskAssignments, { eager: true })
+  @JoinColumn({ name: 'userId' })
   user!: User;
 
   @ManyToOne(() => Task, (task) => task.taskAssignments)
