@@ -61,7 +61,7 @@ export class HousesService {
   }
 
   findHousesByUser(user: User) {
-    return this.housesRepository.findHousesByUser(user);
+    return this.houseMembersService.findHousesByMemberId(user.id);
   }
 
   findOne(attrs: FindOptionsWhere<House>) {

@@ -25,4 +25,8 @@ export class HouseMembersService {
   async findOneByHouseIdAndUserId(houseId: number, userId: number) {
     return this.houseMembersRepository.findOneBy({ houseId: houseId, memberId: userId });
   }
+
+  async findHousesByMemberId(memberId: number) {
+    return this.houseMembersRepository.findBy({ memberId: memberId });
+  }
 }
