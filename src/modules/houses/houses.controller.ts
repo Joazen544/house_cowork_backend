@@ -14,7 +14,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { HousesService } from './houses.service';
+import { HousesService } from './services/houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
 import { UpdateHouseDto } from './dto/request/update-house.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -36,7 +36,7 @@ import { User } from '../users/entities/user.entity';
 import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
-import { JoinRequestsService } from './join-requests.service';
+import { JoinRequestsService } from './services/join-requests.service';
 import { HousesByMemberResponseDto } from './dto/response/houses-by-member-response.dto';
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';

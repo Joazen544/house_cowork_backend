@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { JoinRequest, JoinRequestStatus } from './entities/join-request.entity';
-import { User } from '../users/entities/user.entity';
+import { JoinRequest, JoinRequestStatus } from '../entities/join-request.entity';
+import { User } from '../../users/entities/user.entity';
 import { HousesService } from './houses.service';
-import { House } from './entities/house.entity';
-import { AnswerJoinRequestResult } from './dto/request/answer-join-request.dto';
-import { JoinRequestsRepository } from './repositories/join-requests.repository';
+import { House } from '../entities/house.entity';
+import { AnswerJoinRequestResult } from '../dto/request/answer-join-request.dto';
+import { JoinRequestsRepository } from '../repositories/join-requests.repository';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 import { Transactional } from 'typeorm-transactional';

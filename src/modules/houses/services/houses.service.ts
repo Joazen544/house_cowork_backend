@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateHouseDto } from './dto/request/create-house.dto';
-import { UpdateHouseDto } from './dto/request/update-house.dto';
-import { User } from '../users/entities/user.entity';
-import { House } from './entities/house.entity';
+import { CreateHouseDto } from '../dto/request/create-house.dto';
+import { UpdateHouseDto } from '../dto/request/update-house.dto';
+import { User } from '../../users/entities/user.entity';
+import { House } from '../entities/house.entity';
 import { FindOptionsWhere, MoreThan } from 'typeorm';
-import { HousesRepository } from './repositories/houses.repository';
-import { RulesRepository } from './repositories/rules.repository';
-import { Rule } from './entities/rule.entity';
-import { InvitationsRepository } from './repositories/invitations.repository';
+import { HousesRepository } from '../repositories/houses.repository';
+import { RulesRepository } from '../repositories/rules.repository';
+import { Rule } from '../entities/rule.entity';
+import { InvitationsRepository } from '../repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
-import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
+import { InvitationNotFoundException } from '../../../common/exceptions/houses/invitation-not-found.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
-import { HouseMembersService } from '../house-members/house-members.service';
+import { HouseMembersService } from '../../house-members/house-members.service';
 
 @Injectable()
 export class HousesService {
