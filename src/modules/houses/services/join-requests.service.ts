@@ -16,8 +16,7 @@ export class JoinRequestsService {
     private readonly housesService: HousesService,
   ) {}
 
-  async createJoinRequest(invitationCode: string, user: User) {
-    const house = await this.housesService.findOneWithInvitation(invitationCode);
+  async createJoinRequest(house: House, user: User) {
     const isUserMemberOfHouse = await this.housesService.isUserMemberOfHouse(user, house);
     if (isUserMemberOfHouse) {
       throw new MemberAlreadyExistsException();

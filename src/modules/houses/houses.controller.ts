@@ -156,7 +156,7 @@ export class HousesController {
   @ApiBearerAuth()
   @UseGuards()
   @ApiOperation({ summary: 'Create a house join request.' })
-  @ApiResponse({ status: 201, description: 'House join request created.', type: SimpleResponseDto })
+  @ApiResponse({ status: 201, description: 'House join request created.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
@@ -164,8 +164,12 @@ export class HousesController {
   @Serialize(SimpleResponseDto)
   async createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
     try {
-      const result = await this.joinRequestsService.createJoinRequest(invitationCode, user);
-      return { result };
+      const house = await this.housesService.findOneWithInvitation(invitationCode);
+      const result = await this.joinRequestsService.createJoinRequest(house, user);
+      if (result) {
+        return { house: this.housesService.formatHouseInfoInResponse(house) };
+      }
+      throw new Error('Something went wrong creating join request.');
     } catch (error) {
       if (error instanceof InvitationNotFoundException) {
         throw new BadRequestException(error.message);
