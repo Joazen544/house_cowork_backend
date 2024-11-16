@@ -42,7 +42,7 @@ import { InvitationNotFoundException } from '../../common/exceptions/houses/invi
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 
-@Controller('houses')
+@Controller({ path: 'houses', version: '1' })
 @ApiTags('Houses')
 export class HousesController {
   constructor(
