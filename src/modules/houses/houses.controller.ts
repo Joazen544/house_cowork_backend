@@ -28,7 +28,7 @@ import {
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { HouseInfoResponseDto } from './dto/response/house-info-response.dto';
 import { CreateHouseInvitationResponseDto } from './dto/response/create-house-invitation-response.dto';
-import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
+import { JoinRequestsSentResponseDto } from './dto/response/join-requests-sent-response.dto';
 import { SimpleResponseDto } from '../../common/dto/response/simple-response.dto';
 import { AnswerJoinRequestDto } from './dto/request/answer-join-request.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -41,6 +41,8 @@ import { HousesByMemberResponseDto } from './dto/response/houses-by-member-respo
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
+import { CreateJoinRequestResponseDto } from './dto/response/create-join-request-response.dto';
+import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 
 @Controller({ path: 'houses', version: '1' })
 @ApiTags('Houses')
@@ -156,18 +158,18 @@ export class HousesController {
   @ApiBearerAuth()
   @UseGuards()
   @ApiOperation({ summary: 'Create a house join request.' })
-  @ApiResponse({ status: 201, description: 'House join request created.', type: HouseInfoResponseDto })
+  @ApiResponse({ status: 201, description: 'House join request created.', type: CreateJoinRequestResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to create join request.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only not house member can join.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @ApiQuery({ name: 'invitationCode', type: String, required: true, description: 'Invitation code to join the group' })
-  @Serialize(SimpleResponseDto)
+  @Serialize(CreateJoinRequestResponseDto)
   async createJoinRequest(@Query('invitationCode') invitationCode: string, @CurrentUser() user: User) {
     try {
       const house = await this.housesService.findOneWithInvitation(invitationCode);
-      const result = await this.joinRequestsService.createJoinRequest(house, user);
-      if (result) {
-        return { house: this.housesService.formatHouseInfoInResponse(house) };
+      const joinRequest = await this.joinRequestsService.createJoinRequest(house, user);
+      if (joinRequest) {
+        return { joinRequest: this.joinRequestsService.formatJoinRequestInResponse(joinRequest) };
       }
       throw new Error('Something went wrong creating join request.');
     } catch (error) {
@@ -184,6 +186,22 @@ export class HousesController {
     }
   }
 
+  @Get('joinRequests/sent')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all sent join requests.' })
+  @ApiResponse({ status: 200, description: 'Sent join requests got.', type: JoinRequestsSentResponseDto })
+  @ApiResponse({
+    status: 401,
+    description: 'Need signin to get sent join requests.',
+    type: UnauthorizedErrorResponseDto,
+  })
+  @Serialize(JoinRequestsSentResponseDto)
+  async getSentJoinRequests(@CurrentUser() user: User) {
+    const joinRequests = await this.joinRequestsService.getSentJoinRequests(user);
+    const joinRequestsInResponse = this.joinRequestsService.formatJoinRequestsInResponse(joinRequests);
+    return { joinRequests: joinRequestsInResponse };
+  }
+
   @Get(':houseId/joinRequests')
   @ApiBearerAuth()
   @UseGuards(HouseMemberGuard)
@@ -193,7 +211,7 @@ export class HousesController {
   @ApiResponse({ status: 403, description: 'Only house member get join requests.', type: ForbiddenErrorResponseDto })
   @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
   @Serialize(HouseJoinRequestsResponseDto)
-  async getJoinRequests(@CurrentHouse() house: House) {
+  async getJoinRequestsOfHouse(@CurrentHouse() house: House) {
     const joinRequests = await this.joinRequestsService.getPendingJoinRequests(house);
     const joinRequestsInResponse = joinRequests.map((joinRequest) => {
       return {

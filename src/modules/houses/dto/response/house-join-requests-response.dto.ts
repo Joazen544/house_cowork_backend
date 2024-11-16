@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { JoinRequestDto } from '../join-request.dto';
 import { Expose, Type } from 'class-transformer';
+import { JoinRequestOfHouseDto } from '../join-request-of-house.dto';
 
 export class HouseJoinRequestsResponseDto {
-  @ApiProperty({ type: [JoinRequestDto] })
+  @ApiProperty({ type: [JoinRequestOfHouseDto] })
   @Expose()
-  @Type(() => JoinRequestDto)
-  joinRequests!: JoinRequestDto[];
+  @Type(() => JoinRequestOfHouseDto)
+  joinRequests!: JoinRequestOfHouseDto[];
 }

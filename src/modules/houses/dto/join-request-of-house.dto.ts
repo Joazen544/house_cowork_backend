@@ -2,14 +2,9 @@ import { IsEnum, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { UserDto } from 'src/modules/users/dtos/user.dto';
+import { JoinRequestStatus } from '../entities/join-request.entity';
 
-enum JoinRequestStatus {
-  PENDING = 0,
-  ACCEPT = 1,
-  REJECT = 2,
-}
-
-export class JoinRequestDto {
+export class JoinRequestOfHouseDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   @Expose()

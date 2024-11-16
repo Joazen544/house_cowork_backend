@@ -37,10 +37,27 @@ export class JoinRequestsService {
     });
 
     // TODO: send fcm to house members
-    if (joinRequest) {
-      return true;
-    }
-    return false;
+    return joinRequest;
+  }
+
+  formatJoinRequestInResponse(joinRequest: JoinRequest) {
+    return {
+      id: joinRequest.id,
+      status: joinRequest.status,
+      houseName: joinRequest.house.name,
+    };
+  }
+
+  formatJoinRequestsInResponse(joinRequests: JoinRequest[]) {
+    const result = joinRequests.map(this.formatJoinRequestInResponse);
+    return result;
+  }
+
+  async getSentJoinRequests(user: User) {
+    return this.joinRequestsRepository.findBy({
+      user,
+      status: JoinRequestStatus.PENDING,
+    });
   }
 
   async getPendingJoinRequests(house: House) {
