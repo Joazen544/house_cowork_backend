@@ -142,7 +142,7 @@ export class HousesService {
 
   formatHouseInfoInResponse(house: House) {
     const houseMembers = house.houseMembers;
-    const memberIds = houseMembers ? houseMembers.map((houseMember) => houseMember.member.id) : [];
+    const memberIds = houseMembers ? houseMembers.map((houseMember) => houseMember.memberId) : [];
     const rules = house.rules ? house.rules.map((rule) => rule.description) : [];
     return { ...house, memberIds, rules };
   }
