@@ -40,7 +40,7 @@ export class UsersController {
       throw new NotFoundException('user not found');
     }
 
-    const isInSameHouse = await this.houseMembersService.areUsersInSameHouse(user, targetUser);
+    const isInSameHouse = await this.houseMembersService.areUsersInSameHouse(user.id, targetUser.id);
     if (!isInSameHouse) {
       throw new ForbiddenException('Can only find user info in family');
     }

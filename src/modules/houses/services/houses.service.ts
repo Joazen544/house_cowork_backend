@@ -10,7 +10,6 @@ import { Rule } from '../entities/rule.entity';
 import { InvitationsRepository } from '../repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { InvitationNotFoundException } from '../../../common/exceptions/houses/invitation-not-found.exception';
-import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 import { HouseMembersService } from '../../house-members/house-members.service';
 
 @Injectable()
@@ -34,7 +33,7 @@ export class HousesService {
       house.rules = ruleEntities;
     }
     const savedHouse = await this.housesRepository.save(house);
-    await this.addMemberToHouse(user, savedHouse);
+    await this.houseMembersService.addMemberToHouse(user, savedHouse);
 
     const wholeHouse = await this.findOne({ id: savedHouse.id });
 
@@ -42,15 +41,6 @@ export class HousesService {
       throw new Error('House not created');
     }
     return wholeHouse;
-  }
-
-  async addMemberToHouse(user: User, house: House) {
-    const isUserMemberOfHouse = await this.isUserMemberOfHouse(user, house);
-    if (!isUserMemberOfHouse) {
-      await this.houseMembersService.addMemberToHouse(user, house);
-    } else {
-      throw new MemberAlreadyExistsException();
-    }
   }
 
   private createHouseEntity(createHouseDto: CreateHouseDto): House {
@@ -134,11 +124,6 @@ export class HousesService {
   // leave(user: User) {
   //   return 'This action will make user leave a house.';
   // }
-
-  async isUserMemberOfHouse(user: User, house: House) {
-    const users = await this.houseMembersService.getHouseMembers(house.id);
-    return users.some((u) => u.id === user.id);
-  }
 
   formatHouseInfoInResponse(house: House) {
     const houseMembers = house.houseMembers;

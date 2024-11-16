@@ -7,9 +7,17 @@ import { House } from '../houses/entities/house.entity';
 export class HouseMembersService {
   constructor(private readonly houseMembersRepository: HouseMembersRepository) {}
 
-  areUsersInSameHouse(user1: User, user2: User) {
-    const areUsersInSameHouse = this.houseMembersRepository.ifUsersInAtLeastOneSameHouse(user1.id, user2.id);
+  areUsersInSameHouse(userOneId: number, userTwoId: number) {
+    const areUsersInSameHouse = this.houseMembersRepository.ifUsersInAtLeastOneSameHouse(userOneId, userTwoId);
     return areUsersInSameHouse;
+  }
+
+  async isUserMemberOfHouse(userId: number, houseId: number) {
+    const isUserMemberOfHouse = await this.houseMembersRepository.findOneBy({
+      memberId: userId,
+      houseId: houseId,
+    });
+    return isUserMemberOfHouse;
   }
 
   addMemberToHouse(user: User, house: House) {
