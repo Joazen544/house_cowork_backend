@@ -12,7 +12,7 @@ export class Invitation {
   @ManyToOne(() => House, (house) => house.invitations, { onDelete: 'CASCADE', eager: true })
   house!: House;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   expiresAt!: Date;
 
   get isExpired(): boolean {

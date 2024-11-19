@@ -74,6 +74,9 @@ export class JoinRequestsService {
 
   @Transactional()
   async answerJoinRequest(joinRequest: JoinRequest, result: string) {
+    console.log(typeof joinRequest.status);
+    console.log(typeof JoinRequestStatus.PENDING);
+    console.log(joinRequest.status === JoinRequestStatus.PENDING);
     if (joinRequest.status !== JoinRequestStatus.PENDING) {
       throw new AnswerNotPendingJoinRequestException();
     }

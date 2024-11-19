@@ -44,7 +44,7 @@ export class Task {
   })
   status!: TaskStatus;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   dueTime!: Date;
 
   @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task, { eager: true, cascade: true })
