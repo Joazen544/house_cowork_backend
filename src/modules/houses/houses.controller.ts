@@ -153,7 +153,7 @@ export class HousesController {
     }
   }
 
-  @Post('joinRequests')
+  @Post('/invitation/:invitationCode/joinRequests')
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
   @UseGuards()
