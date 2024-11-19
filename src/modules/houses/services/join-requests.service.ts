@@ -8,6 +8,7 @@ import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-r
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 import { Transactional } from 'typeorm-transactional';
 import { HouseMembersService } from 'src/modules/house-members/house-members.service';
+import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
 
 @Injectable()
 export class JoinRequestsService {
@@ -73,6 +74,9 @@ export class JoinRequestsService {
 
   @Transactional()
   async answerJoinRequest(joinRequest: JoinRequest, result: string) {
+    if (joinRequest.status !== JoinRequestStatus.PENDING) {
+      throw new AnswerNotPendingJoinRequestException();
+    }
     if (result === AnswerJoinRequestResult.ACCEPT) {
       joinRequest.status = JoinRequestStatus.ACCEPTED;
       await this.houseMembersService.addMemberToHouse(joinRequest.user, joinRequest.house);

@@ -43,6 +43,7 @@ import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-r
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 import { CreateJoinRequestResponseDto } from './dto/response/create-join-request-response.dto';
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
+import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
 
 @Controller({ path: 'houses', version: '1' })
 @ApiTags('Houses')
@@ -248,6 +249,9 @@ export class HousesController {
     try {
       return { result: await this.joinRequestsService.answerJoinRequest(joinRequest, answerJoinRequestDto.result) };
     } catch (error) {
+      if (error instanceof AnswerNotPendingJoinRequestException) {
+        throw new BadRequestException(error.message);
+      }
       if (error instanceof MemberAlreadyExistsException) {
         throw new BadRequestException(error.message);
       }
