@@ -75,6 +75,7 @@ export class JoinRequestsService {
   async answerJoinRequest(joinRequest: JoinRequest, result: string) {
     if (result === AnswerJoinRequestResult.ACCEPT) {
       joinRequest.status = JoinRequestStatus.ACCEPTED;
+      await this.houseMembersService.addMemberToHouse(joinRequest.user, joinRequest.house);
     } else if (result === AnswerJoinRequestResult.REJECT) {
       joinRequest.status = JoinRequestStatus.REJECTED;
     } else {
@@ -82,8 +83,6 @@ export class JoinRequestsService {
     }
 
     await this.joinRequestsRepository.save(joinRequest);
-
-    await this.houseMembersService.addMemberToHouse(joinRequest.user, joinRequest.house);
 
     // TODO: should send fcm to user
 
