@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 import { JoinRequest } from '../../houses/entities/join-request.entity';
 import { TaskAssignment } from '../../tasks/entities/task-assignment.entity';
@@ -40,4 +40,10 @@ export class User {
 
   @OneToMany(() => DeviceToken, (deviceToken) => deviceToken.user)
   deviceTokens!: DeviceToken[];
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt!: Date;
 }

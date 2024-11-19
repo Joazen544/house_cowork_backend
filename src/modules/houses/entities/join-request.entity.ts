@@ -1,6 +1,6 @@
 import { User } from '../../users/entities/user.entity';
 import { House } from './house.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum JoinRequestStatus {
   PENDING = 0,
@@ -22,4 +22,10 @@ export class JoinRequest {
 
   @Column({ type: 'integer', enum: JoinRequestStatus, default: JoinRequestStatus.PENDING })
   status!: JoinRequestStatus;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt!: Date;
 }

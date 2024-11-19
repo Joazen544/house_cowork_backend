@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { House } from '../../houses/entities/house.entity';
 import { TaskAssignment } from './task-assignment.entity';
@@ -44,7 +52,7 @@ export class Task {
   })
   status!: TaskStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   dueTime!: Date;
 
   @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task, { eager: true, cascade: true })
@@ -52,4 +60,10 @@ export class Task {
 
   @ManyToOne(() => House, (house) => house.tasks)
   house!: House;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt!: Date;
 }
