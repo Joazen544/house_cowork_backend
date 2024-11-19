@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
@@ -47,3 +48,5 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
 };
 
 export const dataSourceOptions: PostgresConnectionOptions | SqliteConnectionOptions = createDataSourceOptions();
+
+export const AppDataSource = new DataSource(dataSourceOptions);
