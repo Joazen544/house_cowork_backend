@@ -59,10 +59,7 @@ export class JoinRequestsService {
   }
 
   async getPendingJoinRequests(house: House) {
-    return this.joinRequestsRepository.findBy({
-      house,
-      status: JoinRequestStatus.PENDING,
-    });
+    return await this.joinRequestsRepository.fetchHousePendingRequestsWithUserInfo(house.id);
   }
 
   async findOneById(joinRequestId: number) {

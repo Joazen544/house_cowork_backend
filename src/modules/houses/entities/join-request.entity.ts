@@ -25,14 +25,14 @@ export class JoinRequest {
   @Column({ type: 'integer' })
   houseId!: number;
 
-  @ManyToOne(() => House, (house) => house.joinRequests, { eager: true })
+  @ManyToOne(() => House, (house) => house.joinRequests)
   @JoinColumn({ name: 'houseId' })
   house!: House;
 
   @Column({ type: 'integer' })
   userId!: number;
 
-  @ManyToOne(() => User, (user) => user.houseJoinRequests, { lazy: true })
+  @ManyToOne(() => User, (user) => user.houseJoinRequests)
   @JoinColumn({ name: 'userId' })
   user!: User;
 

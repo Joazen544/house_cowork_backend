@@ -29,4 +29,16 @@ export class JoinRequestsRepository extends BaseRepository<JoinRequest> {
       },
     });
   }
+
+  async fetchHousePendingRequestsWithUserInfo(houseId: number) {
+    return await this.joinRequestRepo.find({
+      where: {
+        houseId,
+        status: JoinRequestStatus.PENDING,
+      },
+      relations: {
+        user: true,
+      },
+    });
+  }
 }
