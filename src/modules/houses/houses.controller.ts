@@ -243,7 +243,7 @@ export class HousesController {
     if (!joinRequest) {
       throw new NotFoundException('Join request not found.');
     }
-    if (joinRequest.house.id !== house.id) {
+    if (joinRequest.houseId !== house.id) {
       throw new ForbiddenException('Only house member can answer join request.');
     }
     try {
