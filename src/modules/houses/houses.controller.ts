@@ -198,7 +198,7 @@ export class HousesController {
   })
   @Serialize(JoinRequestsSentResponseDto)
   async getSentJoinRequests(@CurrentUser() user: User) {
-    const joinRequests = await this.joinRequestsService.getSentJoinRequests(user);
+    const joinRequests = await this.joinRequestsService.getSentJoinRequestsAndHouseName(user);
     const joinRequestsInResponse = this.joinRequestsService.formatJoinRequestsInResponse(joinRequests);
     return { joinRequests: joinRequestsInResponse };
   }

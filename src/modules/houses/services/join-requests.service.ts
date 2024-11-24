@@ -54,11 +54,8 @@ export class JoinRequestsService {
     return result;
   }
 
-  async getSentJoinRequests(user: User) {
-    return this.joinRequestsRepository.findBy({
-      user,
-      status: JoinRequestStatus.PENDING,
-    });
+  async getSentJoinRequestsAndHouseName(user: User) {
+    return await this.joinRequestsRepository.fetchPendingRequestsWithHouseName(user.id);
   }
 
   async getPendingJoinRequests(house: House) {
@@ -74,9 +71,6 @@ export class JoinRequestsService {
 
   @Transactional()
   async answerJoinRequest(joinRequest: JoinRequest, result: string) {
-    console.log(typeof joinRequest.status);
-    console.log(typeof JoinRequestStatus.PENDING);
-    console.log(joinRequest.status === JoinRequestStatus.PENDING);
     if (joinRequest.status !== JoinRequestStatus.PENDING) {
       throw new AnswerNotPendingJoinRequestException();
     }
