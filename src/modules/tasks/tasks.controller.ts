@@ -43,7 +43,7 @@ import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-i
 import { UserIsNotAcceptorException } from 'src/common/exceptions/tasks/user-is-not-acceptor.exception';
 import { RespondToTaskService } from './services/respond-to-task-service';
 
-@Controller('tasks')
+@Controller({ path: 'tasks', version: '1' })
 @ApiTags('Tasks')
 export class TasksController {
   constructor(
