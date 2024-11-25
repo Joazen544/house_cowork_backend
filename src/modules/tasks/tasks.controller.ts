@@ -106,7 +106,7 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Task created.', type: GetTasksResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
-  find(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
+  async find(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
     let startDate: Date;
 
     if (timeStart) {
@@ -117,7 +117,7 @@ export class TasksController {
     }
     const endDate = timeEnd ? new Date(timeEnd) : null;
 
-    return this.tasksService.findByDatePeriod(startDate, endDate, house);
+    return { tasks: await this.tasksService.findByDatePeriod(startDate, endDate, house) };
   }
 
   @Get('house/:houseId/home')
