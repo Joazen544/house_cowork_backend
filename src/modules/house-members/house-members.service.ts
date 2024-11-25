@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { HouseMembersRepository } from './house-members.repository';
-import { User } from '../users/entities/user.entity';
-import { House } from '../houses/entities/house.entity';
 
 @Injectable()
 export class HouseMembersService {
@@ -20,8 +18,8 @@ export class HouseMembersService {
     return isUserMemberOfHouse;
   }
 
-  addMemberToHouse(user: User, house: House) {
-    return this.houseMembersRepository.addMemberToHouse(user, house);
+  addMemberToHouse(userId: number, houseId: number) {
+    return this.houseMembersRepository.addMemberToHouse(userId, houseId);
   }
 
   async getHouseMembers(houseId: number) {

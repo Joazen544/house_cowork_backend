@@ -3,8 +3,6 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { BaseRepository } from 'src/common/repositories/base.repository';
 import { HouseMember } from './house-member.entity';
-import { User } from '../users/entities/user.entity';
-import { House } from '../houses/entities/house.entity';
 
 @Injectable()
 export class HouseMembersRepository extends BaseRepository<HouseMember> {
@@ -33,10 +31,10 @@ export class HouseMembersRepository extends BaseRepository<HouseMember> {
     return false;
   }
 
-  async addMemberToHouse(user: User, house: House): Promise<HouseMember> {
+  async addMemberToHouse(userId: number, houseId: number): Promise<HouseMember> {
     const houseMember = new HouseMember();
-    houseMember.member = user;
-    houseMember.house = house;
+    houseMember.memberId = userId;
+    houseMember.houseId = houseId;
     await this.houseMemberRepo.save(houseMember);
     return houseMember;
   }

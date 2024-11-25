@@ -73,7 +73,7 @@ export class JoinRequestsService {
     }
     if (result === AnswerJoinRequestResult.ACCEPT) {
       joinRequest.status = JoinRequestStatus.ACCEPTED;
-      await this.houseMembersService.addMemberToHouse(joinRequest.user, joinRequest.house);
+      await this.houseMembersService.addMemberToHouse(joinRequest.userId, joinRequest.houseId);
     } else if (result === AnswerJoinRequestResult.REJECT) {
       joinRequest.status = JoinRequestStatus.REJECTED;
     } else {

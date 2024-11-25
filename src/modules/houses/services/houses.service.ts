@@ -33,7 +33,7 @@ export class HousesService {
       house.rules = ruleEntities;
     }
     const savedHouse = await this.housesRepository.save(house);
-    await this.houseMembersService.addMemberToHouse(user, savedHouse);
+    await this.houseMembersService.addMemberToHouse(user.id, savedHouse.id);
 
     const wholeHouse = await this.findOne({ id: savedHouse.id });
 
