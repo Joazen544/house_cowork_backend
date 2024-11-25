@@ -7,7 +7,7 @@ import { JoinRequestsRepository } from '../repositories/join-requests.repository
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
 import { Transactional } from 'typeorm-transactional';
-import { HouseMembersService } from 'src/modules/house-members/house-members.service';
+import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
 
 @Injectable()

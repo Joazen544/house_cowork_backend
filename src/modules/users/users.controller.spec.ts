@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
-import { HouseMembersService } from '../house-members/house-members.service';
+import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 
 describe('UsersController', () => {
   let controller: UsersController;

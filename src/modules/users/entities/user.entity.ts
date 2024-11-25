@@ -3,7 +3,7 @@ import { Task } from '../../tasks/entities/task.entity';
 import { JoinRequest } from '../../houses/entities/join-request.entity';
 import { TaskAssignment } from '../../tasks/entities/task-assignment.entity';
 import { DeviceToken } from '../../device-tokens/entities/device-token.entity';
-import { HouseMember } from '../../house-members/house-member.entity';
+import { HouseMember } from 'src/modules/houses/modules/house-members/house-member.entity';
 
 @Entity()
 @Unique(['email'])

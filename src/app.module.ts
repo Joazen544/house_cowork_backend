@@ -14,7 +14,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { HouseMembersModule } from './modules/house-members/house-members.module';
+import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
 
 @Module({
   imports: [

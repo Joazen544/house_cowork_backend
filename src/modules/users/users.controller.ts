@@ -12,7 +12,7 @@ import {
   UnauthorizedErrorResponseDto,
 } from '../../common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
-import { HouseMembersService } from '../house-members/house-members.service';
+import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 
 @Controller({ path: 'users', version: '1' })
 @ApiTags('Users')

@@ -8,8 +8,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../users/entities/user.entity';
-import { House } from '../houses/entities/house.entity';
+import { User } from 'src/modules/users/entities/user.entity';
+import { House } from 'src/modules/houses/entities/house.entity';
 
 export enum HouseMemberStatus {
   JOINED = 0,

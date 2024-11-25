@@ -11,7 +11,7 @@ import { HousesRepository } from './repositories/houses.repository';
 import { RulesRepository } from './repositories/rules.repository';
 import { InvitationsRepository } from './repositories/invitations.repository';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
-import { HouseMembersModule } from '../house-members/house-members.module';
+import { HouseMembersModule } from 'src/modules/houses/modules/house-members/house-members.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([House, Rule, Invitation, JoinRequest]), HouseMembersModule],

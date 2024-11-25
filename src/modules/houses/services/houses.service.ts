@@ -10,7 +10,7 @@ import { Rule } from '../entities/rule.entity';
 import { InvitationsRepository } from '../repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { InvitationNotFoundException } from '../../../common/exceptions/houses/invitation-not-found.exception';
-import { HouseMembersService } from '../../house-members/house-members.service';
+import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 
 @Injectable()
 export class HousesService {

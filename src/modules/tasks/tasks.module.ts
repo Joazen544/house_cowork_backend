@@ -9,7 +9,7 @@ import { TaskAssignmentsRepository } from './repositories/task-assignments.repos
 import { TaskAssigneeVerificationService } from './services/task-assignee-verification-service';
 import { RespondToTaskService } from './services/respond-to-task-service';
 import { TaskProcessorVerificationService } from './services/task-processor-verification-service';
-import { HouseMembersModule } from '../house-members/house-members.module';
+import { HouseMembersModule } from 'src/modules/houses/modules/house-members/house-members.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Task, TaskAssignment]), HouseMembersModule],

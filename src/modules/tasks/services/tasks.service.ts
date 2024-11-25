@@ -9,7 +9,7 @@ import { TaskAssignment, TaskAssignmentStatus } from '../entities/task-assignmen
 import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
 import { UserNotMemberOfHouseException } from '../../../common/exceptions/houses/user-not-member-of-house-exception';
-import { HouseMembersService } from 'src/modules/house-members/house-members.service';
+import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 
 @Injectable()
 export class TasksService {

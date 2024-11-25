@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { Rule } from './rule.entity';
 import { JoinRequest } from './join-request.entity';
 import { Invitation } from './invitation.entity';
-import { HouseMember } from '../../house-members/house-member.entity';
+import { HouseMember } from 'src/modules/houses/modules/house-members/house-member.entity';
 
 @Entity()
 export class House {
