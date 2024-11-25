@@ -23,8 +23,8 @@ export class JoinRequestsService {
       throw new MemberAlreadyExistsException();
     }
     const existingRequest = await this.joinRequestsRepository.findOneBy({
-      house,
-      user,
+      houseId: house.id,
+      userId: user.id,
       status: JoinRequestStatus.PENDING,
     });
 
