@@ -64,7 +64,9 @@ export class TasksService {
   }
 
   async findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
-    return this.tasksRepository.findByDatePeriod(startDate, endDate, house);
+    const tasks = await this.tasksRepository.findByDatePeriod(startDate, endDate, house);
+
+    return tasks;
   }
 
   async findUserHomePageTasks(house: House, user: User) {

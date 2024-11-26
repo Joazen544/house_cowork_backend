@@ -1,4 +1,4 @@
-import { DataSource, In, Repository } from 'typeorm';
+import { Between, DataSource, In, MoreThanOrEqual, Repository } from 'typeorm';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Task, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
@@ -17,16 +17,14 @@ export class TasksRepository extends BaseRepository<Task> {
   }
 
   findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
-    const queryBuilder = this.taskRepo.createQueryBuilder('task');
+    const whereConditions: any = {
+      house: { id: house.id },
+      dueTime: endDate ? Between(startDate, endDate) : MoreThanOrEqual(startDate),
+    };
 
-    queryBuilder.where('task.houseId = :houseId', { houseId: house.id });
-    if (endDate) {
-      queryBuilder.andWhere('task.dueTime BETWEEN :startDate AND :endDate', { startDate, endDate });
-    } else {
-      queryBuilder.andWhere('task.dueTime >= :startDate', { startDate });
-    }
-
-    return queryBuilder.getMany();
+    return this.taskRepo.find({
+      where: whereConditions,
+    });
   }
 
   findPastNotDoneTasksAndThreeDaysTasksFromToday(user: User, house: House) {
