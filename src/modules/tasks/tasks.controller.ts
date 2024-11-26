@@ -166,7 +166,7 @@ export class TasksController {
   @Serialize(GetTasksResponseDto)
   async findAssignedTasks(@CurrentHouse() house: House, @CurrentUser() user: User) {
     const tasks = await this.tasksService.findAssignedTasks(house, user);
-    return { tasks };
+    return { tasks: tasks.map((task) => this.tasksService.toTaskInResponseDto(task)) };
   }
 
   @Patch(':taskId')

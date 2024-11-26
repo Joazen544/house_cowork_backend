@@ -96,7 +96,7 @@ export class TasksService {
       [TaskStatus.OPEN, TaskStatus.IN_PROGRESS],
       [TaskAssignmentStatus.PENDING],
     );
-    return tasks.map((task) => this.toTaskInResponseDto(task));
+    return tasks;
   }
 
   isUserOwnerOfTask(user: User, task: Task) {

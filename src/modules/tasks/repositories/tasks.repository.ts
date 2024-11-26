@@ -68,9 +68,9 @@ export class TasksRepository extends BaseRepository<Task> {
   ) {
     const tasksAssignedToUser = await this.taskRepo.find({
       where: {
-        house,
+        house: { id: house.id },
         taskAssignments: {
-          user,
+          user: { id: user.id },
           assigneeStatus: In(taskAssignmentStatuses),
         },
         status: In(taskStatuses),
