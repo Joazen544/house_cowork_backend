@@ -107,7 +107,12 @@ export class TasksController {
   @ApiResponse({ status: 401, description: 'Needs sign in to get tasks.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only house member can get task.', type: ForbiddenErrorResponseDto })
   @Serialize(GetTasksResponseDto)
-  async find(@Query('timeStart') timeStart: string, @Query('timeEnd') timeEnd: string, @CurrentHouse() house: House) {
+  async find(
+    @Query('timeStart') timeStart: string,
+    @Query('timeEnd') timeEnd: string,
+    @CurrentHouse() house: House,
+    @CurrentUser() user: User,
+  ) {
     let startDate: Date;
 
     if (timeStart) {
@@ -117,7 +122,7 @@ export class TasksController {
       startDate.setDate(startDate.getDate() - 40);
     }
     const endDate = timeEnd ? new Date(timeEnd) : null;
-    const tasks = await this.tasksService.findByDatePeriod(startDate, endDate, house);
+    const tasks = await this.tasksService.findByDatePeriod(startDate, endDate, house, user);
 
     return { tasks: tasks.map((task) => this.tasksService.toTaskInResponseDto(task)) };
   }

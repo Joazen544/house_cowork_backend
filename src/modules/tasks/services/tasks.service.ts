@@ -63,14 +63,15 @@ export class TasksService {
     return this.tasksRepository.findBy(attrs);
   }
 
-  async findByDatePeriod(startDate: Date, endDate: Date | null, house: House) {
+  async findByDatePeriod(startDate: Date, endDate: Date | null, house: House, user: User) {
     const tasks = await this.tasksRepository.findByDatePeriod(startDate, endDate, house);
 
-    return tasks;
+    return this.filterTasksByPrivateCheck(tasks, user.id);
   }
 
   async findUserHomePageTasks(house: House, user: User) {
-    return this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
+    const tasks = await this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
+    return this.filterTasksByPrivateCheck(tasks, user.id);
   }
 
   async filterTasksByPrivateCheck(tasks: Task[], userId: number) {
