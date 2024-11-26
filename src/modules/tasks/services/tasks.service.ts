@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere } from 'typeorm';
-import { Task, TaskStatus } from '../entities/task.entity';
+import { Task, TaskAccessLevel, TaskStatus } from '../entities/task.entity';
 import { User } from '../../users/entities/user.entity';
 import { CreateTaskDto } from '../dtos/request/create-task.dto';
 import { House } from '../../houses/entities/house.entity';
@@ -71,6 +71,21 @@ export class TasksService {
 
   async findUserHomePageTasks(house: House, user: User) {
     return this.tasksRepository.findPastNotDoneTasksAndThreeDaysTasksFromToday(user, house);
+  }
+
+  async filterTasksByPrivateCheck(tasks: Task[], userId: number) {
+    return tasks.filter((task) => {
+      if (!this.isPrivate(task)) {
+        return true;
+      }
+
+      return task.owner.id === userId || task.taskAssignments.some((assignment) => assignment.user.id === userId);
+    });
+  }
+
+  private isPrivate(task: Task) {
+    const accessLevel = task.accessLevel;
+    return accessLevel === TaskAccessLevel.ASSIGNEE;
   }
 
   async findAssignedTasks(house: House, user: User) {
