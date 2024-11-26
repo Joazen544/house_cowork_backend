@@ -115,7 +115,7 @@ export class TasksService {
   }
 
   async update(task: Task, updateTaskDto: UpdateTaskDto) {
-    return this.tasksRepository.update(task.id, updateTaskDto);
+    return await this.tasksRepository.update(task.id, updateTaskDto);
   }
 
   async delete(task: Task) {

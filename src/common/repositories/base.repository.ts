@@ -55,9 +55,22 @@ export class BaseRepository<T extends ObjectLiteral> {
     return await this.repository.find();
   }
 
-  async update(id: number, data: Partial<T>): Promise<T | null> {
-    await this.repository.update(id, data);
-    return this.findOne({ id } as unknown as Partial<T>);
+  async update(id: number, data: Partial<T>) {
+    const entity = await this.findOneBy({ id } as unknown as Partial<T>);
+    if (!entity) {
+      throw new Error(`Entity with id ${id} does not exist`);
+    }
+
+    const updateResult = await this.repository.update(id, data);
+    if (updateResult.affected === 0) {
+      throw new Error(`Failed to update entity with id ${id}`);
+    }
+
+    const updatedEntity = await this.findOneBy({ id } as unknown as Partial<T>);
+    if (!updatedEntity) {
+      throw new Error(`Failed to update entity with id ${id}`);
+    }
+    return updatedEntity;
   }
 
   async delete(id: number): Promise<void> {

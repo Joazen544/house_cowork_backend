@@ -176,8 +176,10 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Task updated.', type: CreateTaskResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to update task.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only task owner can update the task.', type: ForbiddenErrorResponseDto })
-  update(@Body() updateTaskDto: UpdateTaskDto, @CurrentTask() task: Task) {
-    return this.tasksService.update(task, updateTaskDto);
+  @Serialize(CreateTaskResponseDto)
+  async update(@Body() updateTaskDto: UpdateTaskDto, @CurrentTask() task: Task) {
+    const updatedTask = await this.tasksService.update(task, updateTaskDto);
+    return { task: this.tasksService.toTaskInResponseDto(updatedTask) };
   }
 
   @Delete(':taskId')
