@@ -19,7 +19,7 @@ export class TaskOwnerGuard implements CanActivate {
       throw new ForbiddenException('Task not found');
     }
 
-    const isOwner = await this.tasksService.isUserOwnerOfTask(user, task);
+    const isOwner = this.tasksService.isUserOwnerOfTask(user, task);
     if (!isOwner) {
       throw new ForbiddenException('User is not owner of this task');
     }

@@ -100,7 +100,7 @@ export class TasksService {
   }
 
   isUserOwnerOfTask(user: User, task: Task) {
-    return task.owner === user;
+    return task.owner.id === user.id;
   }
 
   toTaskInResponseDto(task: Task) {
