@@ -234,7 +234,14 @@ export class TasksController {
   })
   async accept(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
-      return { result: await this.respondToTaskService.accept(task, user) };
+      const result = await this.respondToTaskService.accept(task, user);
+      const response = {
+        ...result,
+        taskAssignments: result.taskAssignments.map((assignment) =>
+          this.tasksService.toTaskAssignmentInResponseDto(assignment),
+        ),
+      };
+      return { result: response };
     } catch (error) {
       if (error instanceof TaskIsNotAcceptableException) {
         throw new BadRequestException(error.message);
