@@ -234,7 +234,7 @@ export class TasksController {
   })
   async accept(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
-      return { result: this.respondToTaskService.accept(task, user) };
+      return { result: await this.respondToTaskService.accept(task, user) };
     } catch (error) {
       if (error instanceof TaskIsNotAcceptableException) {
         throw new BadRequestException(error.message);

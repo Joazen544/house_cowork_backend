@@ -9,8 +9,8 @@ export class TaskAssigneeVerificationService {
 
   async isUserAssigneeOfTask(user: User, task: Task): Promise<boolean> {
     const taskAssignment = await this.taskAssignmentsRepository.findOneBy({
-      user,
-      task,
+      userId: user.id,
+      task: { id: task.id },
     });
 
     return !!taskAssignment;

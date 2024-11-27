@@ -62,7 +62,7 @@ export class RespondToTaskService {
   }
 
   private async respondToTask(task: Task, user: User, taskAssignmentStatus: TaskAssignmentStatusAvailable) {
-    this.checkIfTaskAbleToBeResponded(task, user, taskAssignmentStatus);
+    await this.checkIfTaskAbleToBeResponded(task, user, taskAssignmentStatus);
     const taskAssignment = await this.getTaskAssignment(task, user);
 
     const taskStatusResponse = await this.updateAssignmentStatusAndTaskStatus(
@@ -70,7 +70,6 @@ export class RespondToTaskService {
       taskAssignment,
       taskAssignmentStatus,
     );
-
     // TODO: Send notification to owner and other assignees
 
     return taskStatusResponse;
@@ -150,7 +149,7 @@ export class RespondToTaskService {
       throw new Error('Task status not found when update after task assignment status updated');
     }
 
-    this.tasksRepository.save(task);
+    await this.tasksRepository.save(task);
   }
 
   private async getTaskAssignment(task: Task, user: User) {
