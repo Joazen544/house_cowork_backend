@@ -107,10 +107,14 @@ export class TasksService {
     return {
       ...task,
       ownerId: task.owner.id,
-      assignees: task.taskAssignments.map((assignment) => ({
-        assigneeId: assignment.user.id,
-        assigneeStatus: assignment.assigneeStatus,
-      })),
+      assignees: task.taskAssignments.map((assignment) => this.toTaskAssignmentInResponseDto(assignment)),
+    };
+  }
+
+  toTaskAssignmentInResponseDto(taskAssignment: TaskAssignment) {
+    return {
+      assigneeId: taskAssignment.userId,
+      assigneeStatus: taskAssignment.assigneeStatus,
     };
   }
 
@@ -124,12 +128,15 @@ export class TasksService {
   }
 
   async assign(task: Task, userIds: number[]) {
-    const taskAssignments = userIds.map((userId) => {
-      const taskAssignment = new TaskAssignment();
-      taskAssignment.task = task;
-      taskAssignment.userId = userId;
-      return taskAssignment;
-    });
+    const originalAssignees = await this.taskAssignmentsRepository.findBy({ task: { id: task.id } });
+    const taskAssignments = userIds
+      .filter((userId) => !originalAssignees.some((assignee) => assignee.userId === userId))
+      .map((userId) => {
+        const taskAssignment = new TaskAssignment();
+        taskAssignment.task = task;
+        taskAssignment.userId = userId;
+        return taskAssignment;
+      });
 
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
   }

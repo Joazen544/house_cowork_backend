@@ -202,9 +202,13 @@ export class TasksController {
   @ApiResponse({ status: 401, description: 'Needs sign in to assign task.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only task owner can assign the task.', type: ForbiddenErrorResponseDto })
   @ApiBody({ type: AssignTaskDto })
-  assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
+  @Serialize(AssignTaskResponseDto)
+  async assign(@CurrentTask() task: Task, @Body() assignTaskDto: AssignTaskDto) {
     try {
-      return { assignments: this.tasksService.assign(task, assignTaskDto.assigneeIds) };
+      const assignments = await this.tasksService.assign(task, assignTaskDto.assigneeIds);
+      return {
+        assignments: assignments.map((assignment) => this.tasksService.toTaskAssignmentInResponseDto(assignment)),
+      };
     } catch (error) {
       if (error instanceof UsersNotFoundException) {
         throw new BadRequestException(error.message);
@@ -225,7 +229,7 @@ export class TasksController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Only task assignee can respond to the task assignment.',
+    description: 'Only the task assignee can respond to the task assignment.',
     type: ForbiddenErrorResponseDto,
   })
   async accep(@CurrentTask() task: Task, @CurrentUser() user: User) {
