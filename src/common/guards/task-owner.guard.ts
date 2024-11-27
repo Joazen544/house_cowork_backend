@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { TasksService } from '../../modules/tasks/services/tasks.service';
 
 @Injectable()
@@ -11,12 +11,12 @@ export class TaskOwnerGuard implements CanActivate {
     const taskId = request.params.taskId;
 
     if (!user || !taskId) {
-      throw new ForbiddenException('User or task not found');
+      throw new NotFoundException('User or task not found');
     }
 
     const task = await this.tasksService.findOne({ id: taskId });
     if (!task) {
-      throw new ForbiddenException('Task not found');
+      throw new NotFoundException('Task not found');
     }
 
     const isOwner = this.tasksService.isUserOwnerOfTask(user, task);

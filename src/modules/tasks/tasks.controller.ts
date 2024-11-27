@@ -189,8 +189,9 @@ export class TasksController {
   @ApiResponse({ status: 200, description: 'Task deleted.', type: SimpleResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to delete task.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({ status: 403, description: 'Only task owner can delete the task.', type: ForbiddenErrorResponseDto })
+  @Serialize(SimpleResponseDto)
   delete(@CurrentTask() task: Task) {
-    return this.tasksService.delete(task);
+    return { result: this.tasksService.delete(task) };
   }
 
   @Post(':taskId/assignments')
