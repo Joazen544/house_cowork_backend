@@ -232,7 +232,7 @@ export class TasksController {
     description: 'Only the task assignee can respond to the task assignment.',
     type: ForbiddenErrorResponseDto,
   })
-  async accep(@CurrentTask() task: Task, @CurrentUser() user: User) {
+  async accept(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
       return { result: this.respondToTaskService.accept(task, user) };
     } catch (error) {
