@@ -235,6 +235,7 @@ export class TasksController {
     description: 'Only the task assignee can respond to the task assignment.',
     type: ForbiddenErrorResponseDto,
   })
+  @Serialize(TaskStatusResponseDto)
   async accept(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
       const result = await this.respondToTaskService.accept(task, user);
@@ -268,6 +269,7 @@ export class TasksController {
     description: 'Only task assignee can complete the task.',
     type: ForbiddenErrorResponseDto,
   })
+  @Serialize(TaskStatusResponseDto)
   async reject(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
       const result = await this.respondToTaskService.reject(task, user);
@@ -296,6 +298,7 @@ export class TasksController {
     description: 'Only task assignee can complete the task.',
     type: ForbiddenErrorResponseDto,
   })
+  @Serialize(TaskStatusResponseDto)
   async complete(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
       const result = await this.respondToTaskService.complete(task, user);
@@ -316,7 +319,7 @@ export class TasksController {
   @ApiBearerAuth()
   @UseGuards(TaskAssigneeGuard)
   @ApiOperation({ summary: 'Pending a task.' })
-  @ApiResponse({ status: 200, description: 'Task pending.', type: SimpleResponseDto })
+  @ApiResponse({ status: 200, description: 'Task pending.', type: TaskStatusResponseDto })
   @ApiResponse({
     status: 401,
     description: 'Needs sign in to pending task.',
@@ -327,7 +330,10 @@ export class TasksController {
     description: 'Only task assignee can pending the task.',
     type: ForbiddenErrorResponseDto,
   })
+  @Serialize(TaskStatusResponseDto)
   async pending(@CurrentTask() task: Task, @CurrentUser() user: User) {
-    return { result: this.respondToTaskService.pending(task, user) };
+    const result = await this.respondToTaskService.pending(task, user);
+    const response = this.tasksService.formatTaskStatusResponse(result);
+    return { result: response };
   }
 }
