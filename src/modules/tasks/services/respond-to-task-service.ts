@@ -123,13 +123,13 @@ export class RespondToTaskService {
     }
   }
 
-  @Transactional()
-  private async updateTaskStatusBasedOnAssignments(task: Task) {
+  private async updateTaskStatusBasedOnAssignments(taskId: number) {
+    const task = await this.tasksRepository.findOneBy({ id: taskId });
     if (!task) {
       throw new Error('Task not found when update after task assignment status updated');
     }
 
-    const taskAssignments = await this.taskAssignmentsRepository.findBy({ task });
+    const taskAssignments = task.taskAssignments;
 
     if (taskAssignments.some((assignment: TaskAssignment) => assignment.assigneeStatus === TaskAssignmentStatus.DONE)) {
       task.status = TaskStatus.DONE;
@@ -160,6 +160,7 @@ export class RespondToTaskService {
     return taskAssignment;
   }
 
+  @Transactional()
   private async updateAssignmentStatusAndTaskStatus(
     task: Task,
     taskAssignment: TaskAssignment,
@@ -170,7 +171,7 @@ export class RespondToTaskService {
       | TaskAssignmentStatus.DONE,
   ): Promise<TaskStatusResponse> {
     await this.taskAssignmentsRepository.update(taskAssignment.id, { assigneeStatus: status });
-    await this.updateTaskStatusBasedOnAssignments(task);
+    await this.updateTaskStatusBasedOnAssignments(task.id);
 
     const updatedTask = await this.tasksRepository.findOneBy({ id: task.id });
     if (!updatedTask) {

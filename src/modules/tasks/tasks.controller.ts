@@ -42,6 +42,7 @@ import { UserNotMemberOfHouseException } from 'src/common/exceptions/houses/user
 import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-is-not-acceptable.exception';
 import { UserIsNotAcceptorException } from 'src/common/exceptions/tasks/user-is-not-acceptor.exception';
 import { RespondToTaskService } from './services/respond-to-task-service';
+import { TaskIsNotRejectableException } from 'src/common/exceptions/tasks/task-is-not-rejectable.exception';
 
 @Controller({ path: 'tasks', version: '1' })
 @ApiTags('Tasks')
@@ -266,7 +267,21 @@ export class TasksController {
     type: ForbiddenErrorResponseDto,
   })
   async reject(@CurrentTask() task: Task, @CurrentUser() user: User) {
-    return { result: this.respondToTaskService.reject(task, user) };
+    try {
+      const result = await this.respondToTaskService.reject(task, user);
+      const response = {
+        ...result,
+        taskAssignments: result.taskAssignments.map((assignment) =>
+          this.tasksService.toTaskAssignmentInResponseDto(assignment),
+        ),
+      };
+      return { result: response };
+    } catch (error) {
+      if (error instanceof TaskIsNotRejectableException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Patch(':taskId/complete')
