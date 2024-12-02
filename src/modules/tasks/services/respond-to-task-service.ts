@@ -115,7 +115,7 @@ export class RespondToTaskService {
     if (taskAssignmentStatus === TaskAssignmentStatus.DONE) {
       if (
         task.status !== TaskStatus.IN_PROGRESS ||
-        !(await this.taskProcessorVerificationService.isUserProcessorOfTask(user, task))
+        !(await this.taskProcessorVerificationService.isUserProcessorOfTask(user.id, task.id))
       ) {
         throw new TaskIsNotCompletableException();
       }

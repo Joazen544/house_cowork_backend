@@ -10,6 +10,7 @@ import { TasksRepository } from '../repositories/tasks.repository';
 import { TaskAssignmentsRepository } from '../repositories/task-assignments.repository';
 import { UserNotMemberOfHouseException } from '../../../common/exceptions/houses/user-not-member-of-house-exception';
 import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
+import { TaskStatusResponse } from './respond-to-task-service';
 
 @Injectable()
 export class TasksService {
@@ -139,5 +140,14 @@ export class TasksService {
       });
 
     return this.taskAssignmentsRepository.createMultiple(taskAssignments);
+  }
+
+  formatTaskStatusResponse(taskStatusResponse: TaskStatusResponse) {
+    return {
+      taskStatus: taskStatusResponse.taskStatus,
+      taskAssignments: taskStatusResponse.taskAssignments.map((assignment) =>
+        this.toTaskAssignmentInResponseDto(assignment),
+      ),
+    };
   }
 }

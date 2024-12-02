@@ -30,7 +30,11 @@ export class TaskAssignment {
   @JoinColumn({ name: 'userId' })
   user!: User;
 
+  @Column()
+  taskId!: number;
+
   @ManyToOne(() => Task, (task) => task.taskAssignments, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'taskId' })
   task!: Task;
 
   @Column({

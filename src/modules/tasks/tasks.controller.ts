@@ -43,6 +43,8 @@ import { TaskIsNotAcceptableException } from 'src/common/exceptions/tasks/task-i
 import { UserIsNotAcceptorException } from 'src/common/exceptions/tasks/user-is-not-acceptor.exception';
 import { RespondToTaskService } from './services/respond-to-task-service';
 import { TaskIsNotRejectableException } from 'src/common/exceptions/tasks/task-is-not-rejectable.exception';
+import { TaskStatusResponseDto } from './dtos/response/task-status-reponse.dto';
+import { TaskIsNotCompletableException } from 'src/common/exceptions/tasks/task-is-not-completable.exception';
 
 @Controller({ path: 'tasks', version: '1' })
 @ApiTags('Tasks')
@@ -255,7 +257,7 @@ export class TasksController {
   @ApiBearerAuth()
   @UseGuards(TaskAssigneeGuard)
   @ApiOperation({ summary: 'Reject a task assignment.' })
-  @ApiResponse({ status: 200, description: 'Task assignment rejected.', type: SimpleResponseDto })
+  @ApiResponse({ status: 200, description: 'Task assignment rejected.', type: TaskStatusResponseDto })
   @ApiResponse({
     status: 401,
     description: 'Needs sign in to complete task.',
@@ -269,12 +271,7 @@ export class TasksController {
   async reject(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
       const result = await this.respondToTaskService.reject(task, user);
-      const response = {
-        ...result,
-        taskAssignments: result.taskAssignments.map((assignment) =>
-          this.tasksService.toTaskAssignmentInResponseDto(assignment),
-        ),
-      };
+      const response = this.tasksService.formatTaskStatusResponse(result);
       return { result: response };
     } catch (error) {
       if (error instanceof TaskIsNotRejectableException) {
@@ -288,7 +285,7 @@ export class TasksController {
   @ApiBearerAuth()
   @UseGuards(TaskAssigneeGuard)
   @ApiOperation({ summary: 'Complete a task.' })
-  @ApiResponse({ status: 200, description: 'Task completed.', type: SimpleResponseDto })
+  @ApiResponse({ status: 200, description: 'Task completed.', type: TaskStatusResponseDto })
   @ApiResponse({
     status: 401,
     description: 'Needs sign in to complete task.',
@@ -301,10 +298,15 @@ export class TasksController {
   })
   async complete(@CurrentTask() task: Task, @CurrentUser() user: User) {
     try {
-      return { result: this.respondToTaskService.complete(task, user) };
+      const result = await this.respondToTaskService.complete(task, user);
+      const response = this.tasksService.formatTaskStatusResponse(result);
+      return { result: response };
     } catch (error) {
       if (error instanceof UserIsNotAcceptorException) {
         throw new ForbiddenException(error.message);
+      }
+      if (error instanceof TaskIsNotCompletableException) {
+        throw new BadRequestException(error.message);
       }
       throw error;
     }
