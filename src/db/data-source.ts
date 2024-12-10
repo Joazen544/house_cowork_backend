@@ -36,6 +36,7 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
       database: process.env.DATABASE_NAME,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
+      ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
       ...normalDatabaseProperties,
     };
   } else {
