@@ -39,6 +39,7 @@ jobs:
             cd house_cowork
             git pull origin main
             npm install
+            npm run migration:run:prod
             npm run build
             pm2 start npm --name "house_cowork" -- run start:prod || pm2 restart house_cowork
           EOF
