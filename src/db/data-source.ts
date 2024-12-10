@@ -30,6 +30,9 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
 
   if (type === 'postgres') {
     console.log('type is postgres');
+    console.log(process.env.DATABASE_NAME);
+    console.log(process.env.DATABASE_USERNAME);
+    console.log(process.env.DATABASE_PASSWORD);
     return {
       type: 'postgres',
       database: process.env.DATABASE_NAME,
