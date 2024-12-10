@@ -3,44 +3,44 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # 當 main 分支有更新時觸發
+      - main # 當 main 分支有更新時觸發
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'  # 根據你的 Node.js 版本設置
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # 根據你的 Node.js 版本設置
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
 
-    - name: Deploy to EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        SERVER_IP: ${{ secrets.EC2_SERVER_IP }}
-        USERNAME: ${{ secrets.EC2_USERNAME }}
-      run: |
-        # 安裝 sshpass 如果需要
-        sudo apt-get install -y sshpass
+      - name: Deploy to EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.EC2_SERVER_IP }}
+          USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          # 安裝 sshpass 如果需要
+          sudo apt-get install -y sshpass
 
-        echo "${SSH_PRIVATE_KEY}" > private_key.pem
-        chmod 600 private_key.pem
+          echo "${SSH_PRIVATE_KEY}" > private_key.pem
+          chmod 600 private_key.pem
 
-        # 使用 SSH 部署到 EC2
-        ssh -o StrictHostKeyChecking=no -i private_key.pem $USERNAME@$SERVER_IP << 'EOF'
-          cd house_cowork
-          git pull origin main
-          npm install
-          npm run build
-          pm2 restart all
-        EOF
+          # 使用 SSH 部署到 EC2
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $USERNAME@$SERVER_IP << 'EOF'
+            cd house_cowork
+            git pull origin main
+            npm install
+            npm run build
+            pm2 start npm --name "house_cowork" -- run start:prod || pm2 restart house_cowork
+          EOF
