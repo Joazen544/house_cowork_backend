@@ -1,7 +1,9 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
-const ssm = new AWS.SSM();
+const ssm = new AWS.SSM({
+  region: 'ap-northeast-1',
+});
 
 async function loadParameter(name) {
   try {
