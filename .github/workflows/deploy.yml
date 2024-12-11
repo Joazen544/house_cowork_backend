@@ -38,6 +38,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USERNAME@$SERVER_IP << 'EOF'
             cd house_cowork
             git pull origin main
+            node load-parameter.js # Load environment variables
             npm install
             npm run migration:run:prod
             npm run build
