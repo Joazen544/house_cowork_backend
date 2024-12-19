@@ -1,73 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# House Cowork
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+House Cowork is a collaborative platform designed to manage and coordinate shared living spaces. It provides features for managing house members, tasks, invitations, and join requests.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+We're now still working on the first version of this project. You can soon find it on the Google Play Store.
 
-## Description
+I want to thank you to [@pollyannaanalytics](https://github.com/pollyannaanalytics) the best Android developer, for helping me to build the mobile app for this project. And our friend Chloe Yang for helping us as the best PM and designer.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Architecture Decision Records (ADR) & Design Diagrams
 
-## Installation
+We use ADR to record the architectural decisions for this project. You can find them here: [house-cowork-ADR](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/ADRs) and more design diagrams here: [house-cowork-architecture](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/diagrams).
 
-```bash
-$ npm install
-```
+## Features
 
-## Running the app
+- **House Management**: Create and manage houses, including setting rules and descriptions.
+- **Member Management**: Add and manage house members.
+- **Task Management**: Create, assign, and track tasks within a house.
 
-```bash
-# development
-$ npm run start
+## Getting Started
 
-# watch mode
-$ npm run start:dev
+### Prerequisites
 
-# production mode
-$ npm run start:prod
-```
+- Node.js (version 20 or higher)
+- npm (Node Package Manager)
+- PostgreSQL database
 
-## Test
+### Installation
 
-```bash
-# unit tests
-$ npm run test
+1. Clone the repository:
 
-# e2e tests
-$ npm run test:e2e
+   ```bash
+   git clone https://github.com/yourusername/house_cowork.git
+   cd house_cowork
+   ```
 
-# test coverage
-$ npm run test:cov
-```
+2. Install dependencies:
 
-## Support
+   ```bash
+   npm install
+   ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+3. Set up your environment variables. Create a `.env.development` or `.env.production` file in the root directory and add the following:
 
-## Stay in touch
+   ```plaintext
+   DATABASE_TYPE=postgres
+   DATABASE_NAME=your_database_name
+   DATABASE_HOST=your_database_host
+   DATABASE_PORT=5432
+   DATABASE_USERNAME=your_database_username
+   DATABASE_PASSWORD=your_database_password
+   JWT_SECRET=your_jwt_secret
+   ```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+4. Run database migrations:
 
-## License
+   ```bash
+   npm run migration:run
+   ```
 
-Nest is [MIT licensed](LICENSE).
+### Running the Application
+
+- **Development Mode**:
+
+  ```bash
+  npm run start:dev
+  ```
+
+- **Production Mode**:
+
+  ```bash
+  npm run build
+  npm run start:prod
+  ```
+
+## API Documentation
+
+The API is documented using Swagger. Once the application is running, you can access the documentation at `http://localhost:3000/api`.
+
+## Deployment
+
+The project includes a GitHub Actions workflow for deploying to an EC2 instance. Ensure you have the necessary secrets set up in your GitHub repository:
+
+- `EC2_SSH_PRIVATE_KEY`
+- `EC2_SERVER_IP`
+- `EC2_USERNAME`
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+## Contact
+
+For any inquiries, please contact johnsons544@gmail.com.
