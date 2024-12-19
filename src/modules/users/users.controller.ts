@@ -14,7 +14,7 @@ import {
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
 
-@Controller({ path: 'users', version: '1' })
+@Controller({ path: 'v1/users', version: '1' })
 @ApiTags('Users')
 export class UsersController {
   constructor(

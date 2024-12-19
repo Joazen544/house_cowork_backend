@@ -46,7 +46,7 @@ import { TaskIsNotRejectableException } from 'src/common/exceptions/tasks/task-i
 import { TaskStatusResponseDto } from './dtos/response/task-status-reponse.dto';
 import { TaskIsNotCompletableException } from 'src/common/exceptions/tasks/task-is-not-completable.exception';
 
-@Controller({ path: 'tasks', version: '1' })
+@Controller({ path: 'v1/tasks', version: '1' })
 @ApiTags('Tasks')
 export class TasksController {
   constructor(

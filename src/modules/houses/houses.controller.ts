@@ -45,7 +45,7 @@ import { CreateJoinRequestResponseDto } from './dto/response/create-join-request
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
 
-@Controller({ path: 'houses', version: '1' })
+@Controller({ path: 'v1/houses', version: '1' })
 @ApiTags('Houses')
 export class HousesController {
   constructor(
