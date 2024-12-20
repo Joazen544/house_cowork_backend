@@ -8,6 +8,10 @@ async function bootstrap() {
   initializeTransactionalContext();
   const app = await NestFactory.create(AppModule);
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Your API Title')
     .setDescription('Your API description')
@@ -19,10 +23,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
 
   await app.listen(3000);
 }
