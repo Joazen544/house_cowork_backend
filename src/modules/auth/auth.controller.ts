@@ -21,7 +21,7 @@ import { EmailInUseException } from 'src/common/exceptions/auth/email-in-use.exc
 import { WrongPasswordException } from 'src/common/exceptions/auth/wrong-password.exception';
 import { EmailNotFoundException } from 'src/common/exceptions/auth/email-not-found.exception';
 
-@Controller({ path: 'v1/auth', version: '1' })
+@Controller({ path: 'auth', version: '1' })
 @ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
