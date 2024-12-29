@@ -2,9 +2,11 @@
 
 House Cowork is a collaborative platform designed to manage and coordinate shared living spaces. It provides features for managing house members, tasks, invitations, and join requests.
 
-We're now still working on the first version of this project. You can soon find it on the Google Play Store.
+## Acknowledgments
 
 Thank you to [@pollyannaanalytics](https://github.com/pollyannaanalytics), the best Android developer, for helping me build the mobile app for this project. Our friend Chloe Yang, for helping us become the best PM and designer.
+
+We're still working on the first version of this project, which will soon be available on the Google Play Store.
 
 ## Architecture Decision Records (ADR) & Design Diagrams
 
