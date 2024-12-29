@@ -4,7 +4,7 @@ House Cowork is a collaborative platform designed to manage and coordinate share
 
 We're now still working on the first version of this project. You can soon find it on the Google Play Store.
 
-I want to thank you to [@pollyannaanalytics](https://github.com/pollyannaanalytics) the best Android developer, for helping me to build the mobile app for this project. And our friend Chloe Yang for helping us as the best PM and designer.
+Thank you to [@pollyannaanalytics](https://github.com/pollyannaanalytics), the best Android developer, for helping me build the mobile app for this project. Our friend Chloe Yang, for helping us become the best PM and designer.
 
 ## Architecture Decision Records (ADR) & Design Diagrams
 
