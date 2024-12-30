@@ -17,15 +17,15 @@ We use ADR to record the architectural decisions for this project. You can find 
 
 ## Skills & Technologies
 
-### Backend Frameworks
+#### Backend Frameworks
 
 - NestJS
 
-### Database
+#### Database
 
 - PostgreSQL
 
-### Cloud Services
+#### Cloud Services
 
 - AWS
   - EC2
@@ -36,27 +36,27 @@ We use ADR to record the architectural decisions for this project. You can find 
   - Parameter Store
   - Elasticache
 
-### Containerization
+#### Containerization
 
 - Docker (server deployment)
 
-### Programming Languages
+#### Programming Languages
 
 - TypeScript
 
-### Deployment Strategies
+#### Deployment Strategies
 
 - Blue/Green Deployment
 
-### CI/CD
+#### CI/CD
 
 - GitHub Actions
 
-### Mobile & Web Services
+#### Mobile & Web Services
 
 - Firebase
 
-### API Documentation
+#### API Documentation
 
 - Swagger
 
