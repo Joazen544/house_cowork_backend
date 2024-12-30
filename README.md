@@ -15,6 +15,51 @@ House Cowork is a collaborative platform designed to manage and coordinate share
 
 We use ADR to record the architectural decisions for this project. You can find them here: [house-cowork-ADR](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/ADRs) and more design diagrams here: [house-cowork-architecture](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/diagrams).
 
+## Skills & Technologies
+
+### Backend Frameworks
+
+- NestJS
+
+### Database
+
+- PostgreSQL
+
+### Cloud Services
+
+- AWS
+  - EC2
+  - ECS
+  - S3
+  - CloudFront
+  - RDS
+  - Parameter Store
+  - Elasticache
+
+### Containerization
+
+- Docker (server deployment)
+
+### Programming Languages
+
+- TypeScript
+
+### Deployment Strategies
+
+- Blue/Green Deployment
+
+### CI/CD
+
+- GitHub Actions
+
+### Mobile & Web Services
+
+- Firebase
+
+### API Documentation
+
+- Swagger
+
 ## Features
 
 - **House Management**: Create and manage houses, including setting rules and descriptions.
