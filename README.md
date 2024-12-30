@@ -7,7 +7,11 @@
 
 House Cowork is a collaborative platform designed to manage and coordinate shared living spaces. It provides features for managing house members, tasks, invitations, and join requests.
 
-## Architecture Decision Records (ADR) & Design Diagrams
+## Project Architecture Overview
+
+![House Cowork Architecture](./assets/House-Cowork-architecture.png)
+
+### Other Architecture Decision Records (ADR) & Design Diagrams
 
 We use ADR to record the architectural decisions for this project. You can find them here: [house-cowork-ADR](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/ADRs) and more design diagrams here: [house-cowork-architecture](https://github.com/Joazen544/house-cowork-architecture/tree/main/docs/diagrams).
 
