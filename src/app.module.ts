@@ -13,6 +13,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { HouseMembersModule } from './modules/houses/modules/house-members/house
     HousesModule,
     DeviceTokensModule,
     HouseMembersModule,
+    FilesModule,
   ],
   providers: [
     {

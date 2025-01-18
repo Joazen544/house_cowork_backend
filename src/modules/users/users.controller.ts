@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Param, ParseIntPipe, NotFoundException, ForbiddenException, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  NotFoundException,
+  ForbiddenException,
+  Put,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/request/update-user.dto';
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
@@ -13,6 +25,8 @@ import {
 } from '../../common/dto/errors/errors.dto';
 import { UserInfoResponseDto } from './dtos/response/user-info-response.dto';
 import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
+import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller({ path: 'users', version: '1' })
 @ApiTags('Users')
@@ -57,5 +71,14 @@ export class UsersController {
   @Serialize(UserInfoResponseDto)
   async update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
     return { user: await this.usersService.update(user, body) };
+  }
+
+  @Post('avatar')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Upload avatar' })
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiResponse({ status: 200, description: 'Avatar uploaded!', type: UserInfoResponseDto })
+  async uploadAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
+    return { user: await this.usersService.uploadProfileAvatar(user, file) };
   }
 }

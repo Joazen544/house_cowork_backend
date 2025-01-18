@@ -3,10 +3,15 @@ import { FindOptionsWhere } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
+import { FilesService } from '../files/services/files.service';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly filesService: FilesService,
+  ) {}
 
   async create(email: string, password: string, name: string, nickName: string) {
     const user = this.usersRepository.create({ email, password, name, nickName });
@@ -34,5 +39,12 @@ export class UsersService {
     Object.assign(user, attrs);
     const updatedUser = await this.usersRepository.save(user);
     return updatedUser;
+  }
+
+  @Transactional()
+  async uploadProfileAvatar(user: User, file: Express.Multer.File) {
+    const imageUrl = await this.filesService.uploadImage(file, 'user-avatar');
+
+    return await this.update(user, { avatar: imageUrl });
   }
 }
