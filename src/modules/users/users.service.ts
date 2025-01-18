@@ -5,6 +5,7 @@ import { UsersRepository } from './users.repository';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { FilesService } from '../files/services/files.service';
 import { Transactional } from 'typeorm-transactional';
+import { FileCategory } from '../files/services/file-categories.enum';
 
 @Injectable()
 export class UsersService {
@@ -43,7 +44,7 @@ export class UsersService {
 
   @Transactional()
   async uploadProfileAvatar(user: User, file: Express.Multer.File) {
-    const imageUrl = await this.filesService.uploadImage(file, 'user-avatar');
+    const imageUrl = await this.filesService.uploadFile(file, FileCategory.USER_AVATAR);
 
     return await this.update(user, { avatar: imageUrl });
   }

@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { FILE_STORAGE_SERVICE, FileStorageService } from './file-storage.interface';
+import { FileCategory } from './file-categories.enum';
+import { strategyMapping } from '../strategies/strategy-mapping';
 
 @Injectable()
 export class FilesService {
@@ -9,16 +10,21 @@ export class FilesService {
     private readonly fileStorageService: FileStorageService,
   ) {}
 
-  async uploadImage(file: Express.Multer.File, folder: string) {
-    if (!file.mimetype.startsWith('image/')) {
-      throw new BadRequestException('Only image files are allowed!');
+  async uploadFile(file: Express.Multer.File, category: FileCategory) {
+    const fileExt = file.originalname.split('.').pop();
+    if (!fileExt) {
+      throw new BadRequestException('Invalid file extension!');
     }
 
-    const fileExt = file.originalname.split('.').pop();
-    const fileKey = `${folder}/${uuidv4()}.${fileExt}`;
+    const fileName = this.generateFileName(category, fileExt);
 
-    await this.fileStorageService.uploadFile(file.buffer, fileKey, file.mimetype);
+    await this.fileStorageService.uploadFile(file.buffer, category, fileName, file.mimetype);
 
-    return fileKey;
+    return fileName;
+  }
+
+  generateFileName(category: FileCategory, fileExt: string) {
+    const strategy = strategyMapping[category];
+    return strategy.generateFileName(category, fileExt);
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { FileStorageService } from './file-storage.interface';
+import { FileCategory } from './file-categories.enum';
+import { strategyMapping } from '../strategies/strategy-mapping';
 
 @Injectable()
 export class S3Service implements FileStorageService {
   private s3Client: S3Client;
-  private readonly bucketName = process.env.AWS_S3_BUCKET_NAME;
 
   constructor() {
     this.s3Client = new S3Client({
@@ -17,12 +18,23 @@ export class S3Service implements FileStorageService {
     });
   }
 
-  async uploadFile(file: Buffer, key: string, mimetype: string) {
+  async uploadFile(file: Buffer, category: FileCategory, fileName: string, mimetype: string) {
     const command = new PutObjectCommand({
-      Bucket: this.bucketName,
-      Key: key,
+      Bucket: this.getBucketName(category),
+      Key: this.getFileKey(category, fileName),
       Body: file,
       ContentType: mimetype,
     });
+    await this.s3Client.send(command);
+  }
+
+  getBucketName(category: FileCategory) {
+    const strategy = strategyMapping[category];
+    return strategy.getBucketName();
+  }
+
+  getFileKey(category: FileCategory, fileName: string) {
+    const strategy = strategyMapping[category];
+    return strategy.getFileKey(fileName);
   }
 }

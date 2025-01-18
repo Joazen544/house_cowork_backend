@@ -1,5 +1,7 @@
+import { FileCategory } from './file-categories.enum';
+
 export const FILE_STORAGE_SERVICE = Symbol('FileStorageService');
 
 export interface FileStorageService {
-  uploadFile(buffer: Buffer, key: string, mimeType: string): Promise<void>;
+  uploadFile(buffer: Buffer, category: FileCategory, fileName: string, mimeType: string): Promise<void>;
 }
