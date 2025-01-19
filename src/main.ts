@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -24,6 +25,20 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  const configService = app.get(ConfigService);
+
+  checkRequiredEnvVars(configService);
+
   await app.listen(3000);
 }
+
+function checkRequiredEnvVars(configService: ConfigService) {
+  const requiredEnvVars = ['AVATARS_BUCKET'];
+  requiredEnvVars.forEach((envVar) => {
+    if (!configService.get<string>(envVar)) {
+      throw new Error(`${envVar} environment variable is not set`);
+    }
+  });
+}
+
 bootstrap();
