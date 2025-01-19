@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { FileStorageService } from './file-storage.interface';
 import { FileCategory } from './file-categories.enum';
-import { strategyMapping } from '../strategies/strategy-mapping';
+import { StrategyMapping } from '../strategies/strategy-mapping';
 
 @Injectable()
 export class S3Service implements FileStorageService {
   private s3Client: S3Client;
 
-  constructor() {
+  constructor(private readonly strategyMapping: StrategyMapping) {
     this.s3Client = new S3Client({
       region: process.env.AWS_REGION || '',
       credentials:
@@ -32,12 +32,12 @@ export class S3Service implements FileStorageService {
   }
 
   getBucketName(category: FileCategory) {
-    const strategy = strategyMapping[category];
+    const strategy = this.strategyMapping.strategy[category];
     return strategy.getBucketName();
   }
 
   getFileKey(category: FileCategory, fileName: string) {
-    const strategy = strategyMapping[category];
+    const strategy = this.strategyMapping.strategy[category];
     return strategy.getFileKey(fileName);
   }
 }

@@ -9,7 +9,6 @@ import { DataSource } from 'typeorm';
 import { HousesModule } from './modules/houses/houses.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './common/guards/auth.guard';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
@@ -32,7 +31,6 @@ import { FilesModule } from './modules/files/files.module';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
-    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     TasksModule,
