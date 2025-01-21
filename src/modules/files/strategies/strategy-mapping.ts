@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FileCategory } from '../services/file-categories.enum';
+import { FileCategory } from '../enum/file-categories.enum';
 import { FileStorageStrategy } from './file-storage-strategy.interface';
 import { UserAvatarStorageStrategy } from './user-avatar-storage.strategy';
 

@@ -1,4 +1,4 @@
-import { FileCategory } from './file-categories.enum';
+import { FileCategory } from '../enum/file-categories.enum';
 
 export const FILE_STORAGE_SERVICE = Symbol('FileStorageService');
 

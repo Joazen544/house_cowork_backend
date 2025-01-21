@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { FILE_STORAGE_SERVICE, FileStorageService } from './file-storage.interface';
-import { FileCategory } from './file-categories.enum';
+import { FileCategory } from '../enum/file-categories.enum';
 import { StrategyMapping } from '../strategies/strategy-mapping';
 
 @Injectable()

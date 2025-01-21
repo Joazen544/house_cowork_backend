@@ -5,7 +5,7 @@ import { UsersRepository } from './users.repository';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { FilesService } from '../files/services/files.service';
 import { Transactional } from 'typeorm-transactional';
-import { FileCategory } from '../files/services/file-categories.enum';
+import { FileCategory } from '../files/enum/file-categories.enum';
 
 @Injectable()
 export class UsersService {

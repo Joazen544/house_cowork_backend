@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { FileStorageService } from './file-storage.interface';
-import { FileCategory } from './file-categories.enum';
+import { FileCategory } from '../enum/file-categories.enum';
 import { StrategyMapping } from '../strategies/strategy-mapping';
 
 @Injectable()
