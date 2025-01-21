@@ -17,6 +17,6 @@ export class HouseAvatarStorageStrategy implements FileStorageStrategy {
   }
 
   getFileKey(fileName: string): string {
-    return `${FileCategory.USER_AVATAR}/${fileName}`;
+    return `${FileCategory.HOUSE_AVATAR}/${fileName}`;
   }
 }
