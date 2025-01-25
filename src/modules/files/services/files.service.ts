@@ -1,14 +1,15 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { FILE_STORAGE_SERVICE, FileStorageService } from './file-storage.interface';
 import { FileCategory } from '../enum/file-categories.enum';
-import { StrategyMapping } from './strategy-mapping';
+import { v4 as uuidv4 } from 'uuid';
+import { BucketConfigService } from './bucket-config.service';
 
 @Injectable()
 export class FilesService {
   constructor(
     @Inject(FILE_STORAGE_SERVICE)
     private readonly fileStorageService: FileStorageService,
-    private readonly strategyMapping: StrategyMapping,
+    private readonly bucketConfigService: BucketConfigService,
   ) {}
 
   async uploadFile(file: Express.Multer.File, category: FileCategory) {
@@ -21,14 +22,40 @@ export class FilesService {
     }
 
     const fileName = this.generateFileName(category, originalName, fileExt);
+    const bucketName = this.getBucketName(category);
+    const key = this.getFileKey(category, fileName);
 
-    await this.fileStorageService.uploadFile(file.buffer, category, fileName, file.mimetype);
+    await this.fileStorageService.uploadFile(file.buffer, bucketName, key, file.mimetype);
 
     return fileName;
   }
 
-  generateFileName(category: FileCategory, originalName: string, fileExt: string) {
-    const strategy = this.strategyMapping.strategy[category];
-    return strategy.generateFileName(fileExt, originalName);
+  private generateFileName(category: FileCategory, originalName: string, fileExt: string): string {
+    switch (category) {
+      case FileCategory.USER_AVATAR:
+        return `${originalName}-${uuidv4()}.${fileExt}`;
+      case FileCategory.HOUSE_AVATAR:
+        return `${originalName}-${uuidv4()}.${fileExt}`;
+      default:
+        throw new BadRequestException('Invalid file category!');
+    }
+  }
+
+  getUrl(category: FileCategory, fileName: string) {
+    const key = this.getFileKey(category, fileName);
+    return `https://d1px1ztgevq7tr.cloudfront.net/${key}`;
+  }
+
+  private getBucketName(category: FileCategory) {
+    return this.bucketConfigService.getBucketConfig(category);
+  }
+
+  private getFileKey(category: FileCategory, fileName: string) {
+    switch (category) {
+      case FileCategory.USER_AVATAR:
+        return fileName;
+      case FileCategory.HOUSE_AVATAR:
+        return fileName;
+    }
   }
 }
