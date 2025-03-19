@@ -44,6 +44,7 @@ async function loadEnv() {
       DATABASE_PASSWORD=${databasePassword}\n
       DATABASE_SSL=true\n
       JWT_SECRET=${jwtSecret}\n
+      AWS_REGION=ap-northeast-1
     `,
     );
 
