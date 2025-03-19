@@ -32,6 +32,7 @@ async function loadEnv() {
     const databaseUsername = await loadParameter('database-username');
     const databasePassword = await loadParameter('database-password');
     const jwtSecret = await loadParameter('jwt-secret');
+    const avatarsBucket = await loadParameter('avatars-bucket');
 
     fs.appendFileSync(
       '.env.production',
@@ -44,7 +45,8 @@ async function loadEnv() {
       DATABASE_PASSWORD=${databasePassword}\n
       DATABASE_SSL=true\n
       JWT_SECRET=${jwtSecret}\n
-      AWS_REGION=ap-northeast-1
+      AWS_REGION=ap-northeast-1\n
+      AVATARS_BUCKET=${avatarsBucket}
     `,
     );
 
