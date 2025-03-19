@@ -32,7 +32,7 @@ async function loadEnv() {
     const databaseUsername = await loadParameter('database-username');
     const databasePassword = await loadParameter('database-password');
     const jwtSecret = await loadParameter('jwt-secret');
-    const avatarsBucket = await loadParameter('avatars-bucket');
+    const avatarsBucket = await loadParameter('avatars-bucket-st');
 
     fs.appendFileSync(
       '.env.production',
