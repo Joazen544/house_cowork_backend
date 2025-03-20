@@ -40,7 +40,7 @@ export class AuthController {
     }
 
     try {
-      const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name, body.nickName);
+      const { user, accessToken } = await this.authService.signUp(body.email, body.password, body.name);
 
       return { user, accessToken };
     } catch (error) {

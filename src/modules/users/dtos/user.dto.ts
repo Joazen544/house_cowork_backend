@@ -18,11 +18,6 @@ export class UserDto {
   @Expose()
   email!: string;
 
-  @ApiProperty({ example: 'Handsome boy' })
-  @IsString()
-  @Expose()
-  nickName!: string;
-
   @ApiProperty({ example: 'https://image/url' })
   @IsString()
   @Expose()

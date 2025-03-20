@@ -17,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(email: string, password: string, name: string, nickName: string) {
+  async signUp(email: string, password: string, name: string) {
     const users = await this.usersService.findByEmail(email);
     if (users && users.length) {
       throw new EmailInUseException();
@@ -29,7 +29,7 @@ export class AuthService {
 
     const result = salt + '.' + hash.toString('hex');
 
-    const user = await this.usersService.create(email, result, name, nickName);
+    const user = await this.usersService.create(email, result, name);
 
     return { user, accessToken: await this.signJwt(user) };
   }

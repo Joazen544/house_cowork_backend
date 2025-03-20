@@ -33,11 +33,4 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   name!: string;
-
-  @ApiProperty({
-    example: 'Handsome boy',
-  })
-  @IsString()
-  @IsOptional()
-  nickName!: string;
 }

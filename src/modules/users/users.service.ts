@@ -14,8 +14,8 @@ export class UsersService {
     private readonly filesService: FilesService,
   ) {}
 
-  async create(email: string, password: string, name: string, nickName: string) {
-    const user = this.usersRepository.create({ email, password, name, nickName });
+  async create(email: string, password: string, name: string) {
+    const user = this.usersRepository.create({ email, password, name });
 
     return user;
   }

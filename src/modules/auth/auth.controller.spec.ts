@@ -35,7 +35,6 @@ describe('AuthController', () => {
         password: 'password',
         passwordConfirm: 'password',
         name: 'Test User',
-        nickName: 'Tester',
       };
 
       const result = {
@@ -44,7 +43,6 @@ describe('AuthController', () => {
           email: 'test@example.com',
           password: 'hashedPassword',
           name: 'Test User',
-          nickName: 'Tester',
           avatar: 'avatarUrl',
         } as User,
         accessToken: 'someAccessToken',
@@ -61,7 +59,6 @@ describe('AuthController', () => {
         password: 'password',
         passwordConfirm: 'differentPassword',
         name: 'Test User',
-        nickName: 'Tester',
       };
 
       await expect(authController.create(createUserDto)).rejects.toThrow(BadRequestException);
@@ -81,7 +78,6 @@ describe('AuthController', () => {
           email: 'test@example.com',
           password: 'hashedPassword',
           name: 'Test User',
-          nickName: 'Tester',
           avatar: 'avatarUrl',
         } as User,
         accessToken: 'someAccessToken',

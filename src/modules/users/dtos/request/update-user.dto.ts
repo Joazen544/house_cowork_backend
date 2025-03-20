@@ -11,10 +11,5 @@ export class UpdateUserDto {
   @InheritApiProperty(UserDto)
   @IsString()
   @IsOptional()
-  nickName!: string;
-
-  @InheritApiProperty(UserDto)
-  @IsString()
-  @IsOptional()
   bankAccount!: string;
 }
