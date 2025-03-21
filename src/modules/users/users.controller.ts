@@ -78,6 +78,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Upload avatar' })
   @UseInterceptors(FileInterceptor('file'))
   @ApiResponse({ status: 200, description: 'Avatar uploaded!', type: UserInfoResponseDto })
+  @Serialize(UserInfoResponseDto)
   async uploadAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
     return { user: await this.usersService.uploadProfileAvatar(user, file) };
   }

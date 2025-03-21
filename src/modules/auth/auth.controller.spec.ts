@@ -43,7 +43,7 @@ describe('AuthController', () => {
           email: 'test@example.com',
           password: 'hashedPassword',
           name: 'Test User',
-          avatar: 'avatarUrl',
+          avatarKey: 'avatarKey',
         } as User,
         accessToken: 'someAccessToken',
       };
@@ -78,7 +78,7 @@ describe('AuthController', () => {
           email: 'test@example.com',
           password: 'hashedPassword',
           name: 'Test User',
-          avatar: 'avatarUrl',
+          avatarKey: 'avatarKey',
         } as User,
         accessToken: 'someAccessToken',
       };

@@ -27,11 +27,14 @@ export class FilesService {
 
     await this.fileStorageService.uploadFile(file.buffer, bucketName, key, file.mimetype);
 
-    return this.getUrl(category, fileName);
+    return key;
   }
 
-  async deleteFile(category: FileCategory, fileUrl: string) {
-    const fileKey = this.getFileKeyFromUrl(fileUrl);
+  getUrl(key: string) {
+    return `${CLOUDFRONT_BASE_URL}/${key}`;
+  }
+
+  async deleteFile(category: FileCategory, fileKey: string) {
     if (!fileKey) {
       throw new BadRequestException('Invalid fileUrl!');
     }
@@ -62,11 +65,6 @@ export class FilesService {
       default:
         throw new BadRequestException('Invalid file category!');
     }
-  }
-
-  private getUrl(category: FileCategory, fileName: string) {
-    const key = this.getFileKey(category, fileName);
-    return `${CLOUDFRONT_BASE_URL}/${key}`;
   }
 
   private getBucketName(category: FileCategory) {
