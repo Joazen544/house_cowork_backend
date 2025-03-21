@@ -45,6 +45,7 @@ export class UsersService {
   @Transactional()
   async uploadProfileAvatar(user: User, file: Express.Multer.File) {
     const imageUrl = await this.filesService.uploadFile(file, FileCategory.USER_AVATAR);
+    await this.filesService.deleteFile(FileCategory.USER_AVATAR, user.avatar);
 
     return await this.update(user, { avatar: imageUrl });
   }

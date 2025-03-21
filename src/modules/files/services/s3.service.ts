@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { FileStorageService } from './file-storage.interface';
 
 @Injectable()
@@ -25,6 +25,14 @@ export class S3Service implements FileStorageService {
       Key: key,
       Body: file,
       ContentType: mimetype,
+    });
+    await this.s3Client.send(command);
+  }
+
+  async deleteFile(bucketName: string, key: string) {
+    const command = new DeleteObjectCommand({
+      Bucket: bucketName,
+      Key: key,
     });
     await this.s3Client.send(command);
   }
