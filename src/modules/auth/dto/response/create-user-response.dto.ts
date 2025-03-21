@@ -1,13 +1,11 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from '../../../users/dtos/user.dto';
 import { Expose } from 'class-transformer';
 
-class UserInCreateResponseDto extends OmitType(UserDto, ['bankAccount'] as const) {}
-
 export class CreateUserResponseDto {
   @Expose()
-  @ApiProperty({ type: UserInCreateResponseDto })
-  user!: UserInCreateResponseDto;
+  @ApiProperty({ type: UserDto })
+  user!: UserDto;
 
   @Expose()
   @ApiProperty({
