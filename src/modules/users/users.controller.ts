@@ -77,7 +77,8 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Upload avatar' })
   @UseInterceptors(FileInterceptor('file'))
-  @ApiResponse({ status: 200, description: 'Avatar uploaded!', type: UserInfoResponseDto })
+  @ApiResponse({ status: 201, description: 'Avatar uploaded!', type: UserInfoResponseDto })
+  @ApiResponse({ status: 401, description: 'Needs sign in to upload avatar.', type: UnauthorizedErrorResponseDto })
   @Serialize(UserInfoResponseDto)
   async uploadAvatar(@CurrentUser() user: User, @UploadedFile() file: Express.Multer.File) {
     return { user: await this.usersService.uploadProfileAvatar(user, file) };

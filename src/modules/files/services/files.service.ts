@@ -41,14 +41,6 @@ export class FilesService {
     await this.fileStorageService.deleteFile(this.getBucketName(category), fileKey);
   }
 
-  private getFileKeyFromUrl(fileUrl: string) {
-    if (!fileUrl.startsWith(CLOUDFRONT_BASE_URL)) {
-      return null;
-    }
-
-    return fileUrl.replace(`${CLOUDFRONT_BASE_URL}/`, '');
-  }
-
   private getFileExtensionAndOriginalName(file: Express.Multer.File) {
     const lastDotIndex = file.originalname.lastIndexOf('.');
     const fileExt = lastDotIndex !== -1 ? file.originalname.substring(lastDotIndex + 1) : '';

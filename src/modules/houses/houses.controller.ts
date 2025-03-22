@@ -14,6 +14,7 @@ import {
   NotFoundException,
   ForbiddenException,
   UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { HousesService } from './services/houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
@@ -46,6 +47,7 @@ import { CreateJoinRequestResponseDto } from './dto/response/create-join-request
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
 import { HouseAvatarService } from './services/house-avatar.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller({ path: 'houses', version: '1' })
 @ApiTags('Houses')
@@ -263,10 +265,11 @@ export class HousesController {
     }
   }
 
-  @Put(':houseId/avatar')
+  @Post(':houseId/avatar')
   @ApiBearerAuth()
   @UseGuards(HouseMemberGuard)
   @ApiOperation({ summary: 'Change house avatar.' })
+  @UseInterceptors(FileInterceptor('file'))
   @ApiResponse({ status: 201, description: 'Avatar uploaded.', type: HouseInfoResponseDto })
   @ApiResponse({ status: 401, description: 'Need signin to change house avatar.', type: UnauthorizedErrorResponseDto })
   @ApiResponse({

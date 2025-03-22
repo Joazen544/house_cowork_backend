@@ -29,7 +29,6 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
   };
 
   if (type === 'postgres') {
-    console.log('type is postgres');
     return {
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -40,7 +39,6 @@ const createDataSourceOptions = (): PostgresConnectionOptions | SqliteConnection
       ...normalDatabaseProperties,
     };
   } else {
-    console.log('type is sqlite');
     return {
       type: 'sqlite',
       database: process.env.DATABASE_NAME || '',
