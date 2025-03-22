@@ -12,12 +12,15 @@ import { RulesRepository } from './repositories/rules.repository';
 import { InvitationsRepository } from './repositories/invitations.repository';
 import { JoinRequestsRepository } from './repositories/join-requests.repository';
 import { HouseMembersModule } from 'src/modules/houses/modules/house-members/house-members.module';
+import { HouseAvatarService } from './services/house-avatar.service';
+import { FilesModule } from '../files/files.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([House, Rule, Invitation, JoinRequest]), HouseMembersModule],
+  imports: [TypeOrmModule.forFeature([House, Rule, Invitation, JoinRequest]), HouseMembersModule, FilesModule],
   controllers: [HousesController],
   providers: [
     HousesService,
+    HouseAvatarService,
     JoinRequestsService,
     HousesRepository,
     RulesRepository,

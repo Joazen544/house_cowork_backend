@@ -19,6 +19,11 @@ export class HouseDto {
   @IsString()
   description!: string;
 
+  @ApiProperty({ example: 'https://example.com/house.jpg' })
+  @Expose()
+  @IsString()
+  avatar!: string;
+
   @ApiProperty({ example: ['Pay the rent on 5th', 'Be clean', 'Be happy', 'Dogs and cats are welcome'] })
   @Expose()
   @IsArray()

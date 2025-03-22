@@ -61,8 +61,14 @@ export class HousesService {
     return this.housesRepository.findOneBy(attrs);
   }
 
+  async update(house: House, attrs: Partial<House>) {
+    Object.assign(house, attrs);
+    const updatedHouse = await this.housesRepository.save(house);
+    return updatedHouse;
+  }
+
   @Transactional()
-  async update(house: House, updateHouseDto: UpdateHouseDto) {
+  async updateAllRelevant(house: House, updateHouseDto: UpdateHouseDto) {
     const { name, description, rules } = updateHouseDto;
 
     Object.assign(house, {

@@ -13,6 +13,7 @@ import {
   BadRequestException,
   NotFoundException,
   ForbiddenException,
+  UploadedFile,
 } from '@nestjs/common';
 import { HousesService } from './services/houses.service';
 import { CreateHouseDto } from './dto/request/create-house.dto';
@@ -44,12 +45,14 @@ import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/membe
 import { CreateJoinRequestResponseDto } from './dto/response/create-join-request-response.dto';
 import { HouseJoinRequestsResponseDto } from './dto/response/house-join-requests-response.dto';
 import { AnswerNotPendingJoinRequestException } from 'src/common/exceptions/houses/answer-not-pending-join-request.exception';
+import { HouseAvatarService } from './services/house-avatar.service';
 
 @Controller({ path: 'houses', version: '1' })
 @ApiTags('Houses')
 export class HousesController {
   constructor(
     private readonly housesService: HousesService,
+    private readonly houseAvatarService: HouseAvatarService,
     private readonly joinRequestsService: JoinRequestsService,
   ) {}
 
@@ -112,7 +115,7 @@ export class HousesController {
   @ApiBody({ type: UpdateHouseDto })
   @Serialize(HouseInfoResponseDto)
   async update(@CurrentHouse() house: House, @Body() updateHouseDto: UpdateHouseDto) {
-    const updatedHouse = await this.housesService.update(house, updateHouseDto);
+    const updatedHouse = await this.housesService.updateAllRelevant(house, updateHouseDto);
     return { house: this.housesService.formatHouseInfoInResponse(updatedHouse) };
   }
 
@@ -258,6 +261,23 @@ export class HousesController {
 
       throw error;
     }
+  }
+
+  @Put(':houseId/avatar')
+  @ApiBearerAuth()
+  @UseGuards(HouseMemberGuard)
+  @ApiOperation({ summary: 'Change house avatar.' })
+  @ApiResponse({ status: 201, description: 'Avatar uploaded.', type: HouseInfoResponseDto })
+  @ApiResponse({ status: 401, description: 'Need signin to change house avatar.', type: UnauthorizedErrorResponseDto })
+  @ApiResponse({
+    status: 403,
+    description: 'Only house member can change house avatar.',
+    type: ForbiddenErrorResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Not found.', type: NotFoundErrorResponseDto })
+  @Serialize(HouseInfoResponseDto)
+  async changeAvatar(@CurrentHouse() house: House, @UploadedFile() file: Express.Multer.File) {
+    return { house: await this.houseAvatarService.uploadAvatar(house, file) };
   }
 
   // @Delete(':houseId/leave')

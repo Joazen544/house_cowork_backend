@@ -4,7 +4,6 @@ import { User } from './entities/user.entity';
 import { UsersRepository } from './users.repository';
 import { UsersNotFoundException } from 'src/common/exceptions/users/users-not-found.exception';
 import { FilesService } from '../files/services/files.service';
-import { Transactional } from 'typeorm-transactional';
 import { FileCategory } from '../files/enum/file-categories.enum';
 
 @Injectable()
@@ -42,12 +41,10 @@ export class UsersService {
     return updatedUser;
   }
 
-  @Transactional()
   async uploadProfileAvatar(user: User, file: Express.Multer.File) {
     const imageKey = await this.filesService.uploadFile(file, FileCategory.USER_AVATAR);
-    if (user.avatarKey) {
-      await this.filesService.deleteFile(FileCategory.USER_AVATAR, user.avatarKey);
-    }
+
+    const originalAvatarKey = user.avatarKey;
 
     const userObject = await this.update(user, { avatarKey: imageKey });
     const avatarUrl = this.filesService.getUrl(imageKey);
@@ -56,6 +53,10 @@ export class UsersService {
       ...userObject,
       avatar: avatarUrl,
     };
+
+    if (originalAvatarKey) {
+      await this.filesService.deleteFile(FileCategory.USER_AVATAR, user.avatarKey);
+    }
 
     return updatedUserObject;
   }
