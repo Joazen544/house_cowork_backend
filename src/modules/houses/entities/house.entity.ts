@@ -16,7 +16,7 @@ export class House {
   @Column()
   description!: string;
 
-  @Column()
+  @Column({ nullable: true })
   avatarKey!: string;
 
   @OneToMany(() => Rule, (rule) => rule.house, { eager: true, cascade: true })
