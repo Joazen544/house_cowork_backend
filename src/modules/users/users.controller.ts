@@ -46,7 +46,7 @@ export class UsersController {
   @Serialize(UserInfoResponseDto)
   async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
     if (id === user.id) {
-      return { user };
+      return { user: this.usersService.formatUserInfoInResponse(user) };
     }
 
     const targetUser = await this.usersService.findOneBy({ id });
@@ -58,7 +58,7 @@ export class UsersController {
     if (!isInSameHouse) {
       throw new ForbiddenException('Can only find user info in family');
     }
-    return { user: targetUser };
+    return { user: this.usersService.formatUserInfoInResponse(targetUser) };
   }
 
   @Put('/profile')
@@ -70,7 +70,8 @@ export class UsersController {
   @ApiBody({ type: UpdateUserDto })
   @Serialize(UserInfoResponseDto)
   async update(@CurrentUser() user: User, @Body() body: UpdateUserDto) {
-    return { user: await this.usersService.update(user, body) };
+    const updatedUser = await this.usersService.update(user, body);
+    return { user: this.usersService.formatUserInfoInResponse(updatedUser) };
   }
 
   @Post('avatar')

@@ -60,4 +60,9 @@ export class UsersService {
 
     return updatedUserObject;
   }
+
+  formatUserInfoInResponse(user: User) {
+    const avatar = user.avatarKey ? this.filesService.getUrl(user.avatarKey) : null;
+    return { ...user, avatar };
+  }
 }

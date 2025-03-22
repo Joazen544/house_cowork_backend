@@ -11,6 +11,7 @@ import { InvitationsRepository } from '../repositories/invitations.repository';
 import { IsolationLevel, Transactional } from 'typeorm-transactional';
 import { InvitationNotFoundException } from '../../../common/exceptions/houses/invitation-not-found.exception';
 import { HouseMembersService } from 'src/modules/houses/modules/house-members/house-members.service';
+import { FilesService } from 'src/modules/files/services/files.service';
 
 @Injectable()
 export class HousesService {
@@ -19,6 +20,7 @@ export class HousesService {
     private readonly rulesRepository: RulesRepository,
     private readonly invitationsRepository: InvitationsRepository,
     private readonly houseMembersService: HouseMembersService,
+    private readonly filesService: FilesService,
   ) {}
 
   @Transactional()
@@ -135,7 +137,8 @@ export class HousesService {
     const houseMembers = house.houseMembers;
     const memberIds = houseMembers ? houseMembers.map((houseMember) => houseMember.memberId) : [];
     const rules = house.rules ? house.rules.map((rule) => rule.description) : [];
-    return { ...house, memberIds, rules };
+    const avatar = house.avatarKey ? this.filesService.getUrl(house.avatarKey) : null;
+    return { ...house, memberIds, rules, avatar };
   }
 
   private async generateInvitationCode(): Promise<string> {
