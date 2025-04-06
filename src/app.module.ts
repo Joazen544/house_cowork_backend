@@ -13,7 +13,7 @@ import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
 import { FilesModule } from './modules/files/files.module';
-import { NotificationModule } from './modules/notification/notification.module';
+// import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { NotificationModule } from './modules/notification/notification.module';
     DeviceTokensModule,
     HouseMembersModule,
     FilesModule,
-    NotificationModule,
+    // NotificationModule,
   ],
   providers: [
     {
