@@ -22,7 +22,7 @@
     "migration:generate": "npm run typeorm -- migration:generate src/db/migrations/$NAME",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "migration:run:prod": "cross-env NODE_ENV=production npm run typeorm -- migration:run"
+    "migration:run:prod": "cross-env NODE_ENV=production npx typeorm -d dist/db/data-source.js migration:run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.726.1",
