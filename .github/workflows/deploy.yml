@@ -40,6 +40,7 @@ jobs:
             tar -xzf /home/${{ secrets.EC2_USERNAME }}/build.tar.gz -C .
             node load-parameter.js
             npm install
+            npm run migration:run:prod
             pm2 delete house_cowork || true
             pm2 start npm --name "house_cowork" -- run start:prod
           EOF
