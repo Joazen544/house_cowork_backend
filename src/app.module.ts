@@ -39,7 +39,7 @@ import { FilesModule } from './modules/files/files.module';
     DeviceTokensModule,
     HouseMembersModule,
     FilesModule,
-    // NotificationModule,
+    // NotificationModule
   ],
   providers: [
     {
