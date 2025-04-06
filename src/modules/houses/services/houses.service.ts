@@ -52,8 +52,8 @@ export class HousesService {
     return house;
   }
 
-  findHousesByUser(user: User) {
-    return this.houseMembersService.findHousesByMemberId(user.id);
+  async findHousesByUser(user: User) {
+    return await this.housesRepository.findHousesByUser(user);
   }
 
   findOne(attrs: FindOptionsWhere<House>) {

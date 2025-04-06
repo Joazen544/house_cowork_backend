@@ -17,10 +17,10 @@ export class HousesRepository extends BaseRepository<House> {
 
   async findHousesByUser(user: User) {
     const HouseMembers = await this.HouseMemberRepo.find({
-      where: { member: user },
+      where: { memberId: user.id },
       relations: ['house'],
     });
-    const houses = HouseMembers.map((HouseMember) => HouseMember.house);
+    const houses = await Promise.all(HouseMembers.map(async (HouseMember) => await HouseMember.house));
 
     return houses;
   }

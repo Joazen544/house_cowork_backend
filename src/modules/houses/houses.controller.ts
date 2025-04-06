@@ -29,6 +29,7 @@ import {
 } from '../../common/dto/errors/errors.dto';
 import { Serialize } from '../../common/interceptors/serialize.interceptor';
 import { HouseInfoResponseDto } from './dto/response/house-info-response.dto';
+import { HousesInfoResponseDto } from './dto/response/houses-info-response.dto';
 import { CreateHouseInvitationResponseDto } from './dto/response/create-house-invitation-response.dto';
 import { JoinRequestsSentResponseDto } from './dto/response/join-requests-sent-response.dto';
 import { SimpleResponseDto } from '../../common/dto/response/simple-response.dto';
@@ -39,7 +40,6 @@ import { HouseMemberGuard } from '../../common/guards/house-member.guard';
 import { CurrentHouse } from './decorators/current-house.decorator';
 import { House } from './entities/house.entity';
 import { JoinRequestsService } from './services/join-requests.service';
-import { HousesByMemberResponseDto } from './dto/response/houses-by-member-response.dto';
 import { InvitationNotFoundException } from '../../common/exceptions/houses/invitation-not-found.exception';
 import { JoinRequestExistedException } from 'src/common/exceptions/houses/join-request-existed.exception';
 import { MemberAlreadyExistsException } from 'src/common/exceptions/houses/member-already-exists.exception';
@@ -83,14 +83,14 @@ export class HousesController {
   @Get('own')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get houses by user' })
-  @ApiResponse({ status: 200, description: 'Houses got.', type: HouseInfoResponseDto })
+  @ApiResponse({ status: 200, description: 'Houses got.', type: HousesInfoResponseDto })
   @ApiResponse({ status: 400, description: 'Bad request, some property is missed.', type: BadRequestErrorResponseDto })
   @ApiResponse({ status: 401, description: 'Needs sign in to create a house.', type: UnauthorizedErrorResponseDto })
-  @Serialize(HousesByMemberResponseDto)
+  @Serialize(HousesInfoResponseDto)
   async findOwnHouses(@CurrentUser() user: User) {
     const houses = await this.housesService.findHousesByUser(user);
-    const houseIds = houses.map((house) => house.id);
-    return { houseIds };
+    const formattedHouses = houses.map((house) => this.housesService.formatHouseInfoInResponse(house));
+    return { houses: formattedHouses };
   }
 
   @Get(':houseId')
