@@ -42,6 +42,7 @@ export class HousesService {
     if (!wholeHouse) {
       throw new Error('House not created');
     }
+
     return wholeHouse;
   }
 
