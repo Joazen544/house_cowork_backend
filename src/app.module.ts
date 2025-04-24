@@ -52,4 +52,4 @@ import { NotificationModule } from './modules/notification/notification.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

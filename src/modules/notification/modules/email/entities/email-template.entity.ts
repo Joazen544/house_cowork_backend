@@ -1,5 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { EmailNotification } from './email-notification.entity';
+import { EmailDetail } from './email-detail.entity';
+import { EmailTemplateKey } from '../enums/email-template-key.enum';
+import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
 
 @Entity()
 @Index(['templateKey', 'language', 'version'], { unique: true })
@@ -7,8 +9,13 @@ export class EmailTemplate {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  templateKey!: string;
+  @Column({
+    type: 'enum',
+    enum: EmailTemplateKey,
+    enumName: 'email_template_key_enum',
+    nullable: false,
+  })
+  templateKey!: EmailTemplateKey;
 
   @Column()
   version!: number;
@@ -28,8 +35,13 @@ export class EmailTemplate {
   @Column({ type: 'jsonb', nullable: true })
   variables!: string[];
 
-  @Column({ default: 'en' })
-  language!: string;
+  @Column({
+    type: 'enum',
+    enum: EmailTemplateLanguage,
+    enumName: 'email_template_language_enum',
+    nullable: false
+  })
+  language!: EmailTemplateLanguage;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
@@ -37,6 +49,6 @@ export class EmailTemplate {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
-  @OneToMany(() => EmailNotification, (emailNotification) => emailNotification.emailTemplate)
-  emailNotifications!: EmailNotification[];
+  @OneToMany(() => EmailDetail, (emailNotification) => emailNotification.emailTemplate)
+  emailNotifications!: EmailDetail[];
 }

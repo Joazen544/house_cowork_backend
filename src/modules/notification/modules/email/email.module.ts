@@ -1,24 +1,22 @@
 import { Module } from '@nestjs/common';
-import { SendEmailService } from './services/send-email.service';
 import { EmailService } from './services/email.service';
 import { EmailTemplatesRepository } from './repositories/email-templates.repository';
-import { EmailNotificationsRepository } from './repositories/email-notifications.repository';
-import { FailoverEmailProvider } from './providers/fail-over-email-provider';
+import { EmailRecordRepository } from './repositories/email-record.repository';
+import { FailoverEmailProvider } from './providers/fail-over-email-client';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailTemplate } from './entities/email-template.entity';
-import { EmailNotification } from './entities/email-notification.entity';
-import { AwsSesEmailProvider } from './providers/aws-ses-email-provider';
+import { EmailDetail } from './entities/email-detail.entity';
+import { AwsSesEmailClient } from './providers/aws-ses-email-client';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmailTemplate, EmailNotification])],
+  imports: [TypeOrmModule.forFeature([EmailTemplate, EmailDetail])],
   providers: [
-    SendEmailService,
     EmailService,
     EmailTemplatesRepository,
-    EmailNotificationsRepository,
+    EmailRecordRepository,
     { provide: 'EmailProvider', useClass: FailoverEmailProvider },
-    { provide: 'ThirdPartyEmailProviders', useValue: [AwsSesEmailProvider] },
+    { provide: 'ThirdPartyEmailProviders', useValue: [AwsSesEmailClient] },
   ],
-  exports: [SendEmailService, EmailService],
+  exports: [EmailService],
 })
-export class EmailModule {}
+export class EmailModule { }

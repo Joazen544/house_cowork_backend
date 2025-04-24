@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { EmailTemplate } from './email-template.entity';
+import { EmailTemplateKey } from '../enums/email-template-key.enum';
 
 export enum EmailSendStatus {
   PENDING = 1,
@@ -8,7 +9,7 @@ export enum EmailSendStatus {
 }
 
 @Entity()
-export class EmailNotification {
+export class EmailDetail {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -17,6 +18,13 @@ export class EmailNotification {
 
   @Column()
   emailTemplateId!: number;
+
+  @Column({
+    type: 'enum',
+    enum: EmailTemplateKey,
+    default: EmailTemplateKey.USER_SIGNUP_SUCCESS
+  })
+  emailTemplateKey!: EmailTemplateKey;
 
   @ManyToOne(() => EmailTemplate, (emailTemplate) => emailTemplate.emailNotifications)
   emailTemplate!: EmailTemplate;
@@ -35,7 +43,7 @@ export class EmailNotification {
   status!: EmailSendStatus;
 
   @Column({ nullable: true })
-  errorMessage!: string;
+  errorMessage?: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;

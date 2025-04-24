@@ -1,13 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { EmailProvider } from './interfaces/email-provider.interface';
+import { EmailClient } from './interfaces/email-client.interface';
 import { EmailSendOptions } from '../dtos/email-send-options.dto';
-import { EmailSendResult } from '../interfaces/email-send-result.interface';
+import { EmailSendResult } from '../interfaces/email-send-result';
 
 @Injectable()
-export class FailoverEmailProvider implements EmailProvider {
+export class FailoverEmailProvider implements EmailClient {
   private readonly logger = new Logger(FailoverEmailProvider.name);
 
-  constructor(@Inject('ThirdPartyEmailProviders') private readonly providers: EmailProvider[]) {}
+  constructor(@Inject('ThirdPartyEmailProviders') private readonly providers: EmailClient[]) { }
 
   async sendEmail(options: EmailSendOptions): Promise<EmailSendResult> {
     for (const provider of this.providers) {
