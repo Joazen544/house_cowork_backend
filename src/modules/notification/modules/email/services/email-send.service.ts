@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { AwsSesEmailClient } from "../providers/aws-ses-email-client";
-import { EmailSendOptions } from "../dtos/email-send-options.dto";
+import { EmailSendDetails } from "../dtos/email-send-detail.dto";
 
 @Injectable()
-export class SendEmailService {
+export class EmailSendService {
     constructor(
         private readonly emailClient: AwsSesEmailClient
     ) { }
 
-    async sendEmail(sendOptions: EmailSendOptions) {
-        const result = await this.emailClient.sendEmail(sendOptions);
+    async sendEmail(sendDetail: EmailSendDetails) {
+        const result = await this.emailClient.sendEmail(sendDetail);
         return result;
     }
+
+
 }

@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { EmailDetail } from './email-detail.entity';
+import { EmailSendRecord } from './email-send-record.entity';
 import { EmailTemplateKey } from '../enums/email-template-key.enum';
 import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
 
@@ -49,6 +49,6 @@ export class EmailTemplate {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
-  @OneToMany(() => EmailDetail, (emailNotification) => emailNotification.emailTemplate)
-  emailNotifications!: EmailDetail[];
+  @OneToMany(() => EmailSendRecord, (emailNotification) => emailNotification.emailTemplate)
+  emailNotifications!: EmailSendRecord[];
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EmailClient } from './interfaces/email-client.interface';
-import { EmailSendOptions } from '../dtos/email-send-options.dto';
+import { EmailSendDetails } from '../dtos/email-send-detail.dto';
 import * as AWS from 'aws-sdk';
 import { EmailSendResult } from '../interfaces/email-send-result';
 import { EmailClient as EmailProviderEnum } from './enums/email-client.enum';
@@ -9,7 +9,7 @@ import { EmailClient as EmailProviderEnum } from './enums/email-client.enum';
 export class AwsSesEmailClient implements EmailClient {
   private ses = new AWS.SES({ region: process.env.AWS_REGION });
 
-  async sendEmail(options: EmailSendOptions): Promise<EmailSendResult> {
+  async sendEmail(options: EmailSendDetails): Promise<EmailSendResult> {
     const params = {
       Source: options.from,
       Destination: { ToAddresses: [options.to] },

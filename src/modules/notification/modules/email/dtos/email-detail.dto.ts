@@ -1,5 +1,5 @@
 import { IsDate, isEmail, IsEnum, IsOptional } from "class-validator";
-import { EmailSendStatus } from "../entities/email-detail.entity";
+import { EmailSendStatus } from "../entities/email-send-record.entity";
 
 export class EmailDetailDto {
     id: number;

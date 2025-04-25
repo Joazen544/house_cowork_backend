@@ -5,11 +5,11 @@ import { EmailRecordRepository } from './repositories/email-record.repository';
 import { FailoverEmailProvider } from './providers/fail-over-email-client';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailTemplate } from './entities/email-template.entity';
-import { EmailDetail } from './entities/email-detail.entity';
+import { EmailSendRecord } from './entities/email-send-record.entity';
 import { AwsSesEmailClient } from './providers/aws-ses-email-client';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmailTemplate, EmailDetail])],
+  imports: [TypeOrmModule.forFeature([EmailTemplate, EmailSendRecord])],
   providers: [
     EmailService,
     EmailTemplatesRepository,
