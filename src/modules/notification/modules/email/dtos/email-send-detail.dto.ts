@@ -1,13 +1,13 @@
-export class EmailSendOptions {
-  to: string;
+export class EmailSendDetails {
   from: string;
+  to: string;
   subject: string;
   htmlBody: string;
   textBody: string;
 
-  constructor(to: string, from: string, subject: string, htmlBody: string, textBody: string) {
-    this.to = to;
+  constructor(from: string, to: string, subject: string, htmlBody: string, textBody: string) {
     this.from = from;
+    this.to = to;
     this.subject = subject;
     this.htmlBody = htmlBody;
     this.textBody = textBody;

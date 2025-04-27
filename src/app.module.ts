@@ -52,4 +52,4 @@ import { FilesModule } from './modules/files/files.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
