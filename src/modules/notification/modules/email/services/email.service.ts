@@ -7,8 +7,10 @@ import { EmailTemplateKey } from '../enums/email-template-key.enum';
 import { EmailSendService } from './email-send.service';
 import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
 import { EmailSendResult } from '../interfaces/email-send-result.interface';
-import { EmailSendOptions } from '../dtos/email-send-option.dto';
+import { EmailSendOption } from '../dtos/email-send-option.dto';
 import { EmailTemplate } from '../entities/email-template.entity';
+import { NotificationType } from 'src/common/dto/notification-type.enum';
+import { Language } from 'src/common/dto/laguage-type.enum';
 
 
 @Injectable()
@@ -19,7 +21,7 @@ export class EmailService {
     private readonly sendEmailService: EmailSendService,
   ) { }
 
-  async send(sendOptions: EmailSendOptions<EmailTemplateKey>): Promise<EmailSendResult> {
+  async send(sendOptions: EmailSendOption<EmailTemplateKey>): Promise<EmailSendResult> {
     this.isSendOptionsValid(sendOptions);
     try {
       const template = await this.getTemplate(sendOptions.templateKey, sendOptions.language)
@@ -37,7 +39,7 @@ export class EmailService {
     }
   }
 
-  private async createEmailRecord(options: EmailSendOptions<EmailTemplateKey>, templateId: number): Promise<EmailSendRecord> {
+  private async createEmailRecord(options: EmailSendOption<EmailTemplateKey>, templateId: number): Promise<EmailSendRecord> {
     const newRecord = new EmailSendRecord()
 
     Object.assign(newRecord, {
@@ -53,7 +55,12 @@ export class EmailService {
     return this.emailRecordRepository.create(newRecord)
   }
 
-  private async getTemplate(key: EmailTemplateKey, language: EmailTemplateLanguage): Promise<EmailTemplate> {
+  findEmailTemplateKey(type: NotificationType): EmailTemplateKey {
+    if (type == NotificationType.OTP) return EmailTemplateKey.USER_SIGNUP_OTP
+    throw ("this type should not be email:" + type)
+  }
+
+  async getTemplate(key: EmailTemplateKey, language: Language): Promise<EmailTemplate> {
     const template = await this.emailTemplatesRepository.findLatestVersionByKeyAndLanguage(key, language)
     if (!template) {
       throw new Error(`Email template not found for key: ${key} and language: ${language}`);
@@ -61,13 +68,13 @@ export class EmailService {
     return template
   }
 
-  private async isSendOptionsValid(sendOptions: EmailSendOptions<EmailTemplateKey>) {
+  private async isSendOptionsValid(sendOptions: EmailSendOption<EmailTemplateKey>) {
     if (!sendOptions.to || !sendOptions.templateKey || !sendOptions.language) {
       throw new Error("Missing required email send options");
     }
   }
 
-  private async processEmailDelivery(sendOptions: EmailSendOptions<EmailTemplateKey>, template: EmailTemplate, recordId: number) {
+  private async processEmailDelivery(sendOptions: EmailSendOption<EmailTemplateKey>, template: EmailTemplate, recordId: number) {
     try {
       const detail = new EmailSendDetails(
         sendOptions.from,

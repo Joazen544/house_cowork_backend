@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseRepository } from 'src/common/repositories/base.repository';
 import { EmailTemplate } from '../entities/email-template.entity';
 import { EmailTemplateKey } from '../enums/email-template-key.enum';
-import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
+import { Language } from 'src/common/dto/laguage-type.enum';
 
 @Injectable()
 export class EmailTemplatesRepository extends BaseRepository<EmailTemplate> {
@@ -15,7 +15,7 @@ export class EmailTemplatesRepository extends BaseRepository<EmailTemplate> {
     super(EmailTemplate, dataSource);
   }
 
-  async findLatestVersionByKeyAndLanguage(templateKey: EmailTemplateKey, language: EmailTemplateLanguage) {
+  async findLatestVersionByKeyAndLanguage(templateKey: EmailTemplateKey, language: Language) {
     return await this.emailTemplateRepo.findOne({
       where: { templateKey, language },
       order: { version: 'DESC' },

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { EmailSendRecord } from './email-send-record.entity';
 import { EmailTemplateKey } from '../enums/email-template-key.enum';
-import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
+import { Language } from 'src/common/dto/laguage-type.enum';
 
 @Entity()
 @Index(['templateKey', 'language', 'version'], { unique: true })
@@ -37,11 +37,11 @@ export class EmailTemplate {
 
   @Column({
     type: 'enum',
-    enum: EmailTemplateLanguage,
-    enumName: 'email_template_language_enum',
+    enum: Language,
+    enumName: 'language_enum',
     nullable: false
   })
-  language!: EmailTemplateLanguage;
+  language!: Language;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
