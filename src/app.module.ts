@@ -14,8 +14,7 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
 import { FilesModule } from './modules/files/files.module';
 // import { NotificationModule } from './modules/notification/notification.module';
-import { DevicesModule } from './devices/devices.module';
-import { DevicesController } from './devices/devices.controller';
+import { DevicesModule } from './modules/devices/devices.module';
 
 @Module({
   imports: [
@@ -54,6 +53,5 @@ import { DevicesController } from './devices/devices.controller';
       useClass: AuthGuard,
     },
   ],
-  controllers: [DevicesController],
 })
 export class AppModule {}
