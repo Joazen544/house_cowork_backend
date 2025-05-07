@@ -2,7 +2,7 @@ import { DevicePlatform, PushProvider } from '../entities/device.entity';
 
 export class DeviceRegistrationDto {
   userId!: number;
-  deviceToken!: string;
+  pushToken!: string;
   provider!: PushProvider;
   platform!: DevicePlatform;
   osVersion?: string;
