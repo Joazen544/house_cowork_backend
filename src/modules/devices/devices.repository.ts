@@ -1,5 +1,5 @@
 import { BaseRepository } from 'src/common/repositories/base.repository';
-import { Device } from './entities/device.entity';
+import { Device, PushProvider } from './entities/device.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,5 +12,15 @@ export class TasksRepository extends BaseRepository<Device> {
     @InjectDataSource() dataSource: DataSource,
   ) {
     super(Device, dataSource);
+  }
+
+  findByUserId(userId: number, provider: PushProvider = PushProvider.FCM) {
+    return this.deviceRepo.find({
+      where: {
+        userId,
+        isExpired: false,
+        provider,
+      },
+    });
   }
 }
