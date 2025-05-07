@@ -54,7 +54,7 @@ export class DevicesService {
     return this.devicesRepository.save(device);
   }
 
-  async getDevicesByUserId(userId: number) {
+  async getByUserId(userId: number) {
     return this.devicesRepository.findByUserId(userId);
   }
 }
