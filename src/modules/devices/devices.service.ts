@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { DevicesRepository } from './devices.repository';
 import { DeviceRegistrationDto } from './dto/device-registration.dto';
+import { Device } from './entities/device.entity';
 
 @Injectable()
 export class DevicesService {
@@ -14,14 +15,9 @@ export class DevicesService {
           `Unexpected device registration conflict: pushToken=${dto.pushToken}, existingUserId=${existingDevice.userId}, newUserId=${dto.userId}`,
         );
 
-        throw new InternalServerErrorException('Unexpected device registration conflict');
+        throw new ConflictException('Device registration conflict');
       }
-      existingDevice.pushToken = dto.pushToken;
-      existingDevice.lastActiveAt = new Date();
-      existingDevice.osVersion = dto.osVersion;
-      existingDevice.appVersion = dto.appVersion;
-      existingDevice.deviceModel = dto.deviceModel;
-      existingDevice.isExpired = false;
+      this.updateDeviceDetails(existingDevice, dto);
       existingDevice.lastActiveAt = new Date();
       return this.devicesRepository.save(existingDevice);
     }
@@ -29,6 +25,24 @@ export class DevicesService {
       ...dto,
       lastActiveAt: new Date(),
     });
+  }
+
+  private updateDeviceDetails(device: Device, dto: DeviceRegistrationDto) {
+    device.pushToken = dto.pushToken;
+    device.osVersion = dto.osVersion;
+    device.appVersion = dto.appVersion;
+    device.deviceModel = dto.deviceModel;
+    device.isExpired = false;
+  }
+
+  async updateLastActiveAt(deviceId: number) {
+    const device = await this.devicesRepository.findOneBy({ id: deviceId });
+    if (!device) {
+      throw new NotFoundException(`Device with ID ${deviceId} not found`);
+    }
+    device.lastActiveAt = new Date();
+    device.isExpired = false;
+    return this.devicesRepository.save(device);
   }
 
   async expireDevice(deviceId: number) {
@@ -40,7 +54,7 @@ export class DevicesService {
     return this.devicesRepository.save(device);
   }
 
-  async getDeviceByUserId(userId: number) {
+  async getDevicesByUserId(userId: number) {
     return this.devicesRepository.findByUserId(userId);
   }
 }
