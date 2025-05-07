@@ -14,12 +14,21 @@ export class DevicesRepository extends BaseRepository<Device> {
     super(Device, dataSource);
   }
 
-  findNotExpiredOneByUserId(userId: number, provider: PushProvider = PushProvider.FCM) {
+  findOneByPushToken(pushToken: string, provider: PushProvider = PushProvider.FCM) {
     return this.deviceRepo.findOne({
       where: {
-        userId,
         isExpired: false,
         provider,
+        pushToken,
+      },
+    });
+  }
+
+  findByUserId(userId: number) {
+    return this.deviceRepo.find({
+      where: {
+        isExpired: false,
+        userId,
       },
     });
   }

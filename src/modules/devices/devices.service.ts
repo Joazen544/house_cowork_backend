@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { DevicesRepository } from './devices.repository';
 import { DeviceRegistrationDto } from './dto/device-registration.dto';
 
@@ -7,8 +7,15 @@ export class DevicesService {
   constructor(private readonly devicesRepository: DevicesRepository) {}
 
   async registerDevice(dto: DeviceRegistrationDto) {
-    const existingDevice = await this.devicesRepository.findNotExpiredOneByUserId(dto.userId, dto.provider);
+    const existingDevice = await this.devicesRepository.findOneByPushToken(dto.pushToken);
     if (existingDevice) {
+      if (existingDevice.userId !== dto.userId) {
+        console.error(
+          `Unexpected device registration conflict: pushToken=${dto.pushToken}, existingUserId=${existingDevice.userId}, newUserId=${dto.userId}`,
+        );
+
+        throw new InternalServerErrorException('Unexpected device registration conflict');
+      }
       existingDevice.pushToken = dto.pushToken;
       existingDevice.lastActiveAt = new Date();
       existingDevice.osVersion = dto.osVersion;
@@ -31,5 +38,9 @@ export class DevicesService {
     }
     device.isExpired = true;
     return this.devicesRepository.save(device);
+  }
+
+  async getDeviceByUserId(userId: number) {
+    return this.devicesRepository.findByUserId(userId);
   }
 }
