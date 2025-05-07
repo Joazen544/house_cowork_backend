@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { DevicesService } from './devices.service';
-import { DevicesController } from './devices/devices.controller';
 import { DevicesController } from './devices.controller';
 
 @Module({
   providers: [DevicesService],
-  controllers: [DevicesController]
+  controllers: [DevicesController],
 })
 export class DevicesModule {}
