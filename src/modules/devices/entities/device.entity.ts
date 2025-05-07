@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Unique,
 } from 'typeorm';
 
 export enum PushProvider {
@@ -19,6 +20,7 @@ export enum DevicePlatform {
 }
 
 @Entity('devices')
+@Unique(['provider', 'pushToken'])
 export class Device {
   @PrimaryGeneratedColumn()
   id!: number;

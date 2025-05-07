@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
-export class TasksRepository extends BaseRepository<Device> {
+export class DevicesRepository extends BaseRepository<Device> {
   constructor(
     @InjectRepository(Device) private readonly deviceRepo: Repository<Device>,
     @InjectDataSource() dataSource: DataSource,
@@ -14,8 +14,8 @@ export class TasksRepository extends BaseRepository<Device> {
     super(Device, dataSource);
   }
 
-  findByUserId(userId: number, provider: PushProvider = PushProvider.FCM) {
-    return this.deviceRepo.find({
+  findNotExpiredOneByUserId(userId: number, provider: PushProvider = PushProvider.FCM) {
+    return this.deviceRepo.findOne({
       where: {
         userId,
         isExpired: false,
