@@ -9,7 +9,6 @@ import { DataSource } from 'typeorm';
 import { HousesModule } from './modules/houses/houses.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './common/guards/auth.guard';
-import { DeviceTokensModule } from './modules/device-tokens/device-tokens.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { HouseMembersModule } from './modules/houses/modules/house-members/house-members.module';
 import { FilesModule } from './modules/files/files.module';
@@ -38,7 +37,6 @@ import { PushModule } from './modules/push/push.module';
     UsersModule,
     TasksModule,
     HousesModule,
-    DeviceTokensModule,
     HouseMembersModule,
     FilesModule,
     DevicesModule,
