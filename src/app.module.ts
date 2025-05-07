@@ -15,6 +15,7 @@ import { HouseMembersModule } from './modules/houses/modules/house-members/house
 import { FilesModule } from './modules/files/files.module';
 // import { NotificationModule } from './modules/notification/notification.module';
 import { DevicesModule } from './modules/devices/devices.module';
+import { PushModule } from './modules/push/push.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { DevicesModule } from './modules/devices/devices.module';
     HouseMembersModule,
     FilesModule,
     DevicesModule,
+    PushModule,
     // NotificationModule
   ],
   providers: [
