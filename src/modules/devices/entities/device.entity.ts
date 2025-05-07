@@ -51,6 +51,9 @@ export class Device {
   @Column({ type: 'timestamptz', nullable: true })
   lastActiveAt?: Date;
 
+  @Column({ default: false })
+  isExpired!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 
