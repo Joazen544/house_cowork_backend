@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PushService } from './push.service';
+import { PushService } from './services/push.service';
 import { DevicesModule } from '../devices/devices.module';
 import { FcmHandler } from './handlers/fcm.handler';
 

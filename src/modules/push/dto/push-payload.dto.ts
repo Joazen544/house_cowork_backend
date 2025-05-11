@@ -1,11 +1,15 @@
 export class PushPayloadDto {
-  title: string;
-  body: string;
-  data?: { [key: string]: string };
+  data: {
+    title: string;
+    body: string;
+    targetPage: string;
+  };
 
-  constructor(title: string, body: string, data?: { [key: string]: string }) {
-    this.title = title;
-    this.body = body;
-    this.data = data;
+  constructor(title: string, body: string, targetPage: string) {
+    this.data = {
+      title,
+      body,
+      targetPage,
+    };
   }
 }

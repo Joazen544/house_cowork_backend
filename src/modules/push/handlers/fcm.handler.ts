@@ -1,16 +1,31 @@
 import * as admin from 'firebase-admin';
 import { Injectable } from '@nestjs/common';
 import { PushPayloadDto } from '../dto/push-payload.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FcmHandler {
   private fcmService: admin.messaging.Messaging;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
+    const firebaseCredentials = this.configService.get<string>('FIREBASE_CREDENTIAL_BASE64');
+
+    if (!firebaseCredentials) {
+      throw new Error('Firebase credentials not found');
+    }
+
+    const decodedCredentials = Buffer.from(firebaseCredentials, 'base64').toString('utf8');
+
+    const databaseUrl = this.configService.get<string>('FIREBASE_DATABASE_URL');
+
+    if (!databaseUrl) {
+      throw new Error('Firebase database URL not found');
+    }
+
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
-        databaseURL: 'https://your-project-id.firebaseio.com',
+        credential: admin.credential.cert(JSON.parse(decodedCredentials)),
+        databaseURL: databaseUrl,
       });
     }
     this.fcmService = admin.messaging();
@@ -20,10 +35,6 @@ export class FcmHandler {
     try {
       const message = {
         token: deviceToken,
-        notification: {
-          title: payload.title,
-          body: payload.body,
-        },
         data: payload.data,
       };
 
