@@ -16,16 +16,9 @@ export class FcmHandler {
 
     const decodedCredentials = Buffer.from(firebaseCredentials, 'base64').toString('utf8');
 
-    const databaseUrl = this.configService.get<string>('FIREBASE_DATABASE_URL');
-
-    if (!databaseUrl) {
-      throw new Error('Firebase database URL not found');
-    }
-
     if (!admin.apps.length) {
       admin.initializeApp({
         credential: admin.credential.cert(JSON.parse(decodedCredentials)),
-        databaseURL: databaseUrl,
       });
     }
     this.fcmService = admin.messaging();
