@@ -8,6 +8,7 @@ import { DevicesRepository } from './devices.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([Device])],
   providers: [DevicesService, DevicesRepository],
+  exports: [DevicesService],
   controllers: [DevicesController],
 })
 export class DevicesModule {}
