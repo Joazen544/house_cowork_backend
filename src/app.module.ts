@@ -54,4 +54,4 @@ import { PushModule } from './modules/push/push.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

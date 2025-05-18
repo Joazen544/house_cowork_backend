@@ -1,28 +1,46 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { EmailTemplate } from './email-template.entity';
+import { EmailTemplateKey } from '../enums/email-template-key.enum';
+import { EmailTemplateLanguage } from '../enums/email-template-language.enum';
+import { EmailRecordKey } from '../enums/email-record-key.enum';
 
 export enum EmailSendStatus {
   PENDING = 1,
-  SENT = 2,
-  FAILED = 3,
+  SENDING = 2,
+  SENT = 3,
+  FAILED = 4,
 }
 
 @Entity()
-export class EmailNotification {
+export class EmailSendRecord {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  targetEmail!: string;
+  to!: string;
 
   @Column()
   emailTemplateId!: number;
 
+  @Column({
+    type: 'enum',
+    enum: EmailTemplateKey,
+    default: EmailTemplateKey.USER_SIGNUP_SUCCESS
+  })
+  emailTemplateKey!: EmailTemplateKey;
+
   @ManyToOne(() => EmailTemplate, (emailTemplate) => emailTemplate.emailNotifications)
   emailTemplate!: EmailTemplate;
 
+  @Column({
+    type: 'enum',
+    enum: EmailTemplateLanguage,
+    default: EmailTemplateLanguage.EN
+  })
+  language!: EmailTemplateLanguage;
+
   @Column({ type: 'jsonb' })
-  variables!: Record<string, any>;
+  variables!: Record<EmailRecordKey, any>;
 
   @Column({ type: 'timestamptz' })
   sendAt!: Date;
@@ -35,7 +53,7 @@ export class EmailNotification {
   status!: EmailSendStatus;
 
   @Column({ nullable: true })
-  errorMessage!: string;
+  errorMessage?: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
