@@ -33,6 +33,7 @@ async function loadEnv() {
     const databasePassword = await loadParameter('database-password');
     const jwtSecret = await loadParameter('jwt-secret');
     const avatarsBucket = await loadParameter('avatars-bucket-st');
+    const fireBaseCredentials = await loadParameter('firebase-credential-base64');
 
     fs.appendFileSync(
       '.env.production',
@@ -46,7 +47,8 @@ async function loadEnv() {
       DATABASE_SSL=true\n
       JWT_SECRET=${jwtSecret}\n
       AWS_REGION=ap-northeast-1\n
-      AVATARS_BUCKET=${avatarsBucket}
+      AVATARS_BUCKET=${avatarsBucket}\n
+      FIREBASE_CREDENTIAL_BASE64=${fireBaseCredentials}
     `,
     );
 
