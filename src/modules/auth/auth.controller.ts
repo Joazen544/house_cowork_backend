@@ -7,6 +7,7 @@ import {
   HttpStatus,
   BadRequestException,
   NotFoundException,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -73,5 +74,11 @@ export class AuthController {
       }
       throw error;
     }
+  }
+
+  @Get('test')
+  @Public()
+  async test() {
+    return 'test';
   }
 }
