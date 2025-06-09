@@ -79,6 +79,6 @@ export class AuthController {
   @Get('test')
   @Public()
   async test() {
-    return 'test 123';
+    return 'test 111';
   }
 }
