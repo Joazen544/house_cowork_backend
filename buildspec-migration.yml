@@ -1,5 +1,7 @@
 version: 0.2
 
+# Test comment to verify CodePipeline source detection
+
 phases:
   pre_build:
     commands:
