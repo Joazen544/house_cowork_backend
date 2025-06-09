@@ -20,14 +20,7 @@ phases:
       - TASK_EXIT_CODE=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].exitCode' --output text)
       - echo Task Status: $TASK_STATUS
       - echo Exit Code: $TASK_EXIT_CODE
-      - |
-        if [ "$TASK_STATUS" = "STOPPED" ] && [ "$TASK_EXIT_CODE" = "0" ]; then
-          echo "Migration completed successfully"
-        else
-          echo "Migration failed with exit code $TASK_EXIT_CODE"
-          aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN
-          exit 1
-        fi
+      - 'if [ "$TASK_STATUS" = "STOPPED" ] && [ "$TASK_EXIT_CODE" = "0" ]; then echo "Migration completed successfully"; else echo "Migration failed with exit code $TASK_EXIT_CODE"; aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN; exit 1; fi'
   post_build:
     commands:
       - echo Migration process completed at `date`
