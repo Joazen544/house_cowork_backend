@@ -5,22 +5,26 @@ phases:
   pre_build:
     commands:
       - echo Starting database migration at `date`
-      - echo Checking environment variables...
       - echo CLUSTER_NAME=$CLUSTER_NAME
       - echo TASK_DEFINITION=$TASK_DEFINITION
   build:
     commands:
       - echo Launching migration task...
-      - TASK_ARN=$(aws ecs run-task --cluster $CLUSTER_NAME --task-definition $TASK_DEFINITION --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-0ba67557d5af9b427,subnet-055a021ffdd1ce70e],securityGroups=[sg-0cfcf3086b03038d0],assignPublicIp=ENABLED}" --query 'tasks[0].taskArn' --output text)
-      - echo Migration task ARN: $TASK_ARN
-      - echo Waiting for migration to complete...
+      - TASK_ARN=$(aws ecs run-task --cluster $CLUSTER_NAME --task-definition $TASK_DEFINITION --launch-type FARGATE --query 'tasks[0].taskArn' --output text)
+      - echo Waiting for migration task to complete...
       - aws ecs wait tasks-stopped --cluster $CLUSTER_NAME --tasks $TASK_ARN
-      - echo Checking migration task status...
+      - echo Getting task details...
       - TASK_STATUS=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].lastStatus' --output text)
       - TASK_EXIT_CODE=$(aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN --query 'tasks[0].containers[0].exitCode' --output text)
-      - echo Task Status: $TASK_STATUS
-      - echo Exit Code: $TASK_EXIT_CODE
-      - 'if [ "$TASK_STATUS" = "STOPPED" ] && [ "$TASK_EXIT_CODE" = "0" ]; then echo "Migration completed successfully"; else echo "Migration failed with exit code $TASK_EXIT_CODE"; aws ecs describe-tasks --cluster $CLUSTER_NAME --tasks $TASK_ARN; exit 1; fi'
+      - echo Task Status is $TASK_STATUS
+      - echo Exit Code is $TASK_EXIT_CODE
+      - test "$TASK_STATUS" = "STOPPED"
+      - test "$TASK_EXIT_CODE" = "0"
   post_build:
     commands:
-      - echo Migration process completed at `date`
+      - echo Migration completed at `date`
+
+artifacts:
+  files:
+    - task-arn.txt
+  discard-paths: yes
