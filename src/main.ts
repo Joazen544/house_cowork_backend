@@ -13,6 +13,10 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors();
+  }
+
   const config = new DocumentBuilder()
     .setTitle('Your API Title')
     .setDescription('Your API description')
