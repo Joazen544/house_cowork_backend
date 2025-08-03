@@ -79,7 +79,7 @@ We use ADR to record the architectural decisions for this project. You can find 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/house_cowork.git
+   git clone https://github.com/Joazen544/house_cowork_backend.git
    cd house_cowork
    ```
 
